@@ -12,11 +12,11 @@ struct Friends {
     let message: String?
     let profile_image: String?
     let phone: Int?
-    let like: Bool
+    var like: Bool
 }
 
 struct FriendsInfo {
-    let list: [Friends] = [
+    var list: [Friends] = [
         Friends(
             name: "김민준",
             message: "오늘도 행복하세요 ☺️",

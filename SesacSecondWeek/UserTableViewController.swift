@@ -10,7 +10,11 @@ import Kingfisher
 
 class UserTableViewController: UITableViewController {
 
-    let friends: FriendsInfo = FriendsInfo()
+    var friends: FriendsInfo = FriendsInfo() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,12 +44,22 @@ class UserTableViewController: UITableViewController {
         cell.messageLabel.textColor = .darkGray
         cell.likeButton.setImage(UIImage(systemName: row.like ? "star.fill" : "star"), for: .normal)
         cell.likeButton.tintColor = .systemYellow
+        cell.likeButton.tag = indexPath.row
+        cell.likeButton.addTarget(
+            self,
+            action: #selector(likeButtonTapped),
+            for: .touchUpInside
+        )
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    @objc func likeButtonTapped(_ sender: UIButton) {
+        friends.list[sender.tag].like.toggle()
     }
 
 }
