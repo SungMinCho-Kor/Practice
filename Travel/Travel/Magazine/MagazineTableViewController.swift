@@ -10,7 +10,7 @@ import Kingfisher
 
 class MagazineTableViewController: UITableViewController {
     
-    let magazineInfo = MagazineInfo()
+    private let magazineInfo = MagazineInfo()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,8 @@ class MagazineTableViewController: UITableViewController {
         cell.subtitleLabel.text = row.subtitle
         cell.thumbnailImageView.kf.setImage(with: URL(string: row.photo_image))
         cell.dateLabel.text = convertDateFormat(date: row.date)
-    
+        
+        // Cell의 책임으로 옮기는 것이 좋을 것 같아요..
         cell.thumbnailImageView.contentMode = .scaleAspectFill
         cell.thumbnailImageView.layer.cornerRadius = 10
         cell.titleLabel.font = .systemFont(ofSize: 28, weight: .black)
@@ -47,7 +48,7 @@ class MagazineTableViewController: UITableViewController {
         return cell
     }
     
-    func convertDateFormat(date: String) -> String {
+    private func convertDateFormat(date: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd"
         guard let date = dateFormatter.date(from: date) else {
@@ -55,6 +56,7 @@ class MagazineTableViewController: UITableViewController {
             return ""
         }
         dateFormatter.dateFormat = "yy년 M월 d일"
+        
         return dateFormatter.string(from: date)
     }
     
