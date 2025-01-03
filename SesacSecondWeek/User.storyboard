@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="p8j-L4-UvI">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23094"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -46,17 +46,29 @@
                                                 </label>
                                             </subviews>
                                         </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1iZ-O9-Fsh">
+                                            <rect key="frame" x="30" y="17" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="1vf-5t-3FX"/>
+                                                <constraint firstAttribute="width" constant="20" id="9qj-4y-93V"/>
+                                            </constraints>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" image="star" catalog="system" title=""/>
+                                        </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="1iZ-O9-Fsh" firstAttribute="top" secondItem="BwZ-G9-1Xz" secondAttribute="top" constant="2" id="2Uk-V2-JNi"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="4VW-9d-Yaa" secondAttribute="trailing" constant="16" id="3z0-RW-Bef"/>
                                         <constraint firstItem="4VW-9d-Yaa" firstAttribute="centerY" secondItem="DpF-Hn-qYv" secondAttribute="centerY" id="9e5-ah-y4F"/>
                                         <constraint firstItem="4VW-9d-Yaa" firstAttribute="leading" secondItem="BwZ-G9-1Xz" secondAttribute="trailing" constant="16" id="GHO-MY-G4m"/>
+                                        <constraint firstItem="1iZ-O9-Fsh" firstAttribute="leading" secondItem="BwZ-G9-1Xz" secondAttribute="leading" constant="2" id="Pju-rz-eQQ"/>
                                         <constraint firstItem="BwZ-G9-1Xz" firstAttribute="top" secondItem="DpF-Hn-qYv" secondAttribute="topMargin" constant="4" id="drQ-te-TTT"/>
                                         <constraint firstItem="BwZ-G9-1Xz" firstAttribute="leading" secondItem="DpF-Hn-qYv" secondAttribute="leadingMargin" constant="8" id="hgV-1Q-vws"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="BwZ-G9-1Xz" secondAttribute="bottom" constant="4" id="zBH-wk-zbh"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="likeButton" destination="1iZ-O9-Fsh" id="MpP-g3-866"/>
                                     <outlet property="messageLabel" destination="Pf1-6E-9qd" id="FrG-yH-d5Z"/>
                                     <outlet property="nameLabel" destination="hkX-Jg-EK7" id="2PD-yY-QOD"/>
                                     <outlet property="profileImageView" destination="BwZ-G9-1Xz" id="cZL-Gu-x2f"/>
@@ -75,6 +87,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
