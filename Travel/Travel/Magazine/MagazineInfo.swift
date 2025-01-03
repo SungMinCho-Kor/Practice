@@ -5,8 +5,6 @@
 //  Created by jack on 1/2/25.
 //
 
-import Foundation
-
 struct MagazineInfo {
     let magazine: [Magazine] = [
         Magazine(
