@@ -35,20 +35,7 @@ class CityTableViewController: UITableViewController {
             
             return cell
         } else if row.ad, let cell = tableView.dequeueReusableCell(withIdentifier: "AdTableViewCell", for: indexPath) as? AdTableViewCell {
-            cell.adLabel.text = " AD "
-            cell.adLabel.font = .boldSystemFont(ofSize: 8)
-            cell.adLabel.layer.cornerRadius = 4
-            cell.adLabel.clipsToBounds = true
-            cell.adLabel.backgroundColor = .white
-            
-            let colors: [UIColor] = [.systemRed, .systemBlue, .systemPink, .systemPurple, .systemGreen, .systemCyan]
-            cell.backgroundColorView.backgroundColor = colors[indexPath.row % colors.count]
-            cell.backgroundColorView.layer.cornerRadius = 10
-            
-            cell.contentLabel.text = row.title
-            cell.contentLabel.numberOfLines = 0
-            cell.contentLabel.textAlignment = .center
-            cell.contentLabel.font = .systemFont(ofSize: 16, weight: .black)
+            cell.configure(row, row: indexPath.row)
             
             return cell
         } else {
