@@ -90,6 +90,9 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="o9T-KM-4u4">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
                         <navigationBarAppearance key="scrollEdgeAppearance">
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </navigationBarAppearance>
@@ -108,7 +111,7 @@
             <objects>
                 <tableViewController id="P8R-ND-1Kg" customClass="CityTableViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="Mas-I6-Msk">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
@@ -225,6 +228,53 @@
                                     <outletCollection property="starImageViewList" destination="NdK-C8-Bmv" collectionClass="NSMutableArray" id="5up-nI-IBd"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AdTableViewCell" rowHeight="101" id="qZ3-0i-4F9" customClass="AdTableViewCell" customModule="Travel" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="200" width="393" height="101"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qZ3-0i-4F9" id="bYS-Kc-Nai">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="101"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evi-kd-Wvp">
+                                            <rect key="frame" x="16" y="8" width="361" height="85"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EKN-FJ-GDi">
+                                                    <rect key="frame" x="32" y="8" width="297" height="69"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tCJ-h5-Sdt">
+                                                    <rect key="frame" x="315.66666666666669" y="4" width="41.333333333333314" height="20.333333333333332"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstItem="EKN-FJ-GDi" firstAttribute="top" secondItem="evi-kd-Wvp" secondAttribute="top" constant="8" id="0Ow-e2-ss0"/>
+                                                <constraint firstItem="EKN-FJ-GDi" firstAttribute="leading" secondItem="evi-kd-Wvp" secondAttribute="leading" constant="32" id="1WS-u2-Sfk"/>
+                                                <constraint firstAttribute="trailing" secondItem="tCJ-h5-Sdt" secondAttribute="trailing" constant="4" id="1l8-nP-1bX"/>
+                                                <constraint firstAttribute="bottom" secondItem="EKN-FJ-GDi" secondAttribute="bottom" constant="8" id="4xN-s9-6E4"/>
+                                                <constraint firstAttribute="trailing" secondItem="EKN-FJ-GDi" secondAttribute="trailing" constant="32" id="6Tt-Nv-UXz"/>
+                                                <constraint firstItem="tCJ-h5-Sdt" firstAttribute="top" secondItem="evi-kd-Wvp" secondAttribute="top" constant="4" id="DR6-Yj-9fV"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="evi-kd-Wvp" firstAttribute="leading" secondItem="bYS-Kc-Nai" secondAttribute="leading" constant="16" id="Nqm-uW-Da9"/>
+                                        <constraint firstAttribute="trailing" secondItem="evi-kd-Wvp" secondAttribute="trailing" constant="16" id="gNB-hf-nJk"/>
+                                        <constraint firstItem="evi-kd-Wvp" firstAttribute="top" secondItem="bYS-Kc-Nai" secondAttribute="top" constant="8" id="iqy-WK-bmd"/>
+                                        <constraint firstAttribute="bottom" secondItem="evi-kd-Wvp" secondAttribute="bottom" constant="8" id="v0f-wO-YLP"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="adLabel" destination="tCJ-h5-Sdt" id="VT1-R4-5Y5"/>
+                                    <outlet property="backgroundColorView" destination="evi-kd-Wvp" id="NBp-Ba-0za"/>
+                                    <outlet property="contentLabel" destination="EKN-FJ-GDi" id="R3k-yp-9l2"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="P8R-ND-1Kg" id="sRt-I1-PqE"/>
@@ -243,9 +293,15 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AcK-wZ-een" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="도시" image="airplane" catalog="system" id="lJ5-l1-uLJ"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CBa-dV-oXE">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="CBa-dV-oXE">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                        <navigationBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -294,6 +350,12 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oGU-3Y-1Xy">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                        <navigationBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -314,6 +376,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="selectedImageTintColor" red="1" green="0.23597195639999999" blue="0.25941770079999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <tabBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tabBarAppearance>
+                        <tabBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </tabBarAppearance>
                     </tabBar>
                     <connections>
                         <segue destination="PQx-ay-KYk" kind="relationship" relationship="viewControllers" id="doZ-rP-4fh"/>

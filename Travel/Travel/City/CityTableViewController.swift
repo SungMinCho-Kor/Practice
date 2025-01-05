@@ -17,7 +17,6 @@ class CityTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 160
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -29,7 +28,7 @@ class CityTableViewController: UITableViewController {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let row = travelInfo.travel[indexPath.row]
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "CityTableViewCell", for: indexPath) as? CityTableViewCell {
+        if !row.ad, let cell = tableView.dequeueReusableCell(withIdentifier: "CityTableViewCell", for: indexPath) as? CityTableViewCell {
             cell.titleLabel.text = row.title
             cell.titleLabel.numberOfLines = 0
             cell.titleLabel.font = .systemFont(ofSize: 16, weight: .black)
@@ -64,14 +63,39 @@ class CityTableViewController: UITableViewController {
             cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
             
             return cell
+        } else if row.ad, let cell = tableView.dequeueReusableCell(withIdentifier: "AdTableViewCell", for: indexPath) as? AdTableViewCell {
+            cell.adLabel.text = " AD "
+            cell.adLabel.font = .boldSystemFont(ofSize: 8)
+            cell.adLabel.layer.cornerRadius = 4
+            cell.adLabel.clipsToBounds = true
+            cell.adLabel.backgroundColor = .white
+            
+            let colors: [UIColor] = [.systemRed, .systemBlue, .systemPink, .systemPurple, .systemGreen, .systemCyan]
+            cell.backgroundColorView.backgroundColor = colors[indexPath.row % colors.count]
+            cell.backgroundColorView.layer.cornerRadius = 10
+            
+            cell.contentLabel.text = row.title
+            cell.contentLabel.numberOfLines = 0
+            cell.contentLabel.textAlignment = .center
+            cell.contentLabel.font = .systemFont(ofSize: 16, weight: .black)
+            
+            return cell
         } else {
-            print("Cell 실수")
+            print("Cell 오류", #function)
             return UITableViewCell()
         }
     }
     
     @objc func likeButtonTapped(_ sender: UIButton) {
         travelInfo.travel[sender.tag].like?.toggle()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if travelInfo.travel[indexPath.row].ad {
+            return 100
+        } else {
+            return 180
+        }
     }
     
 }
