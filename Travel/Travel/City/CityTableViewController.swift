@@ -90,7 +90,10 @@ class CityTableViewController: UITableViewController {
         travelInfo.travel[sender.tag].like?.toggle()
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath
+    ) -> CGFloat {
         if travelInfo.travel[indexPath.row].ad {
             return 100
         } else {
