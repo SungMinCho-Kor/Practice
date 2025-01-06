@@ -9,7 +9,6 @@ import UIKit
 
 class CityTableViewCell: UITableViewCell {
     @IBOutlet private var thumbnailImageView: UIImageView!
-    
     @IBOutlet var thumbnailDimView: UIView!
     @IBOutlet private var cityTitleLabel: UILabel!
     @IBOutlet var keywordContainerView: UIView!

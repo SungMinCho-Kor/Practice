@@ -15,7 +15,14 @@ class CityTableViewController: UITableViewController {
     private let cityInfo = CityInfo()
     private var allCityInfo: [City] {
         cityInfo.city.filter({
-            if let textFieldText = searchTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().replacingOccurrences(of: " ", with: ""), !textFieldText.isEmpty {
+            if let textFieldText = searchTextField.text?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
+                .replacingOccurrences(
+                    of: " ",
+                    with: ""
+                ),
+               !textFieldText.isEmpty {
                 return $0.city_english_name.lowercased().contains(textFieldText) ||
                 $0.city_name.lowercased().contains(textFieldText) ||
                 $0.city_explain.lowercased().contains(textFieldText)
@@ -25,22 +32,42 @@ class CityTableViewController: UITableViewController {
         })
     }
     private var internalCityInfo: [City] {
-        cityInfo.city.filter({
-            if let textFieldText = searchTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().replacingOccurrences(of: " ", with: ""), !textFieldText.isEmpty {
-                return ($0.city_english_name.lowercased().contains(textFieldText) ||
-                $0.city_name.lowercased().contains(textFieldText) ||
-                $0.city_explain.lowercased().contains(textFieldText)) && $0.domestic_travel
+        cityInfo.city.filter(
+            {
+                if let textFieldText = searchTextField.text?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased()
+                    .replacingOccurrences(
+                        of: " ",
+                        with: ""
+                    )
+                    ,
+                   !textFieldText.isEmpty {
+                return (
+                    $0.city_english_name.lowercased().contains(textFieldText) ||
+                    $0.city_name.lowercased().contains(textFieldText) ||
+                    $0.city_explain.lowercased().contains(textFieldText)
+                ) && $0.domestic_travel
             } else {
                 return $0.domestic_travel
             }
         })
     }
     private var domesticCityInfo: [City] {
-        cityInfo.city.filter({
-            if let textFieldText = searchTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().replacingOccurrences(of: " ", with: ""), !textFieldText.isEmpty {
-                return ($0.city_english_name.lowercased().contains(textFieldText) ||
-                $0.city_name.lowercased().contains(textFieldText) ||
-                $0.city_explain.lowercased().contains(textFieldText)) && !$0.domestic_travel
+        cityInfo.city.filter(
+            {
+                if let textFieldText = searchTextField.text?
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased().replacingOccurrences(
+                        of: " ",
+                        with: ""
+                    ),
+               !textFieldText.isEmpty {
+                return (
+                    $0.city_english_name.lowercased().contains(textFieldText) ||
+                    $0.city_name.lowercased().contains(textFieldText) ||
+                    $0.city_explain.lowercased().contains(textFieldText)
+                ) && !$0.domestic_travel
             } else {
                 return !$0.domestic_travel
             }
@@ -88,9 +115,18 @@ class CityTableViewController: UITableViewController {
     }
     
     private func categorySegmentedControlDesign() {
-        categorySegmentedControl.setTitle("모두", forSegmentAt: 0)
-        categorySegmentedControl.setTitle("국내", forSegmentAt: 1)
-        categorySegmentedControl.setTitle("해외", forSegmentAt: 2)
+        categorySegmentedControl.setTitle(
+            "모두",
+            forSegmentAt: 0
+        )
+        categorySegmentedControl.setTitle(
+            "국내",
+            forSegmentAt: 1
+        )
+        categorySegmentedControl.setTitle(
+            "해외",
+            forSegmentAt: 2
+        )
         categorySegmentedControl.addTarget(
             self,
             action: #selector(categorySegmentedControlChanged),
@@ -138,7 +174,10 @@ class CityTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         view.endEditing(true)
     }
     
