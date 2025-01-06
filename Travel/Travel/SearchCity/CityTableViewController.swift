@@ -162,11 +162,20 @@ class CityTableViewController: UITableViewController {
             return UITableViewCell()
         }
         if categorySegmentedControl.selectedSegmentIndex == 0 {
-            cell.configure(allCityInfo[indexPath.row])
+            cell.configure(
+                allCityInfo[indexPath.row],
+                highlightString: searchTextField.text
+            )
         } else if categorySegmentedControl.selectedSegmentIndex == 1 {
-            cell.configure(internalCityInfo[indexPath.row])
+            cell.configure(
+                internalCityInfo[indexPath.row],
+                highlightString: searchTextField.text
+            )
         } else if categorySegmentedControl.selectedSegmentIndex == 2 {
-            cell.configure(domesticCityInfo[indexPath.row])
+            cell.configure(
+                domesticCityInfo[indexPath.row],
+                highlightString: searchTextField.text
+            )
         } else {
             print("wrong categorySegmentedControl.selectedSegmentIndex", #function)
         }

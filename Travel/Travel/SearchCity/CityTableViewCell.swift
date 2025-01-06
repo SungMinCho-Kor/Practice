@@ -58,10 +58,6 @@ class CityTableViewCell: UITableViewCell {
     
     private func cityTitleLabelDesign() {
         cityTitleLabel.textColor = .white
-        cityTitleLabel.font = .systemFont(
-            ofSize: 20,
-            weight: .bold
-        )
     }
     
     private func keywordContainerViewDesign() {
@@ -70,12 +66,46 @@ class CityTableViewCell: UITableViewCell {
     
     private func keywordLabelDesign() {
         keywordLabel.textColor = .white
-        keywordLabel.font = .systemFont(ofSize: 14)
     }
     
-    func configure(_ content: City) {
+    func configure(_ content: City, highlightString: String? = nil) {
         thumbnailImageView.kf.setImage(with: URL(string: content.city_image))
-        cityTitleLabel.text = "\(content.city_name) | \(content.city_english_name)"
-        keywordLabel.text = " " + content.city_explain
+        let highlightText = highlightString?.replacingOccurrences(
+            of: " ",
+            with: ""
+        ) ?? ""
+        let cityTitle = "\(content.city_name) | \(content.city_english_name)"
+        let cityTitleAttributedText: NSMutableAttributedString = NSMutableAttributedString(
+            string: cityTitle,
+            attributes: [NSAttributedString.Key.font: UIFont.systemFont(
+                ofSize: 20,
+                weight: .bold
+            )]
+        )
+        let cityRange = (cityTitle as NSString).range(
+            of: highlightText,
+            options: .caseInsensitive
+        )
+        cityTitleAttributedText.addAttribute(
+            .foregroundColor,
+            value: UIColor.yellow,
+            range: cityRange
+        )
+        cityTitleLabel.attributedText = cityTitleAttributedText
+        
+        let keywordTitleAttributedText: NSMutableAttributedString = NSMutableAttributedString(
+            string: content.city_explain,
+            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
+        )
+        let keywordRange = (content.city_explain as NSString).range(
+            of: highlightText,
+            options: .caseInsensitive
+        )
+        keywordTitleAttributedText.addAttribute(
+            .foregroundColor,
+            value: UIColor.yellow,
+            range: keywordRange
+        )
+        keywordLabel.attributedText = keywordTitleAttributedText
     }
 }
