@@ -9,18 +9,22 @@ import UIKit
 
 // shoppingTextField에 너무 많은 텍스트를 입력하면 addButton이 옆으로 밀려납니다.
 // 자동으로 늘어나는 레이아웃의 최대치를 잡는 방법을 모르겠어요 ㅠㅠ
-class ShoppingTableViewController: UITableViewController {
-    @IBOutlet var containerView: UIView!
-    @IBOutlet var shoppingTextField: UITextField!
-    @IBOutlet var addButton: UIButton!
+final class ShoppingTableViewController: UITableViewController {
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var shoppingTextField: UITextField!
+    @IBOutlet private var addButton: UIButton!
     
-    var shoppingInfo = ShoppingInfo()
+    private var shoppingInfo = ShoppingInfo()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         containerViewDesign()
         shoppingTextFieldDesign()
         addButtonDesign()
+        tableViewDesign()
+    }
+    
+    private func tableViewDesign() {
         tableView.rowHeight = 52
     }
     
@@ -39,7 +43,7 @@ class ShoppingTableViewController: UITableViewController {
         )
     }
     
-    func addButtonDesign() {
+    private func addButtonDesign() {
         var attributedString = AttributedString("추가")
         attributedString.font = .systemFont(ofSize: 14)
         var configuration = UIButton.Configuration.filled()

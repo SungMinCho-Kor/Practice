@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CityTableViewController: UITableViewController {
+final class CityTableViewController: UITableViewController {
     @IBOutlet private var textfieldContainerView: UIView!
     @IBOutlet private var searchTextField: UITextField!
     @IBOutlet private var categorySegmentedControl: UISegmentedControl!

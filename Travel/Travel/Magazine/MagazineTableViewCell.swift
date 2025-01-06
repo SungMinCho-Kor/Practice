@@ -7,20 +7,36 @@
 
 import UIKit
 
-class MagazineTableViewCell: UITableViewCell {
-    @IBOutlet var thumbnailImageView: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var subtitleLabel: UILabel!
-    @IBOutlet var dateLabel: UILabel!
+final class MagazineTableViewCell: UITableViewCell {
+    @IBOutlet private var thumbnailImageView: UIImageView!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var subtitleLabel: UILabel!
+    @IBOutlet private var dateLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        thumbnailImageViewDesign()
+        titleLabelDesign()
+        subtitleLabelDesign()
+        dateLabelDesign()
+    }
+    
+    private func thumbnailImageViewDesign() {
         thumbnailImageView.contentMode = .scaleAspectFill
         thumbnailImageView.layer.cornerRadius = 10
+    }
+    
+    private func titleLabelDesign() {
         titleLabel.font = .systemFont(ofSize: 28, weight: .black)
         titleLabel.numberOfLines = 2
+    }
+    
+    private func subtitleLabelDesign() {
         subtitleLabel.font = .systemFont(ofSize: 16, weight: .bold)
         subtitleLabel.textColor = .lightGray
+    }
+    
+    private func dateLabelDesign() {
         dateLabel.font = .systemFont(ofSize: 12)
         dateLabel.textColor = .lightGray
     }

@@ -7,30 +7,54 @@
 
 import UIKit
 
-class TravelTableViewCell: UITableViewCell {
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var descriptionLabel: UILabel!
-    @IBOutlet var starImageViewList: [UIImageView]!
-    @IBOutlet var informationLabel: UILabel!
-    @IBOutlet var thumbnailImageView: UIImageView!
-    @IBOutlet var likeButton: UIButton!
+final class TravelTableViewCell: UITableViewCell {
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var descriptionLabel: UILabel!
+    @IBOutlet private var starImageViewList: [UIImageView]!
+    @IBOutlet private var informationLabel: UILabel!
+    @IBOutlet private var thumbnailImageView: UIImageView!
+    @IBOutlet private(set) var likeButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        titleLabelDesign()
+        descriptionLabelDesign()
+        informationLabelDesign()
+        thumbnailImageViewDesign()
+        likeButtonDesign()
+        starImageViewListDesign()
+    }
+    
+    private func titleLabelDesign() {
         titleLabel.numberOfLines = 0
         titleLabel.font = .systemFont(
             ofSize: 16,
             weight: .black
         )
+    }
+    
+    private func descriptionLabelDesign() {
         descriptionLabel.textColor = .darkGray
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = .systemFont(ofSize: 14)
+    }
+    
+    private func informationLabelDesign() {
         informationLabel.font = .systemFont(ofSize: 12)
         informationLabel.textColor = .lightGray
         informationLabel.numberOfLines = 0
+    }
+    
+    private func thumbnailImageViewDesign() {
         thumbnailImageView.contentMode = .scaleToFill
         thumbnailImageView.layer.cornerRadius = 10
+    }
+    
+    private func likeButtonDesign() {
         likeButton.tintColor = .systemPink
+    }
+    
+    private func starImageViewListDesign() {
         for idx in 0..<5 {
             starImageViewList[idx].image = UIImage(systemName: "star.fill")
             starImageViewList[idx].tintColor = .systemGray5

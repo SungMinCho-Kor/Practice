@@ -7,20 +7,31 @@
 
 import UIKit
 
-class AdTableViewCell: UITableViewCell {
-    @IBOutlet var backgroundColorView: UIView!
-    @IBOutlet var contentLabel: UILabel!
-    @IBOutlet var adLabel: UILabel!
+final class AdTableViewCell: UITableViewCell {
+    @IBOutlet private var backgroundColorView: UIView!
+    @IBOutlet private var contentLabel: UILabel!
+    @IBOutlet private var adLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        adLabelDesign()
+        backgroundColorViewDesign()
+        contentLabelDesign()
+    }
+    
+    private func adLabelDesign() {
         adLabel.text = " AD "
         adLabel.font = .boldSystemFont(ofSize: 8)
         adLabel.layer.cornerRadius = 4
         adLabel.clipsToBounds = true
         adLabel.backgroundColor = .white
-        
+    }
+    
+    private func backgroundColorViewDesign() {
         backgroundColorView.layer.cornerRadius = 10
+    }
+    
+    private func contentLabelDesign() {
         contentLabel.numberOfLines = 0
         contentLabel.textAlignment = .center
         contentLabel.font = .systemFont(

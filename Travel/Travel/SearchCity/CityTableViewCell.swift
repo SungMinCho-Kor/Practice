@@ -7,11 +7,11 @@
 
 import UIKit
 
-class CityTableViewCell: UITableViewCell {
+final class CityTableViewCell: UITableViewCell {
     @IBOutlet private var thumbnailImageView: UIImageView!
-    @IBOutlet var thumbnailDimView: UIView!
+    @IBOutlet private var thumbnailDimView: UIView!
     @IBOutlet private var cityTitleLabel: UILabel!
-    @IBOutlet var keywordContainerView: UIView!
+    @IBOutlet private var keywordContainerView: UIView!
     @IBOutlet private var keywordLabel: UILabel!
     
     override func awakeFromNib() {

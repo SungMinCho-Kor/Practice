@@ -7,9 +7,9 @@
 
 import UIKit
 
-class TravelTableViewController: UITableViewController {
+final class TravelTableViewController: UITableViewController {
     
-    var travelInfo = TravelInfo()
+    private var travelInfo = TravelInfo()
     
     override func tableView(
         _ tableView: UITableView,
@@ -49,7 +49,7 @@ class TravelTableViewController: UITableViewController {
         }
     }
     
-    @objc func likeButtonTapped(_ sender: UIButton) {
+    @objc private func likeButtonTapped(_ sender: UIButton) {
         travelInfo.travel[sender.tag].like?.toggle()
         tableView.reloadRows(
             at: [IndexPath(
@@ -70,5 +70,4 @@ class TravelTableViewController: UITableViewController {
             return 180
         }
     }
-    
 }
