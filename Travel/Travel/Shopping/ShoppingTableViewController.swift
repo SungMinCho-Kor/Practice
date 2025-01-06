@@ -14,11 +14,7 @@ class ShoppingTableViewController: UITableViewController {
     @IBOutlet var shoppingTextField: UITextField!
     @IBOutlet var addButton: UIButton!
     
-    var shoppingInfo = ShoppingInfo() {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var shoppingInfo = ShoppingInfo()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +99,7 @@ class ShoppingTableViewController: UITableViewController {
         ) { [weak self] (_, _, success: @escaping (Bool) -> Void) in
             // UIContextualAction 객체와 ShoppingTableViewController의 약한 참조가 필요한 경우인지 정확하게 판단이 잘 되지 않습니다... 확인할 수 있는 방법이 궁금합니다.
             self?.shoppingInfo.shoppingList.remove(at: indexPath.row)
+            self?.tableView.reloadData()
             success(true)
         }
         delete.backgroundColor = .white
@@ -126,15 +123,30 @@ class ShoppingTableViewController: UITableViewController {
             ),
             at: 0
         )
+        tableView.reloadData()
         shoppingTextField.text = ""
     }
     
     @objc private func checkButtonTapped(_ sender: UIButton) {
         shoppingInfo.shoppingList[sender.tag].checked.toggle()
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: sender.tag,
+                section: 0
+            )],
+            with: .automatic
+        )
     }
     
     @objc private func favoriteButtonTapped(_ sender: UIButton) {
         shoppingInfo.shoppingList[sender.tag].favorite.toggle()
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: sender.tag,
+                section: 0
+            )],
+            with: .automatic
+        )
     }
     
     @objc private func shoppingTextFieldChanged(_ sender: UITextField) {

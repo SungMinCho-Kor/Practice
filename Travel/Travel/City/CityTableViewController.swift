@@ -9,11 +9,7 @@ import UIKit
 
 class CityTableViewController: UITableViewController {
     
-    var travelInfo = TravelInfo() {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var travelInfo = TravelInfo()
     
     override func tableView(
         _ tableView: UITableView,
@@ -55,6 +51,13 @@ class CityTableViewController: UITableViewController {
     
     @objc func likeButtonTapped(_ sender: UIButton) {
         travelInfo.travel[sender.tag].like?.toggle()
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: sender.tag,
+                section: 0
+            )],
+            with: .automatic
+        )
     }
     
     override func tableView(
