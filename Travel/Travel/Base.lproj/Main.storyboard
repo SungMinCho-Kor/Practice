@@ -466,9 +466,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="WTv-YG-T9q">
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="131"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="65c-y7-wBi">
+                                    <rect key="frame" x="16" y="16" width="361" height="60"/>
+                                    <subviews>
+                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kkK-yc-IaT">
+                                            <rect key="frame" x="16" y="8" width="329" height="44"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="kkK-yc-IaT" firstAttribute="top" secondItem="65c-y7-wBi" secondAttribute="top" constant="8" id="7bH-sh-MlG"/>
+                                        <constraint firstAttribute="bottom" secondItem="kkK-yc-IaT" secondAttribute="bottom" constant="8" id="MUS-Jg-pEE"/>
+                                        <constraint firstAttribute="height" constant="60" id="hm8-aL-j0r"/>
+                                        <constraint firstAttribute="trailing" secondItem="kkK-yc-IaT" secondAttribute="trailing" constant="16" id="qmh-5E-T75"/>
+                                        <constraint firstItem="kkK-yc-IaT" firstAttribute="leading" secondItem="65c-y7-wBi" secondAttribute="leading" constant="16" id="w0A-ry-Dbm"/>
+                                    </constraints>
+                                </view>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6DX-i3-Cqc">
+                                    <rect key="frame" x="32" y="84" width="329" height="40"/>
+                                    <segments>
+                                        <segment title="First"/>
+                                        <segment title="Second"/>
+                                        <segment title=""/>
+                                    </segments>
+                                </segmentedControl>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="6DX-i3-Cqc" secondAttribute="trailing" constant="32" id="X2f-iC-C28"/>
+                                <constraint firstAttribute="trailing" secondItem="65c-y7-wBi" secondAttribute="trailing" constant="16" id="YUc-9N-8yw"/>
+                                <constraint firstItem="6DX-i3-Cqc" firstAttribute="top" secondItem="65c-y7-wBi" secondAttribute="bottom" constant="8" id="Zfj-dp-FyP"/>
+                                <constraint firstItem="6DX-i3-Cqc" firstAttribute="leading" secondItem="WTv-YG-T9q" secondAttribute="leading" constant="32" id="lD6-NI-xM7"/>
+                                <constraint firstItem="65c-y7-wBi" firstAttribute="top" secondItem="WTv-YG-T9q" secondAttribute="top" constant="16" id="qCt-si-skm"/>
+                                <constraint firstItem="65c-y7-wBi" firstAttribute="leading" secondItem="WTv-YG-T9q" secondAttribute="leading" constant="16" id="tVl-Mf-5nC"/>
+                                <constraint firstAttribute="bottom" secondItem="6DX-i3-Cqc" secondAttribute="bottom" constant="8" id="ysX-Qs-8RR"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CityTableViewCell" id="0nY-kt-exI" customClass="CityTableViewCell" customModule="Travel" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="44.666667938232422"/>
+                                <rect key="frame" x="20" y="186.33333206176758" width="353" height="44.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0nY-kt-exI" id="X2H-r8-036">
                                     <rect key="frame" x="0.0" y="0.0" width="353" height="44.666667938232422"/>
@@ -482,6 +524,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="인기 도시" id="YIA-vH-Z5v"/>
+                    <connections>
+                        <outlet property="categorySegmentedControl" destination="6DX-i3-Cqc" id="ArN-FO-cCl"/>
+                        <outlet property="searchTextField" destination="kkK-yc-IaT" id="51p-De-ZnB"/>
+                        <outlet property="textfieldContainerView" destination="65c-y7-wBi" id="L9q-ZR-57M"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vuS-Pg-C03" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
