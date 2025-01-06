@@ -37,11 +37,44 @@ class MagazineTableViewCell: UITableViewCell {
         titleLabel.text = content.title
         subtitleLabel.text = content.subtitle
         thumbnailImageView.kf.setImage(with: URL(string: content.photo_image))
-        dateLabel.text = convertDateFormat(date: content.date)
+        if let date = Self.stringToDateFormatter.date(from: content.date) {
+            dateLabel.text = Self.dateToStringFormatter.string(from: date)
+        } else {
+            print("wrong Date")
+            dateLabel.text = ""
+        }
     }
     
-    // TODO: 메모리 관점에서 타입 메서드로 개선
+    // 아래의 기존 함수와 extension의 함수 혹은 static 변수를 활용한 방법의 메모리 차이를 확인하기 위해서
+    // instrument와 debug navigator를 사용해봤으나 차이를 확인하기가 어렵습니다.
+    // 메모리 성능 차이를 확인할 수 있는 방법이 있는지 궁금합니다!
     private func convertDateFormat(date: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyMMdd"
+        guard let date = dateFormatter.date(from: date) else {
+            print("잘못된 date 형식")
+            return ""
+        }
+        dateFormatter.dateFormat = "yy년 M월 d일"
+        
+        return dateFormatter.string(from: date)
+    }
+}
+
+extension MagazineTableViewCell {
+    static var stringToDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyMMdd"
+        return formatter
+    }()
+    
+    static var dateToStringFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy년 M월 d일"
+        return formatter
+    }()
+    
+    static func convertDateFormat(date: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd"
         guard let date = dateFormatter.date(from: date) else {
