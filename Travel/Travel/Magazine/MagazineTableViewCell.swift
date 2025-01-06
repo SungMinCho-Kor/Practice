@@ -40,6 +40,7 @@ class MagazineTableViewCell: UITableViewCell {
         dateLabel.text = convertDateFormat(date: content.date)
     }
     
+    // TODO: 메모리 관점에서 타입 메서드로 개선
     private func convertDateFormat(date: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd"
