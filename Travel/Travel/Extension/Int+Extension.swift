@@ -8,12 +8,10 @@
 import Foundation
 
 extension Int {
-    
     func changeToDecimalFormat() -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         
         return numberFormatter.string(from: NSNumber(integerLiteral: self)) ?? "0"
     }
-    
 }

@@ -15,11 +15,10 @@ class CityTableViewController: UITableViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
         return travelInfo.travel.count
     }
     
@@ -28,13 +27,23 @@ class CityTableViewController: UITableViewController {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let row = travelInfo.travel[indexPath.row]
-        if !row.ad, let cell = tableView.dequeueReusableCell(withIdentifier: "CityTableViewCell", for: indexPath) as? CityTableViewCell {
+        if !row.ad, let cell = tableView.dequeueReusableCell(
+            withIdentifier: "CityTableViewCell",
+            for: indexPath
+        ) as? CityTableViewCell {
             cell.configure(row)
             cell.likeButton.tag = indexPath.row
-            cell.likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+            cell.likeButton.addTarget(
+                self,
+                action: #selector(likeButtonTapped),
+                for: .touchUpInside
+            )
             
             return cell
-        } else if row.ad, let cell = tableView.dequeueReusableCell(withIdentifier: "AdTableViewCell", for: indexPath) as? AdTableViewCell {
+        } else if row.ad, let cell = tableView.dequeueReusableCell(
+            withIdentifier: "AdTableViewCell",
+            for: indexPath
+        ) as? AdTableViewCell {
             cell.configure(row, row: indexPath.row)
             
             return cell

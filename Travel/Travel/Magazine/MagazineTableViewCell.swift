@@ -15,7 +15,6 @@ class MagazineTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Cell의 책임으로 옮기는 것이 좋을 것 같아요..
         thumbnailImageView.contentMode = .scaleAspectFill
         thumbnailImageView.layer.cornerRadius = 10
         titleLabel.font = .systemFont(ofSize: 28, weight: .black)

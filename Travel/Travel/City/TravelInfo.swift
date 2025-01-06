@@ -157,6 +157,6 @@ struct TravelInfo {
             save: 30,
             like: true,
             ad: false
-        ),
+        )
     ]
 }

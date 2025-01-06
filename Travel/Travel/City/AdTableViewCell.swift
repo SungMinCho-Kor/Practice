@@ -23,7 +23,10 @@ class AdTableViewCell: UITableViewCell {
         backgroundColorView.layer.cornerRadius = 10
         contentLabel.numberOfLines = 0
         contentLabel.textAlignment = .center
-        contentLabel.font = .systemFont(ofSize: 16, weight: .black)
+        contentLabel.font = .systemFont(
+            ofSize: 16,
+            weight: .black
+        )
     }
     
     override func prepareForReuse() {
@@ -32,9 +35,19 @@ class AdTableViewCell: UITableViewCell {
         backgroundColorView.backgroundColor = .clear
     }
     
-    func configure(_ content: Travel, row: Int) {
+    func configure(
+        _ content: Travel,
+        row: Int
+    ) {
         contentLabel.text = content.title
-        let colors: [UIColor] = [.systemRed, .systemBlue, .systemPink, .systemPurple, .systemGreen, .systemCyan]
+        let colors: [UIColor] = [
+            .systemRed,
+            .systemBlue,
+            .systemPink,
+            .systemPurple,
+            .systemGreen,
+            .systemCyan
+        ]
         backgroundColorView.backgroundColor = colors[row % colors.count]
     }
 }

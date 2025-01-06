@@ -25,8 +25,16 @@ class ShoppingTableViewCell: UITableViewCell {
     }
     
     func configure(_ content: ShoppingListContent) {
-        checkButton.setImage(UIImage(systemName: content.checked ? "checkmark.square.fill" : "checkmark.square")?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
+        let checkImage = UIImage(systemName: content.checked ? "checkmark.square.fill" : "checkmark.square")
+        checkButton.setImage(
+            checkImage?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12)),
+            for: .normal
+        )
         shoppingTitleLabel.text = content.title
-        favoriteButton.setImage(UIImage(systemName: content.favorite ? "star.fill" : "star")?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12)), for: .normal)
+        let favoriteImage = UIImage(systemName: content.favorite ? "star.fill" : "star")
+        favoriteButton.setImage(
+            favoriteImage?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12)),
+            for: .normal
+        )
     }
 }

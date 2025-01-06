@@ -18,7 +18,10 @@ class CityTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.numberOfLines = 0
-        titleLabel.font = .systemFont(ofSize: 16, weight: .black)
+        titleLabel.font = .systemFont(
+            ofSize: 16,
+            weight: .black
+        )
         descriptionLabel.textColor = .darkGray
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = .systemFont(ofSize: 14)
@@ -43,7 +46,10 @@ class CityTableViewCell: UITableViewCell {
         }
         informationLabel.text = ""
         thumbnailImageView.image = UIImage(systemName: "photo")
-        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        likeButton.setImage(
+            UIImage(systemName: "heart"),
+            for: .normal
+        )
     }
     
     func configure(_ content: Travel) {
@@ -59,6 +65,9 @@ class CityTableViewCell: UITableViewCell {
         } else {
             thumbnailImageView.image = UIImage(systemName: "photo")
         }
-        likeButton.setImage(UIImage(systemName: content.like ?? false ? "heart.fill" : "heart"), for: .normal)
+        likeButton.setImage(
+            UIImage(systemName: content.like ?? false ? "heart.fill" : "heart"),
+            for: .normal
+        )
     }
 }

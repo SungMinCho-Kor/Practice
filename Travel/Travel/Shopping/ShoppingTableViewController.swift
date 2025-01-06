@@ -28,15 +28,19 @@ class ShoppingTableViewController: UITableViewController {
         tableView.rowHeight = 52
     }
     
-    func containerViewDesign() {
+    private func containerViewDesign() {
         containerView.layer.cornerRadius = 10
         containerView.backgroundColor = .systemGray5
     }
     
-    func shoppingTextFieldDesign() {
+    private func shoppingTextFieldDesign() {
         shoppingTextField.borderStyle = .none
         shoppingTextField.placeholder = "무엇을 구매하실 건가요?"
-        shoppingTextField.addTarget(self, action: #selector(shoppingTextFieldChanged), for: .editingChanged)
+        shoppingTextField.addTarget(
+            self,
+            action: #selector(shoppingTextFieldChanged),
+            for: .editingChanged
+        )
     }
     
     func addButtonDesign() {
@@ -47,20 +51,41 @@ class ShoppingTableViewController: UITableViewController {
         configuration.baseBackgroundColor = .systemGray4
         configuration.attributedTitle = attributedString
         addButton.configuration = configuration
-        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        addButton.addTarget(
+            self,
+            action: #selector(addButtonTapped),
+            for: .touchUpInside
+        )
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
         return shoppingInfo.shoppingList.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ShoppingTableViewCell", for: indexPath) as! ShoppingTableViewCell
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "ShoppingTableViewCell",
+            for: indexPath
+        ) as! ShoppingTableViewCell
         cell.configure(shoppingInfo.shoppingList[indexPath.row])
         cell.checkButton.tag = indexPath.row
         cell.favoriteButton.tag = indexPath.row
-        cell.checkButton.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
-        cell.favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        cell.checkButton.addTarget(
+            self,
+            action: #selector(checkButtonTapped),
+            for: .touchUpInside
+        )
+        cell.favoriteButton.addTarget(
+            self,
+            action: #selector(favoriteButtonTapped),
+            for: .touchUpInside
+        )
         
         return cell
     }
@@ -92,5 +117,4 @@ class ShoppingTableViewController: UITableViewController {
     @objc private func shoppingTextFieldChanged(_ sender: UITextField) {
         addButton.isEnabled = sender.text?.isEmpty == false
     }
-    
 }
