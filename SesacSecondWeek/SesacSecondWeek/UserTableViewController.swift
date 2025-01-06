@@ -10,14 +10,20 @@ import Kingfisher
 
 class UserTableViewController: UITableViewController {
 
-    var friends: FriendsInfo = FriendsInfo() {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    var friends: FriendsInfo = FriendsInfo()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = UITableView.automaticDimension
+//        let nib = UINib(
+//            nibName: "NoProfileTableViewCell",
+//            bundle: nil
+//        )
+//        tableView.register(
+//            nib,
+//            forCellReuseIdentifier: "NoProfileTableViewCell"
+//        )
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -25,25 +31,19 @@ class UserTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as? UserTableViewCell else {
+//        guard let cell = tableView.dequeueReusableCell(
+//            withIdentifier: "NoProfileTableViewCell",
+//            for: indexPath
+//        ) as? NoProfileTableViewCell else {
+//            return UITableViewCell()
+//        }
+        
+        // UserTableViewCell 인스턴스 생성
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.identifier, for: indexPath) as? UserTableViewCell else {
             return UITableViewCell()
         }
         let row = friends.list[indexPath.row]
-        
-        cell.profileImageView.backgroundColor = .systemCyan
-        cell.profileImageView.tintColor = .lightGray
-        if let profileImageName = row.profile_image, let url = URL(string: profileImageName) {
-            cell.profileImageView.kf.setImage(with: url)
-        } else {
-            cell.profileImageView.image = UIImage(systemName: "person.fill")
-        }
-        cell.profileImageView.layer.cornerRadius = 10
-        cell.nameLabel.text = row.name
-        cell.nameLabel.font = .boldSystemFont(ofSize: 20)
-        cell.messageLabel.text = row.message
-        cell.messageLabel.textColor = .darkGray
-        cell.likeButton.setImage(UIImage(systemName: row.like ? "star.fill" : "star"), for: .normal)
-        cell.likeButton.tintColor = .systemYellow
+        cell.configure(row: row)
         cell.likeButton.tag = indexPath.row
         cell.likeButton.addTarget(
             self,
@@ -54,12 +54,15 @@ class UserTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-    
     @objc func likeButtonTapped(_ sender: UIButton) {
         friends.list[sender.tag].like.toggle()
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: sender.tag,
+                section: 0
+            )],
+            with: .fade
+        )
     }
 
 }
