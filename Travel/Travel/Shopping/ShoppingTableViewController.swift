@@ -69,10 +69,13 @@ class ShoppingTableViewController: UITableViewController {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: "ShoppingTableViewCell",
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ShoppingTableViewCell.identifier,
             for: indexPath
-        ) as! ShoppingTableViewCell
+        ) as? ShoppingTableViewCell else {
+            print("ShoppingTableViewCell dequeueReusableCell 실패")
+            return UITableViewCell()
+        }
         cell.configure(shoppingInfo.shoppingList[indexPath.row])
         cell.checkButton.tag = indexPath.row
         cell.favoriteButton.tag = indexPath.row
@@ -97,7 +100,7 @@ class ShoppingTableViewController: UITableViewController {
         let delete = UIContextualAction(
             style: .normal,
             title: "Delete"
-        ) { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+        ) { [weak self] (_, _, success: @escaping (Bool) -> Void) in
             // UIContextualAction 객체와 ShoppingTableViewController의 약한 참조가 필요한 경우인지 정확하게 판단이 잘 되지 않습니다... 확인할 수 있는 방법이 궁금합니다.
             self?.shoppingInfo.shoppingList.remove(at: indexPath.row)
             success(true)

@@ -28,7 +28,7 @@ class CityTableViewController: UITableViewController {
     ) -> UITableViewCell {
         let row = travelInfo.travel[indexPath.row]
         if !row.ad, let cell = tableView.dequeueReusableCell(
-            withIdentifier: "CityTableViewCell",
+            withIdentifier: CityTableViewCell.identifier,
             for: indexPath
         ) as? CityTableViewCell {
             cell.configure(row)
@@ -41,7 +41,7 @@ class CityTableViewController: UITableViewController {
             
             return cell
         } else if row.ad, let cell = tableView.dequeueReusableCell(
-            withIdentifier: "AdTableViewCell",
+            withIdentifier: AdTableViewCell.identifier,
             for: indexPath
         ) as? AdTableViewCell {
             cell.configure(row, row: indexPath.row)

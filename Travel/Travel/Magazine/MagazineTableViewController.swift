@@ -29,10 +29,13 @@ class MagazineTableViewController: UITableViewController {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let row = magazineInfo.magazine[indexPath.row]
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: "MagazineTableViewCell",
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: MagazineTableViewCell.identifier,
             for: indexPath
-        ) as! MagazineTableViewCell
+        ) as? MagazineTableViewCell else {
+            print("MagazineTableViewCell dequeueReusableCell 실패")
+            return UITableViewCell()
+        }
         cell.configure(row)
         
         return cell
