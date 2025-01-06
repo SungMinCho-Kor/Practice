@@ -1,5 +1,5 @@
 //
-//  CityTableViewController.swift
+//  TravelTableViewController.swift
 //  Travel
 //
 //  Created by 조성민 on 1/4/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CityTableViewController: UITableViewController {
+class TravelTableViewController: UITableViewController {
     
     var travelInfo = TravelInfo()
     
@@ -24,9 +24,9 @@ class CityTableViewController: UITableViewController {
     ) -> UITableViewCell {
         let row = travelInfo.travel[indexPath.row]
         if !row.ad, let cell = tableView.dequeueReusableCell(
-            withIdentifier: CityTableViewCell.identifier,
+            withIdentifier: TravelTableViewCell.identifier,
             for: indexPath
-        ) as? CityTableViewCell {
+        ) as? TravelTableViewCell {
             cell.configure(row)
             cell.likeButton.tag = indexPath.row
             cell.likeButton.addTarget(

@@ -109,13 +109,13 @@
         <!--도시 상세 정보-->
         <scene sceneID="7lx-zg-OXj">
             <objects>
-                <tableViewController id="P8R-ND-1Kg" customClass="CityTableViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="P8R-ND-1Kg" customClass="TravelTableViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="Mas-I6-Msk">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CityTableViewCell" rowHeight="150" id="GBn-QO-xrh" customClass="CityTableViewCell" customModule="Travel" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TravelTableViewCell" rowHeight="150" id="GBn-QO-xrh" customClass="TravelTableViewCell" customModule="Travel" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="150"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GBn-QO-xrh" id="IbU-fW-TvF">
@@ -458,6 +458,35 @@
             </objects>
             <point key="canvasLocation" x="-123" y="1215"/>
         </scene>
+        <!--인기 도시-->
+        <scene sceneID="vqP-KD-7at">
+            <objects>
+                <tableViewController id="NJu-df-egZ" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="kbI-eT-B3b">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="0nY-kt-exI">
+                                <rect key="frame" x="0.0" y="50" width="393" height="44.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0nY-kt-exI" id="X2H-r8-036">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="44.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="NJu-df-egZ" id="fDi-nz-DTN"/>
+                            <outlet property="delegate" destination="NJu-df-egZ" id="YDD-tY-xaQ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="인기 도시" id="YIA-vH-Z5v"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vuS-Pg-C03" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="788.54961832061065" y="1908.4507042253522"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Ndu-XC-4L5">
             <objects>
@@ -479,17 +508,44 @@
                         <segue destination="PQx-ay-KYk" kind="relationship" relationship="viewControllers" id="doZ-rP-4fh"/>
                         <segue destination="AcK-wZ-een" kind="relationship" relationship="viewControllers" id="ScX-ET-4rN"/>
                         <segue destination="4R0-Rg-gHu" kind="relationship" relationship="viewControllers" id="5O0-1V-4zq"/>
+                        <segue destination="2Qy-Az-xFA" kind="relationship" relationship="viewControllers" id="nRR-oX-bpP"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozD-Y0-5xq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1589" y="525"/>
         </scene>
+        <!--여행 검색-->
+        <scene sceneID="YQL-TE-aZk">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2Qy-Az-xFA" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="여행 검색" image="magnifyingglass" catalog="system" id="UDa-a4-9pD"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Hxr-Av-LIp">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                        <navigationBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="NJu-df-egZ" kind="relationship" relationship="rootViewController" id="tYW-OJ-Hxe"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hw3-D7-DBr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-138.1679389312977" y="1908.4507042253522"/>
+        </scene>
     </scenes>
     <resources>
         <image name="airplane" catalog="system" width="128" height="115"/>
         <image name="clipboard.fill" catalog="system" width="98" height="128"/>
         <image name="magazine.fill" catalog="system" width="110" height="128"/>
+        <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
