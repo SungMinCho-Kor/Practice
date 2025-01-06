@@ -90,6 +90,26 @@ class ShoppingTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(
+        _ tableView: UITableView,
+        trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+    ) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(
+            style: .normal,
+            title: "Delete"
+        ) { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            // UIContextualAction 객체와 ShoppingTableViewController의 약한 참조가 필요한 경우인지 정확하게 판단이 잘 되지 않습니다... 확인할 수 있는 방법이 궁금합니다.
+            self?.shoppingInfo.shoppingList.remove(at: indexPath.row)
+            success(true)
+        }
+        delete.backgroundColor = .white
+        delete.image = UIImage(systemName: "trash")?.withTintColor(
+            .systemRed,
+            renderingMode: .alwaysOriginal
+        )
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
     @objc private func addButtonTapped(_ sender: UIButton) {
         guard let text = shoppingTextField.text, !text.isEmpty else {
             print("no text in shoppingTextField")
