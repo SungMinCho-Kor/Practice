@@ -146,6 +146,38 @@
             </objects>
             <point key="canvasLocation" x="1714" y="525"/>
         </scene>
+        <!--Ad View Controller-->
+        <scene sceneID="BIt-C5-q10">
+            <objects>
+                <viewController storyboardIdentifier="AdViewController" id="1be-LF-fnl" customClass="AdViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jE9-L1-lFc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9V-me-dzG">
+                                <rect key="frame" x="32" y="415.66666666666669" width="329" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="hQQ-gg-G9r"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="hQQ-gg-G9r" firstAttribute="trailing" secondItem="e9V-me-dzG" secondAttribute="trailing" constant="32" id="KgV-KG-6UZ"/>
+                            <constraint firstItem="e9V-me-dzG" firstAttribute="centerX" secondItem="jE9-L1-lFc" secondAttribute="centerX" id="SQD-7N-lLs"/>
+                            <constraint firstItem="e9V-me-dzG" firstAttribute="centerY" secondItem="jE9-L1-lFc" secondAttribute="centerY" id="r9q-8g-aZz"/>
+                            <constraint firstItem="e9V-me-dzG" firstAttribute="leading" secondItem="hQQ-gg-G9r" secondAttribute="leading" constant="32" id="zvC-BY-RIS"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="adTitleLabel" destination="e9V-me-dzG" id="1gh-nh-i6G"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EGx-T3-Fwf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2553" y="525"/>
+        </scene>
         <!--매거진-->
         <scene sceneID="i3J-Wi-aSt">
             <objects>

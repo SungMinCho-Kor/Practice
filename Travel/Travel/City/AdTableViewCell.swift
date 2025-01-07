@@ -14,9 +14,14 @@ final class AdTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        cellDesign()
         adLabelDesign()
         backgroundColorViewDesign()
         contentLabelDesign()
+    }
+    
+    private func cellDesign() {
+        selectionStyle = .none
     }
     
     private func adLabelDesign() {

@@ -58,7 +58,10 @@ final class TravelTableViewController: UITableViewController {
             withIdentifier: AdTableViewCell.identifier,
             for: indexPath
         ) as? AdTableViewCell {
-            cell.configure(row, row: indexPath.row)
+            cell.configure(
+                row,
+                row: indexPath.row
+            )
             
             return cell
         } else {
@@ -72,9 +75,19 @@ final class TravelTableViewController: UITableViewController {
         didSelectRowAt indexPath: IndexPath
     ) {
         if travelInfo.travel[indexPath.row].ad {
-            
+            guard let adViewController = self.storyboard?.instantiateViewController(withIdentifier: AdViewController.identifier) as? AdViewController else {
+                print("AdViewController wrong Identifier")
+                return
+            }
+            adViewController.adTitle = travelInfo.travel[indexPath.row].title
+            let navigationController = UINavigationController(rootViewController: adViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            present(
+                navigationController,
+                animated: true
+            )
         } else {
-            guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "TravelDetailViewController") as? TravelDetailViewController else {
+            guard let detailViewController = self.storyboard?.instantiateViewController(identifier: TravelDetailViewController.identifier) as? TravelDetailViewController else {
                 print("TravelDetailViewController wrong Identifier")
                 return
             }

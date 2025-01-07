@@ -17,12 +17,17 @@ final class TravelTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        cellDesign()
         titleLabelDesign()
         descriptionLabelDesign()
         informationLabelDesign()
         thumbnailImageViewDesign()
         likeButtonDesign()
         starImageViewListDesign()
+    }
+    
+    private func cellDesign() {
+        selectionStyle = .none
     }
     
     private func titleLabelDesign() {
