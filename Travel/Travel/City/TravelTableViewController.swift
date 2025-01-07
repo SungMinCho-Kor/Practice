@@ -11,6 +11,24 @@ final class TravelTableViewController: UITableViewController {
     
     private var travelInfo = TravelInfo()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationDesign()
+    }
+    
+    // 해당 함수가 TravelDetailViewController에 있는 것이 아니라
+    // TravelTableViewController에 있어야 적용이 되는 이유가 궁금합니다!
+    private func navigationDesign() {
+        let backButton = UIBarButtonItem(
+            title: nil,
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        backButton.tintColor = .black
+        navigationItem.backBarButtonItem = backButton
+    }
+    
     override func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
@@ -46,6 +64,25 @@ final class TravelTableViewController: UITableViewController {
         } else {
             print("Cell 오류", #function)
             return UITableViewCell()
+        }
+    }
+    
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        if travelInfo.travel[indexPath.row].ad {
+            
+        } else {
+            guard let detailViewController = self.storyboard?.instantiateViewController(identifier: "TravelDetailViewController") as? TravelDetailViewController else {
+                print("TravelDetailViewController wrong Identifier")
+                return
+            }
+            detailViewController.travel = travelInfo.travel[indexPath.row]
+            navigationController?.pushViewController(
+                detailViewController,
+                animated: true
+            )
         }
     }
     

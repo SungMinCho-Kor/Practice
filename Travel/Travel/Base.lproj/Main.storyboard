@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -80,6 +81,70 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pKD-7G-aOh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="800.76335877862596" y="-179.57746478873241"/>
+        </scene>
+        <!--Travel Detail View Controller-->
+        <scene sceneID="twu-ad-Xql">
+            <objects>
+                <viewController storyboardIdentifier="TravelDetailViewController" id="vtk-OT-X3T" customClass="TravelDetailViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="q6k-6j-Za6">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fXp-RC-8Hd">
+                                <rect key="frame" x="32" y="91" width="329" height="329"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="fXp-RC-8Hd" secondAttribute="height" multiplier="1:1" id="rq7-c5-pvn"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdp-Ho-DQM">
+                                <rect key="frame" x="32" y="436" width="329" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gZq-aZ-Imi">
+                                <rect key="frame" x="32" y="469" width="329" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rqu-kb-fp1">
+                                <rect key="frame" x="159" y="506" width="75" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="popButtonTapped:" destination="vtk-OT-X3T" eventType="touchUpInside" id="8xR-iE-cLh"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="nWl-UN-Tu5"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="rqu-kb-fp1" firstAttribute="centerX" secondItem="q6k-6j-Za6" secondAttribute="centerX" id="8Iq-kH-Ypu"/>
+                            <constraint firstItem="fXp-RC-8Hd" firstAttribute="leading" secondItem="nWl-UN-Tu5" secondAttribute="leading" constant="32" id="9CS-vZ-pqe"/>
+                            <constraint firstItem="gdp-Ho-DQM" firstAttribute="centerX" secondItem="q6k-6j-Za6" secondAttribute="centerX" id="JoS-GX-lOp"/>
+                            <constraint firstItem="gZq-aZ-Imi" firstAttribute="top" secondItem="gdp-Ho-DQM" secondAttribute="bottom" constant="12" id="Ptm-Eu-exM"/>
+                            <constraint firstItem="nWl-UN-Tu5" firstAttribute="trailing" secondItem="gdp-Ho-DQM" secondAttribute="trailing" constant="32" id="f5I-hB-LoW"/>
+                            <constraint firstItem="gdp-Ho-DQM" firstAttribute="top" secondItem="fXp-RC-8Hd" secondAttribute="bottom" constant="16" id="ioX-8v-9Uv"/>
+                            <constraint firstItem="rqu-kb-fp1" firstAttribute="top" secondItem="gZq-aZ-Imi" secondAttribute="bottom" constant="16" id="lNc-7M-wHh"/>
+                            <constraint firstItem="nWl-UN-Tu5" firstAttribute="trailing" secondItem="fXp-RC-8Hd" secondAttribute="trailing" constant="32" id="ptd-sD-unF"/>
+                            <constraint firstItem="gZq-aZ-Imi" firstAttribute="centerX" secondItem="q6k-6j-Za6" secondAttribute="centerX" id="r7a-fg-thr"/>
+                            <constraint firstItem="gdp-Ho-DQM" firstAttribute="leading" secondItem="nWl-UN-Tu5" secondAttribute="leading" constant="32" id="s62-Ap-LGb"/>
+                            <constraint firstItem="gZq-aZ-Imi" firstAttribute="leading" secondItem="nWl-UN-Tu5" secondAttribute="leading" constant="32" id="scS-1k-L3y"/>
+                            <constraint firstItem="nWl-UN-Tu5" firstAttribute="trailing" secondItem="gZq-aZ-Imi" secondAttribute="trailing" constant="32" id="vUe-48-RpD"/>
+                            <constraint firstItem="fXp-RC-8Hd" firstAttribute="top" secondItem="nWl-UN-Tu5" secondAttribute="top" constant="32" id="zvo-uJ-9ae"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="gZq-aZ-Imi" id="wuL-Ko-jvl"/>
+                        <outlet property="popButton" destination="rqu-kb-fp1" id="4Fa-Je-tab"/>
+                        <outlet property="thumbnailImageView" destination="fXp-RC-8Hd" id="RTb-Qn-CRc"/>
+                        <outlet property="travelTitleLabel" destination="gdp-Ho-DQM" id="8GS-eF-kGW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oXT-NV-ivR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1714" y="525"/>
         </scene>
         <!--매거진-->
         <scene sceneID="i3J-Wi-aSt">
