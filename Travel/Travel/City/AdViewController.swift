@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AdViewController: UIViewController {
+final class AdViewController: UIViewController {
     @IBOutlet private var adTitleLabel: UILabel!
     
     var adTitle: String?

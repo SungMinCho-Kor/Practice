@@ -15,10 +15,15 @@ final class MagazineTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        cellDesign()
         thumbnailImageViewDesign()
         titleLabelDesign()
         subtitleLabelDesign()
         dateLabelDesign()
+    }
+    
+    private func cellDesign() {
+        selectionStyle = .none
     }
     
     private func thumbnailImageViewDesign() {
