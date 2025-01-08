@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import Kingfisher
 
 final class RestaurantMapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet var mapView: MKMapView!
@@ -66,7 +67,11 @@ final class RestaurantMapViewController: UIViewController, MKMapViewDelegate {
             )
         )
         RestaurantFilter.allCases.forEach { filterCase in
-            actionSheetController.addAction(UIAlertAction(title: filterCase.rawValue, style: .default) { _ in
+            actionSheetController.addAction(
+                UIAlertAction(
+                    title: filterCase.rawValue,
+                    style: .default
+                ) { _ in
                 self.filter = filterCase
             })
         }
@@ -108,4 +113,35 @@ final class RestaurantMapViewController: UIViewController, MKMapViewDelegate {
     ) {
         mapView.showAnnotations([annotation], animated: true)
     }
+    
+    // 이미지 AnnotationView 구현을 시도했으나 이미지 사이즈 조절에 실패했습니다.
+//    func mapView(
+//        _ mapView: MKMapView,
+//        viewFor annotation: any MKAnnotation
+//    ) -> MKAnnotationView? {
+//        let annotationView = MKAnnotationView()
+//        annotationView.annotation = annotation
+//        
+//        guard let annotation = annotation as? MKPointAnnotation,
+//              let idx = restaurantAnnotations.firstIndex(of: annotation) else {
+//            print("mil")
+//            return nil
+//        }
+//        let restaurant = restaurantList.restaurantArray[idx]
+//        guard let url = URL(string: restaurant.image) else {
+//            print("url")
+//            return nil
+//        }
+//        KingfisherManager.shared.retrieveImage(with: url) { result in
+//            switch result {
+//            case .success(let retrieveImage):
+//                Task { @MainActor in
+//                    annotationView.image = retrieveImage.image
+//                }
+//            case .failure(let error):
+//                dump(error)
+//            }
+//        }
+//        return annotationView
+//    }
 }
