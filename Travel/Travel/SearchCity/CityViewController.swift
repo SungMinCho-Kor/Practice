@@ -87,10 +87,22 @@ final class CityViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationDesign()
         searchBarDesign()
         categorySegmentedControlDesign()
         cityCollectionViewDesign()
         emptyAnnounceLabelDesign()
+    }
+    
+    private func navigationDesign() {
+        let backButton = UIBarButtonItem(
+            title: "MY MEDIA",
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        backButton.tintColor = .gray
+        navigationItem.backBarButtonItem = backButton
     }
     
     private func searchBarDesign() {
@@ -232,5 +244,25 @@ extension CityViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         return cell
+    }
+    
+    // 서울 Cell 선택시 RestaurantMap ViewController로 이동
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        guard let mapViewController = storyboard?.instantiateViewController(withIdentifier: RestaurantMapViewController.identifier) as? RestaurantMapViewController else {
+            print("wrong mapViewController Identifier", #function)
+            return
+        }
+        if (categorySegmentedControl.selectedSegmentIndex == 0 &&
+            allCityInfo[indexPath.row].city_name == "서울") ||
+            (categorySegmentedControl.selectedSegmentIndex == 1 &&
+             internalCityInfo[indexPath.row].city_name == "서울") ||
+            (categorySegmentedControl.selectedSegmentIndex == 2 &&
+             domesticCityInfo[indexPath.row].city_name == "서울")
+        {
+            navigationController?.pushViewController(mapViewController, animated: true)
+        }
     }
 }
