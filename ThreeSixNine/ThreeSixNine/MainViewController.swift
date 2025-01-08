@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Q: UITextView의 크기를 동적으로 조절하는 방법이 궁금합니다.
 final class MainViewController: UIViewController {
     @IBOutlet private var gameTitleLabel: UILabel!
     @IBOutlet private var maxNumberTextField: UITextField!
@@ -62,6 +63,10 @@ final class MainViewController: UIViewController {
         numberPickerView.delegate = self
         numberPickerView.dataSource = self
     }
+    
+    @IBAction func viewTapGestureTapped(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
 }
 
 extension MainViewController: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -90,7 +95,9 @@ extension MainViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         inComponent component: Int
     ) {
         maxNumberTextField.text = String(maxNumber - row)
-        let clapsText = Array<String>((1...(maxNumber - row)).map({String($0)}))
+        let clapsText = Array<String>(
+            (1...(maxNumber - row)).map({String($0)})
+        )
             .joined(separator: ", ")
             .replacingOccurrences(
                 of: "[369]",
@@ -106,19 +113,17 @@ extension MainViewController: UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         return false
     }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        print("a")
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let size = CGSize(width: view.frame.width, height: .infinity)
-        let estimatedSize = textView.sizeThatFits(size)
-        textView.frame = .init(origin: .zero, size: estimatedSize)
-        return true
-    }
 }
 
+// TextField의 복사 붙여넣기와 같은 입력 방지
 extension MainViewController: UITextFieldDelegate {
-    // TODO: edit
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField.selectedTextRange?.start != textField.selectedTextRange?.end {
+            textField.selectedTextRange = .none
+        }
+    }
+    
+    func textField(_ textField: UITextField, editMenuForCharactersIn range: NSRange, suggestedActions: [UIMenuElement]) -> UIMenu? {
+        return UIMenu()
+    }
 }
