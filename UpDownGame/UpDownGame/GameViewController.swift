@@ -14,8 +14,7 @@ final class GameViewController: UIViewController {
     @IBOutlet private var gameCollectionView: UICollectionView!
     @IBOutlet private var resultButton: UIButton!
     
-    var list: [Int] = []
-    
+    private var list: [Int] = []
     private var count = 0 {
         didSet {
             countLabel.text = "시도 횟수: \(count)"
