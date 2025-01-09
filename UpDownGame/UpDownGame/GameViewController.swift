@@ -26,12 +26,11 @@ final class GameViewController: UIViewController {
     }
     var maxCount: Int = 0
     private var correctNumber: Int = 0
-    private var selectedNumber: Int? {
+    private var selectedIndexPath: IndexPath?{
         didSet {
-            resultButton.isEnabled = selectedNumber != nil
+            resultButton.isEnabled = selectedIndexPath != nil
         }
     }
-    private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,7 +172,6 @@ extension GameViewController {
             reactionImageView.image = .emotion1
         }
         
-        selectedNumber = nil
         self.selectedIndexPath = nil
         gameCollectionView.scrollToItem(
             at: IndexPath(
@@ -216,7 +214,6 @@ extension GameViewController: UICollectionViewDelegate, UICollectionViewDataSour
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        selectedNumber = list[indexPath.row]
         selectedIndexPath = indexPath
     }
 }
