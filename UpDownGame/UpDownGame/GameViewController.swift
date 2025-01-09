@@ -14,7 +14,11 @@ final class GameViewController: UIViewController {
     @IBOutlet private var gameCollectionView: UICollectionView!
     @IBOutlet private var resultButton: UIButton!
     
-    private var list: [Int] = []
+    private var list: [Int] = [] {
+        didSet {
+            gameCollectionView.reloadData()
+        }
+    }
     private var count = 0 {
         didSet {
             countLabel.text = "시도 횟수: \(count)"
@@ -27,7 +31,7 @@ final class GameViewController: UIViewController {
             resultButton.isEnabled = selectedNumber != nil
         }
     }
-    private var selectedIndexpath: IndexPath?
+    private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +41,14 @@ final class GameViewController: UIViewController {
         reactionImageViewDesign()
         gameCollectionViewDesign()
         resultButtonDesign()
+        
         configureGameCollectionView()
+        configureData()
+        configureResultButton()
     }
 }
 
+//MARK: Design
 extension GameViewController {
     private func viewDesign() {
         view.backgroundColor = .gamePrimary
@@ -94,6 +102,7 @@ extension GameViewController {
         layout.minimumInteritemSpacing = itemSpacing
         gameCollectionView.collectionViewLayout = layout
         gameCollectionView.backgroundColor = .gamePrimary
+        gameCollectionView.showsHorizontalScrollIndicator = false
     }
     
     private func resultButtonDesign() {
@@ -102,6 +111,12 @@ extension GameViewController {
         configuration.baseForegroundColor = .white
         configuration.title = "결과 확인하기"
         resultButton.configuration = configuration
+    }
+}
+
+//MARK: Configure
+extension GameViewController {
+    private func configureResultButton() {
         resultButton.isEnabled = false
         resultButton.addTarget(
             self,
@@ -120,36 +135,46 @@ extension GameViewController {
             nib,
             forCellWithReuseIdentifier: identifier
         )
-        
         gameCollectionView.delegate = self
         gameCollectionView.dataSource = self
+    }
+    
+    private func configureData() {
         list = Array(1...maxCount)
         correctNumber = Int.random(in: 1...maxCount)
     }
-    
-    @objc
+}
+
+//MARK: Objective-C
+@objc
+extension GameViewController {
     private func resultButtonTapped(_ sender: UIButton) {
-        guard let selectedIndexpath else {
+        guard let selectedIndexPath else {
+            print(#function, "SelectedIndexPath nil")
             return
         }
-        
-        if list[selectedIndexpath.row] > correctNumber {
-            list = Array<Int>(list[0..<selectedIndexpath.row])
+        let randomEmotion = [
+            UIImage.emotion2,
+            UIImage.emotion3,
+            UIImage.emotion4,
+            UIImage.emotion5
+        ].randomElement()
+        if list[selectedIndexPath.row] > correctNumber {
+            list = Array<Int>(list[0..<selectedIndexPath.row])
             gameTitleLabel.text = "DOWN"
-            reactionImageView.image = .emotion4
-        } else if list[selectedIndexpath.row] < correctNumber {
-            list = Array<Int>(list[selectedIndexpath.row+1..<list.count])
+            reactionImageView.image = randomEmotion
+        } else if list[selectedIndexPath.row] < correctNumber {
+            list = Array<Int>(list[selectedIndexPath.row+1..<list.count])
             gameTitleLabel.text = "UP"
-            reactionImageView.image = .emotion3
+            reactionImageView.image = randomEmotion
         } else {
             list = []
             gameTitleLabel.text = "GOOD"
-            reactionImageView.image = .emotion2
+            reactionImageView.image = .emotion1
         }
         
         selectedNumber = nil
-        self.selectedIndexpath = nil
-        gameCollectionView.reloadData()
+        self.selectedIndexPath = nil
         gameCollectionView.scrollToItem(
             at: IndexPath(
                 row: -1,
@@ -162,6 +187,7 @@ extension GameViewController {
     }
 }
 
+//MARK: UICollectionView
 extension GameViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(
         _ collectionView: UICollectionView,
@@ -191,6 +217,6 @@ extension GameViewController: UICollectionViewDelegate, UICollectionViewDataSour
         didSelectItemAt indexPath: IndexPath
     ) {
         selectedNumber = list[indexPath.row]
-        selectedIndexpath = indexPath
+        selectedIndexPath = indexPath
     }
 }
