@@ -95,6 +95,8 @@ extension MainViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         inComponent component: Int
     ) {
         maxNumberTextField.text = String(maxNumber - row)
+        
+        // DP로 개선
         let clapsText = Array<String>(
             (1...(maxNumber - row)).map({String($0)})
         )

@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet var userTextField: UITextField!
     @IBOutlet var secondTextField: UITextField!
     @IBOutlet var mapView: MKMapView!
@@ -50,7 +50,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         annotation.title = "Hello"
         mapView.addAnnotation(annotation)
     }
-    
+}
+
+//MARK: 피커뷰 설정
+extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(
         _ pickerView: UIPickerView,
         numberOfRowsInComponent component: Int
@@ -81,7 +84,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             secondTextField.text = array[row]
         }
     }
-    
+}
+
+//MARK: 텍스트 필드 설정
+extension ViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         print(#function, textField.text)
         return true
@@ -93,5 +99,4 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         secondTextField.becomeFirstResponder()
         return true
     }
-    
 }
