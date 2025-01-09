@@ -8,7 +8,6 @@
 import UIKit
 
 final class OnBoardViewController: UIViewController {
-    
     @IBOutlet private var bottomSheetTopLineView: UIView!
     @IBOutlet private var bottomView: UIView!
     @IBOutlet private var gameTitleLabel: UILabel!
@@ -21,6 +20,7 @@ final class OnBoardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewDesign()
+        navigationDesign()
         gameTitleLabelDesign()
         gameLabelDesign()
         onBoardImageViewDesign()
@@ -28,6 +28,17 @@ final class OnBoardViewController: UIViewController {
         maxNumberTextFieldBottomViewDesign()
         startButtonDesign()
         bottomViewDesign()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        maxNumberTextField.text = ""
+        startButton.isEnabled = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
     
     @IBAction private func tapGestureTapped(_ sender: UITapGestureRecognizer) {
@@ -38,6 +49,17 @@ final class OnBoardViewController: UIViewController {
 extension OnBoardViewController {
     private func viewDesign() {
         view.backgroundColor = .gamePrimary
+    }
+    
+    private func navigationDesign() {
+        let backButton = UIBarButtonItem(
+            title: nil,
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        backButton.tintColor = .black
+        navigationItem.backBarButtonItem = backButton
     }
     
     private func gameTitleLabelDesign() {
@@ -105,7 +127,9 @@ extension OnBoardViewController {
     
     @objc
     private func startButtonTapped(_ sender: UIButton) {
-        let gameViewController = GameViewController()
+        guard let gameViewController = storyboard?.instantiateViewController(identifier: GameViewController.identifier) as? GameViewController else {
+            return
+        }
         guard let maxCountText = maxNumberTextField.text,
               let maxCount = Int(maxCountText) else {
             return
@@ -142,9 +166,16 @@ extension OnBoardViewController: UITextFieldDelegate {
             startButton.isEnabled = false
             return true
         }
-        if let number = Int(newString), 0 < number && number <= 999 {
-            startButton.isEnabled = true
-            return true
+        if let number = Int(newString) {
+            if number == 0 {
+                textField.text = ""
+                return false
+            } else if 0 < number && number <= 999 {
+                startButton.isEnabled = true
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }

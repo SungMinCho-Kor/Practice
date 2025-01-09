@@ -8,12 +8,24 @@
 import UIKit
 
 final class GameCollectionViewCell: UICollectionViewCell {
-    static let identifier: String = String(describing: GameCollectionViewCell.self)
     @IBOutlet private var numberLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         cellDesign()
         numberLabelDesign()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.height / 2
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            backgroundColor = isSelected ? .black : .white
+            numberLabel.textColor = isSelected ? .white : .black
+        }
     }
     
     func configure(number: Int) {
