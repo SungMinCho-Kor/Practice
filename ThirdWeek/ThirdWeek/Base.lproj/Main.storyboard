@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7YU-NW-JGg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pd8-ZR-yaE">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -10,6 +10,65 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="Udt-u2-FxC">
+            <objects>
+                <viewController id="pd8-ZR-yaE" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aTn-Ap-FfP">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="29348571290845701349875019473509" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AJ8-6h-x7X">
+                                <rect key="frame" x="20" y="79" width="166.66666666666666" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="ovV-LW-f8f"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="12343541345324632463246" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="93F-Gg-ogs">
+                                <rect key="frame" x="206.66666666666663" y="79" width="166.33333333333337" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="xDI-Rw-oHO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pMf-xO-hKa">
+                                <rect key="frame" x="159" y="264" width="75" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <segue destination="1wC-gs-SUs" kind="presentation" id="CVU-rD-cfG"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="QkB-3V-Y9g"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="AJ8-6h-x7X" firstAttribute="leading" secondItem="QkB-3V-Y9g" secondAttribute="leading" constant="20" id="1Pn-pW-yVs"/>
+                            <constraint firstAttribute="trailing" secondItem="93F-Gg-ogs" secondAttribute="trailing" constant="20" id="Kjn-gK-Lqx"/>
+                            <constraint firstItem="93F-Gg-ogs" firstAttribute="leading" secondItem="AJ8-6h-x7X" secondAttribute="trailing" constant="20" id="XRj-7B-ih6"/>
+                            <constraint firstItem="AJ8-6h-x7X" firstAttribute="top" secondItem="QkB-3V-Y9g" secondAttribute="top" constant="20" id="cQy-iW-HkJ"/>
+                            <constraint firstItem="93F-Gg-ogs" firstAttribute="top" secondItem="QkB-3V-Y9g" secondAttribute="top" constant="20" id="d8W-A9-SXL"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="In8-Hc-0xj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1023" y="-115"/>
+        </scene>
+        <!--Setting-->
+        <scene sceneID="SGM-NX-1L7">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Setting" id="1wC-gs-SUs" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c6b-0T-BXm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-551" y="-319"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -101,7 +160,7 @@
                                 </cells>
                             </collectionView>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="9zC-sg-aS1">
-                                <rect key="frame" x="0.0" y="138" width="393" height="44"/>
+                                <rect key="frame" x="0.0" y="137.66666666666666" width="393" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="nZ2-mr-wCJ"/>
                                 </constraints>
@@ -134,7 +193,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZAJ-Xj-RbR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1006.8702290076335" y="4.9295774647887329"/>
+            <point key="canvasLocation" x="918" y="5"/>
         </scene>
     </scenes>
     <resources>
