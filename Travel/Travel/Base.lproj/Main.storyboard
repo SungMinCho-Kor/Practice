@@ -774,9 +774,10 @@
                     </tabBar>
                     <connections>
                         <segue destination="PQx-ay-KYk" kind="relationship" relationship="viewControllers" id="doZ-rP-4fh"/>
+                        <segue destination="STa-dC-jja" kind="relationship" relationship="viewControllers" id="q1a-jp-OQp"/>
                         <segue destination="AcK-wZ-een" kind="relationship" relationship="viewControllers" id="ScX-ET-4rN"/>
-                        <segue destination="4R0-Rg-gHu" kind="relationship" relationship="viewControllers" id="5O0-1V-4zq"/>
                         <segue destination="X1z-CD-fUu" kind="relationship" relationship="viewControllers" id="cmU-mS-Omz"/>
+                        <segue destination="4R0-Rg-gHu" kind="relationship" relationship="viewControllers" id="5O0-1V-4zq"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozD-Y0-5xq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -808,6 +809,64 @@
             </objects>
             <point key="canvasLocation" x="-138.1679389312977" y="1908.4507042253522"/>
         </scene>
+        <!--TRAVEL TALK-->
+        <scene sceneID="iqa-Sh-7t9">
+            <objects>
+                <viewController storyboardIdentifier="TravelTalkViewController" id="5A3-Re-Gac" customClass="TravelTalkViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eZX-mz-xUc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="kSt-ve-HVg">
+                                <rect key="frame" x="0.0" y="103" width="393" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="5A3-Re-Gac" id="djJ-BI-vBZ"/>
+                                </connections>
+                            </searchBar>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HI7-9C-ket">
+                                <rect key="frame" x="0.0" y="159" width="393" height="610"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Vac-bP-wKx">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TravelTalkCollectionViewCell" id="o3v-vP-sTt" customClass="TravelTalkCollectionViewCell" customModule="Travel" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="aiD-TT-9zv">
+                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2LD-Kc-9C7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="2LD-Kc-9C7" firstAttribute="trailing" secondItem="HI7-9C-ket" secondAttribute="trailing" id="CBS-BD-btn"/>
+                            <constraint firstItem="kSt-ve-HVg" firstAttribute="top" secondItem="2LD-Kc-9C7" secondAttribute="top" id="DIt-td-2OO"/>
+                            <constraint firstItem="kSt-ve-HVg" firstAttribute="trailing" secondItem="2LD-Kc-9C7" secondAttribute="trailing" id="V4r-eX-pOG"/>
+                            <constraint firstItem="HI7-9C-ket" firstAttribute="leading" secondItem="2LD-Kc-9C7" secondAttribute="leading" id="hcy-6r-GOb"/>
+                            <constraint firstItem="kSt-ve-HVg" firstAttribute="leading" secondItem="2LD-Kc-9C7" secondAttribute="leading" id="igG-73-8zh"/>
+                            <constraint firstItem="HI7-9C-ket" firstAttribute="top" secondItem="kSt-ve-HVg" secondAttribute="bottom" id="lew-n0-DPJ"/>
+                            <constraint firstItem="2LD-Kc-9C7" firstAttribute="bottom" secondItem="HI7-9C-ket" secondAttribute="bottom" id="uFx-HK-Alh"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="TRAVEL TALK" id="I4t-qU-yuk"/>
+                    <connections>
+                        <outlet property="collectionView" destination="HI7-9C-ket" id="Ouu-A1-Elq"/>
+                        <outlet property="searchBar" destination="kSt-ve-HVg" id="yTW-v9-k9i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aev-8o-jwi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1012.9770992366412" y="2856.3380281690143"/>
+        </scene>
         <!--여행 검색-->
         <scene sceneID="xgk-sP-3PE">
             <objects>
@@ -833,12 +892,38 @@
             </objects>
             <point key="canvasLocation" x="1713.740458015267" y="1907.7464788732395"/>
         </scene>
+        <!--채팅-->
+        <scene sceneID="Wgw-6E-HPM">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="STa-dC-jja" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="채팅" image="message.fill" catalog="system" id="xcR-O9-DhD"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="BXy-1B-kQD">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                        <navigationBarAppearance key="scrollEdgeAppearance">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </navigationBarAppearance>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="5A3-Re-Gac" kind="relationship" relationship="rootViewController" id="3I9-lJ-hgD"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EuF-Ej-KjL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="86.25954198473282" y="2856.3380281690143"/>
+        </scene>
     </scenes>
     <resources>
         <image name="airplane" catalog="system" width="128" height="115"/>
         <image name="clipboard.fill" catalog="system" width="98" height="128"/>
         <image name="magazine.fill" catalog="system" width="110" height="128"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="message.fill" catalog="system" width="128" height="114"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
