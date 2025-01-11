@@ -28,6 +28,21 @@ struct ChatRoom {
     var chatList: [Chat] = [] //채팅 화면에서 사용할 데이터
 }
 
+extension ChatRoom {
+    var travelTalkCollectionViewCellContent: TravelTalkCollectionViewCellContent? {
+        guard let chatroomImage = chatroomImage.first,
+              let lastChat = chatList.last else {
+            print(#function, "no chatroomImage")
+            return nil
+        }
+        return TravelTalkCollectionViewCellContent(
+            chatroomImage: chatroomImage,
+            chatroomName: chatroomName,
+            lastChat: lastChat
+        )
+    }
+}
+
 //채팅 화면에서 사용할 데이터 구조체
 struct Chat {
     let user: User

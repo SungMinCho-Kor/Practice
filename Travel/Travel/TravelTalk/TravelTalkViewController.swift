@@ -11,24 +11,29 @@ final class TravelTalkViewController: UIViewController {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
     
+    let list: [TravelTalkCollectionViewCellContent] = mockChatList.compactMap({ $0.travelTalkCollectionViewCellContent })
+    var showingList: [TravelTalkCollectionViewCellContent] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBarDesign()
         collectionViewDesign()
         configureCollectionView()
+        configureShowingList()
     }
-    
 }
 
 //MARK: Design
 extension TravelTalkViewController {
     private func searchBarDesign() {
         searchBar.searchBarStyle = .minimal
+        searchBar.searchTextField.placeholder = "채팅방 이름을 입력하세요"
+        searchBar.delegate = self
     }
     
     private func collectionViewDesign() {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
               let window = sceneDelegate.window else {
             print(#function, "sceneDelegate Wrong")
@@ -60,6 +65,10 @@ extension TravelTalkViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
+    
+    private func configureShowingList() {
+        showingList = list
+    }
 }
 
 //MARK: CollectionView
@@ -68,7 +77,7 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        mockChatList.count
+        return showingList.count
     }
     
     func collectionView(
@@ -82,7 +91,43 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
             print(#function, "TravelTalkCollectionViewCell wrong")
             return UICollectionViewCell()
         }
+        cell.configure(showingList[indexPath.row])
         
         return cell
+    }
+}
+
+//MARK: SearchBar
+extension TravelTalkViewController: UISearchBarDelegate {
+    func searchBar(
+        _ searchBar: UISearchBar,
+        textDidChange searchText: String
+    ) {
+        let text = searchText.replacingOccurrences(
+            of: " ",
+            with: ""
+        )
+        if text.isEmpty {
+            showingList = list
+        } else {
+            showingList = list.filter({
+                $0.chatroomName
+                    .lowercased()
+                    .replacingOccurrences(
+                        of: " ", 
+                        with: ""
+                    )
+                    .contains(text.lowercased())
+            })
+        }
+        collectionView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        view.endEditing(true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        view.endEditing(true)
     }
 }
