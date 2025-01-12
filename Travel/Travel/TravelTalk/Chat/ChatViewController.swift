@@ -40,7 +40,7 @@ final class ChatViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableViewScrollDown()
+        tableViewScrollDown(animated: false)
     }
 }
 
@@ -156,12 +156,10 @@ extension ChatViewController {
                 message: text
             )
         )
-        textView.text = textViewPlaceholder
-        textView.textColor = .lightGray
+        textView.text = ""
         chatButton.isEnabled = false
         tableView.reloadData()
-        tableViewScrollDown()
-        view.endEditing(true)
+        tableViewScrollDown(animated: true)
     }
     
     private func dismissViewController(_ sender: UIBarButtonItem) {
@@ -184,7 +182,11 @@ extension ChatViewController: UITextViewDelegate {
             textView.text = ""
             textView.textColor = .black
         }
+        tableViewScrollDown()
         return true
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -240,14 +242,25 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         return UITableView.automaticDimension
     }
     
-    private func tableViewScrollDown() {
-        tableView.scrollToRow(
-            at: IndexPath(
-                row: list.count - 1,
-                section: 0
-            ),
-            at: .bottom,
-            animated: false
-        )
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        view.endEditing(true)
+    }
+    
+    // TODO: Keyboard event에 대한 반응으로 수정
+    private func tableViewScrollDown(animated: Bool = true) {
+        Task {
+            try await Task.sleep(for: .milliseconds(5))
+            tableView.scrollToRow(
+                at: IndexPath(
+                    row: list.count - 1,
+                    section: 0
+                ),
+                at: .bottom,
+                animated: animated
+            )
+        }
     }
 }
