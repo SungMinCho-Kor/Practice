@@ -15,7 +15,6 @@ final class TravelTalkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationDesign()
         searchBarDesign()
         collectionViewDesign()
         configureCollectionView()
@@ -34,17 +33,6 @@ final class TravelTalkViewController: UIViewController {
 
 //MARK: Design
 extension TravelTalkViewController {
-    private func navigationDesign() {
-        let backButton = UIBarButtonItem(
-            title: nil,
-            style: .plain,
-            target: self,
-            action: nil
-        )
-        backButton.tintColor = .black
-        navigationItem.backBarButtonItem = backButton
-    }
-    
     private func searchBarDesign() {
         searchBar.searchBarStyle = .minimal
         searchBar.searchTextField.placeholder = "채팅방 이름을 입력하세요"
@@ -73,14 +61,44 @@ extension TravelTalkViewController {
 //MARK: Configure
 extension TravelTalkViewController {
     private func configureCollectionView() {
-        let identifier = TravelTalkCollectionViewCell.identifier
-        let xib = UINib(
-            nibName: identifier,
+        let firstIdentifier = TravelTalkCollectionViewCell.identifier
+        let firstXIB = UINib(
+            nibName: firstIdentifier,
             bundle: nil
         )
         collectionView.register(
-            xib,
-            forCellWithReuseIdentifier: identifier
+            firstXIB,
+            forCellWithReuseIdentifier: firstIdentifier
+        )
+        
+        let secondIdentifier = TravelTalkTwoCollectionViewCell.identifier
+        let secondXIB = UINib(
+            nibName: secondIdentifier,
+            bundle: nil
+        )
+        collectionView.register(
+            secondXIB,
+            forCellWithReuseIdentifier: secondIdentifier
+        )
+        
+        let thirdIdentifier = TravelTalkThreeCollectionViewCell.identifier
+        let thirdXIB = UINib(
+            nibName: thirdIdentifier,
+            bundle: nil
+        )
+        collectionView.register(
+            thirdXIB,
+            forCellWithReuseIdentifier: thirdIdentifier
+        )
+        
+        let fourthidentifier = TravelTalkFourCollectionViewCell.identifier
+        let fourthXIB = UINib(
+            nibName: fourthidentifier,
+            bundle: nil
+        )
+        collectionView.register(
+            fourthXIB,
+            forCellWithReuseIdentifier: fourthidentifier
         )
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -100,20 +118,67 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TravelTalkCollectionViewCell.identifier,
-            for: indexPath
-        ) as? TravelTalkCollectionViewCell else {
-            print(#function, "TravelTalkCollectionViewCell wrong")
-            return UICollectionViewCell()
-        }
-        guard let cellContent = showingList[indexPath.row].travelTalkCollectionViewCellContent else {
-            print(#function, "CellContent wrong")
+        if showingList[indexPath.row].chatroomImage.count == 1 {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TravelTalkCollectionViewCell.identifier,
+                for: indexPath
+            ) as? TravelTalkCollectionViewCell else {
+                print(#function, "TravelTalkCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            guard let cellContent = showingList[indexPath.row].travelTalkCollectionViewCellContent else {
+                print(#function, "CellContent wrong")
+                return cell
+            }
+            cell.configure(cellContent)
+            
+            return cell
+        } else if showingList[indexPath.row].chatroomImage.count == 2 {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TravelTalkTwoCollectionViewCell.identifier,
+                for: indexPath
+            ) as? TravelTalkTwoCollectionViewCell else {
+                print(#function, "TravelTalkCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            guard let cellContent = showingList[indexPath.row].travelTalkTwoCollectionViewCellContent else {
+                print(#function, "CellContent wrong")
+                return cell
+            }
+            cell.configure(cellContent)
+            
+            return cell
+        } else if showingList[indexPath.row].chatroomImage.count == 3 {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TravelTalkThreeCollectionViewCell.identifier,
+                for: indexPath
+            ) as? TravelTalkThreeCollectionViewCell else {
+                print(#function, "TravelTalkCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            guard let cellContent = showingList[indexPath.row].travelTalkThreeCollectionViewCellContent else {
+                print(#function, "CellContent wrong")
+                return cell
+            }
+            cell.configure(cellContent)
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TravelTalkFourCollectionViewCell.identifier,
+                for: indexPath
+            ) as? TravelTalkFourCollectionViewCell else {
+                print(#function, "TravelTalkCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            guard let cellContent = showingList[indexPath.row].travelTalkFourCollectionViewCellContent else {
+                print(#function, "CellContent wrong")
+                return cell
+            }
+            cell.configure(cellContent)
+            
             return cell
         }
-        cell.configure(cellContent)
-        
-        return cell
     }
     
     func collectionView(
@@ -126,7 +191,6 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
         }
         chatViewController.navigationItem.title = showingList[indexPath.row].chatroomName
         chatViewController.chatRoomID = showingList[indexPath.row].chatroomId
-//        chatViewController.list = showingList[indexPath.row].chatList
         let navigationController = UINavigationController(rootViewController: chatViewController)
         navigationController.modalPresentationStyle = .fullScreen
         view.window?.layer.add(

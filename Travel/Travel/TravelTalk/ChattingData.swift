@@ -48,6 +48,45 @@ extension ChatRoom {
             lastChat: lastChat
         )
     }
+    var travelTalkTwoCollectionViewCellContent: TravelTalkTwoCollectionViewCellContent? {
+        guard let lastChat = chatList.last else {
+            print(#function, "no chatroomImage")
+            return nil
+        }
+        return TravelTalkTwoCollectionViewCellContent(
+            firstProfileImage: chatroomImage[0],
+            secondProfileImage: chatroomImage[1],
+            chatroomName: chatroomName,
+            lastChat: lastChat
+        )
+    }
+    var travelTalkThreeCollectionViewCellContent: TravelTalkThreeCollectionViewCellContent? {
+        guard let lastChat = chatList.last else {
+            print(#function, "no chatroomImage")
+            return nil
+        }
+        return TravelTalkThreeCollectionViewCellContent(
+            firstProfileImage: chatroomImage[0],
+            secondProfileImage: chatroomImage[1],
+            thirdProfileImage: chatroomImage[2],
+            chatroomName: chatroomName,
+            lastChat: lastChat
+        )
+    }
+    var travelTalkFourCollectionViewCellContent: TravelTalkFourCollectionViewCellContent? {
+        guard let lastChat = chatList.last else {
+            print(#function, "no chatroomImage")
+            return nil
+        }
+        return TravelTalkFourCollectionViewCellContent(
+            firstProfileImage: chatroomImage[0],
+            secondProfileImage: chatroomImage[1],
+            thirdProfileImage: chatroomImage[2],
+            fourthProfileImage: chatroomImage[3],
+            chatroomName: chatroomName,
+            lastChat: lastChat
+        )
+    }
 }
 
 //채팅 화면에서 사용할 데이터 구조체
