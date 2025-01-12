@@ -29,16 +29,13 @@ extension UserChatTableViewCell {
     
     private func messageContainerViewDesign() {
         messageContainerView.layer.cornerRadius = 10
-        messageContainerView.layer.borderWidth = 0.5
-        messageContainerView.layer.borderColor = UIColor.black.cgColor
-        messageContainerView.backgroundColor = .lightGray
+        messageContainerView.layer.borderWidth = 1
+        messageContainerView.layer.borderColor = UIColor.lightGray.cgColor
+        messageContainerView.backgroundColor = .systemGray4
     }
     
     private func messageLabelDesign() {
-        messageLabel.font = .systemFont(
-            ofSize: 14,
-            weight: .semibold
-        )
+        messageLabel.font = .systemFont(ofSize: 14)
         messageLabel.numberOfLines = 0
     }
     

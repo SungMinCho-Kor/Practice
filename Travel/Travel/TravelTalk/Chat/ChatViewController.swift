@@ -175,6 +175,18 @@ extension ChatViewController {
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         chatButton.isEnabled = textView.text != textViewPlaceholder && !textView.text.isEmpty
+
+        let size = CGSize(width: view.frame.width, height: .infinity)
+        let estimatedSize = textView.sizeThatFits(size)
+        
+        guard let heightConstraint = bottomContainerView.constraints.filter({ $0.firstAttribute == .height }).first else {
+            return
+        }
+        if estimatedSize.height <= 63 + 1 {
+            if heightConstraint.firstAttribute == .height {
+                heightConstraint.constant = estimatedSize.height + (8 + 16) * 2
+            }
+        }
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {

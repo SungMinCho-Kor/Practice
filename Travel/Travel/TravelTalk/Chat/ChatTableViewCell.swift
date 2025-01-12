@@ -50,15 +50,12 @@ extension ChatTableViewCell {
     
     private func messageContainerViewDesign() {
         messageContainerView.layer.cornerRadius = 10
-        messageContainerView.layer.borderWidth = 0.5
-        messageContainerView.layer.borderColor = UIColor.black.cgColor
+        messageContainerView.layer.borderWidth = 1
+        messageContainerView.layer.borderColor = UIColor.lightGray.cgColor
     }
     
     private func messageLabelDesign() {
-        messageLabel.font = .systemFont(
-            ofSize: 14,
-            weight: .semibold
-        )
+        messageLabel.font = .systemFont(ofSize: 14)
         messageLabel.numberOfLines = 0
     }
     
