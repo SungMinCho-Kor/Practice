@@ -867,6 +867,95 @@
             </objects>
             <point key="canvasLocation" x="1012.9770992366412" y="2856.3380281690143"/>
         </scene>
+        <!--Chat View Controller-->
+        <scene sceneID="gkH-na-zHa">
+            <objects>
+                <viewController storyboardIdentifier="ChatViewController" id="lYh-pJ-zOY" customClass="ChatViewController" customModule="Travel" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aQv-dD-mhK">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gNF-yx-lG4">
+                                <rect key="frame" x="0.0" y="59" width="393" height="679"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatTableViewCell" id="GY4-sb-S1B" customClass="ChatTableViewCell" customModule="Travel" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="44.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GY4-sb-S1B" id="zm8-3I-vqL">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="44.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <gestureRecognizers/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Thv-Eh-vTh">
+                                <rect key="frame" x="0.0" y="738" width="393" height="80"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SN5-Is-irG">
+                                        <rect key="frame" x="16" y="16" width="361" height="48"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcY-JY-FvR">
+                                                <rect key="frame" x="278" y="8" width="75" height="32"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                            </button>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xVM-Xp-r6v">
+                                                <rect key="frame" x="8" y="8" width="262" height="32"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <color key="textColor" systemColor="labelColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="xVM-Xp-r6v" firstAttribute="leading" secondItem="SN5-Is-irG" secondAttribute="leading" constant="8" id="9Fd-3j-RSn"/>
+                                            <constraint firstItem="xVM-Xp-r6v" firstAttribute="top" secondItem="SN5-Is-irG" secondAttribute="top" constant="8" id="K5x-Dw-vLy"/>
+                                            <constraint firstAttribute="trailing" secondItem="hcY-JY-FvR" secondAttribute="trailing" constant="8" id="Lfj-xX-fT2"/>
+                                            <constraint firstAttribute="bottom" secondItem="xVM-Xp-r6v" secondAttribute="bottom" constant="8" id="S57-7f-6tU"/>
+                                            <constraint firstItem="hcY-JY-FvR" firstAttribute="top" secondItem="SN5-Is-irG" secondAttribute="top" constant="8" id="Soe-7R-LiC"/>
+                                            <constraint firstItem="hcY-JY-FvR" firstAttribute="leading" secondItem="xVM-Xp-r6v" secondAttribute="trailing" constant="8" id="kfa-0f-DSk"/>
+                                            <constraint firstAttribute="bottom" secondItem="hcY-JY-FvR" secondAttribute="bottom" constant="8" id="yXt-FJ-Nhb"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="SN5-Is-irG" firstAttribute="leading" secondItem="Thv-Eh-vTh" secondAttribute="leading" constant="16" id="6b2-Gp-qxX"/>
+                                    <constraint firstItem="SN5-Is-irG" firstAttribute="top" secondItem="Thv-Eh-vTh" secondAttribute="top" constant="16" id="Agu-0N-loN"/>
+                                    <constraint firstAttribute="trailing" secondItem="SN5-Is-irG" secondAttribute="trailing" constant="16" id="BDY-RC-BU0"/>
+                                    <constraint firstAttribute="bottom" secondItem="SN5-Is-irG" secondAttribute="bottom" constant="16" id="C2Y-LO-QSo"/>
+                                    <constraint firstAttribute="height" constant="80" id="gZ1-bc-nVP"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="lbE-Kb-ZDe"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="lbE-Kb-ZDe" firstAttribute="trailing" secondItem="gNF-yx-lG4" secondAttribute="trailing" id="4aL-tj-Ken"/>
+                            <constraint firstItem="Thv-Eh-vTh" firstAttribute="top" secondItem="gNF-yx-lG4" secondAttribute="bottom" id="BXn-bg-fHn"/>
+                            <constraint firstItem="gNF-yx-lG4" firstAttribute="leading" secondItem="lbE-Kb-ZDe" secondAttribute="leading" id="E68-D6-686"/>
+                            <constraint firstItem="lbE-Kb-ZDe" firstAttribute="bottom" secondItem="Thv-Eh-vTh" secondAttribute="bottom" id="SXL-2u-uhx"/>
+                            <constraint firstItem="gNF-yx-lG4" firstAttribute="top" secondItem="lbE-Kb-ZDe" secondAttribute="top" id="g7j-JN-hDX"/>
+                            <constraint firstItem="Thv-Eh-vTh" firstAttribute="leading" secondItem="lbE-Kb-ZDe" secondAttribute="leading" id="lx4-Mi-SNG"/>
+                            <constraint firstItem="lbE-Kb-ZDe" firstAttribute="trailing" secondItem="Thv-Eh-vTh" secondAttribute="trailing" id="xRb-Fk-Z7i"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="tzO-eL-iIr"/>
+                    <connections>
+                        <outlet property="bottomContainerView" destination="Thv-Eh-vTh" id="IqX-0A-eXe"/>
+                        <outlet property="chatButton" destination="hcY-JY-FvR" id="aOu-3W-spB"/>
+                        <outlet property="tableView" destination="gNF-yx-lG4" id="aEk-bj-VBj"/>
+                        <outlet property="textView" destination="xVM-Xp-r6v" id="GxO-rE-dmx"/>
+                        <outlet property="textViewContainerView" destination="SN5-Is-irG" id="G6I-bz-hOS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EUM-zU-kAv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3478.6259541984732" y="2793.6619718309862"/>
+        </scene>
         <!--여행 검색-->
         <scene sceneID="xgk-sP-3PE">
             <objects>
@@ -924,11 +1013,14 @@
         <image name="magazine.fill" catalog="system" width="110" height="128"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="message.fill" catalog="system" width="128" height="114"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

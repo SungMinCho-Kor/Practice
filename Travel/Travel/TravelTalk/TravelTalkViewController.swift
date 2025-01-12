@@ -11,20 +11,35 @@ final class TravelTalkViewController: UIViewController {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
     
-    let list: [TravelTalkCollectionViewCellContent] = mockChatList.compactMap({ $0.travelTalkCollectionViewCellContent })
-    var showingList: [TravelTalkCollectionViewCellContent] = []
+    private var showingList: [ChatRoom] = mockChatList
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationDesign()
         searchBarDesign()
         collectionViewDesign()
         configureCollectionView()
-        configureShowingList()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
 }
 
 //MARK: Design
 extension TravelTalkViewController {
+    private func navigationDesign() {
+        let backButton = UIBarButtonItem(
+            title: nil,
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        backButton.tintColor = .black
+        navigationItem.backBarButtonItem = backButton
+    }
+    
     private func searchBarDesign() {
         searchBar.searchBarStyle = .minimal
         searchBar.searchTextField.placeholder = "채팅방 이름을 입력하세요"
@@ -65,10 +80,6 @@ extension TravelTalkViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
-    
-    private func configureShowingList() {
-        showingList = list
-    }
 }
 
 //MARK: CollectionView
@@ -91,9 +102,35 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
             print(#function, "TravelTalkCollectionViewCell wrong")
             return UICollectionViewCell()
         }
-        cell.configure(showingList[indexPath.row])
+        guard let cellContent = showingList[indexPath.row].travelTalkCollectionViewCellContent else {
+            print(#function, "CellContent wrong")
+            return cell
+        }
+        cell.configure(cellContent)
         
         return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        guard let chatViewController = storyboard?.instantiateViewController(identifier: ChatViewController.identifier) as? ChatViewController else {
+            print(#function, "ChatViewController wrong")
+            return
+        }
+        chatViewController.navigationItem.title = showingList[indexPath.row].chatroomName
+        chatViewController.list = showingList[indexPath.row].chatList
+        let navigationController = UINavigationController(rootViewController: chatViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        view.window?.layer.add(
+            CATransition().pushFromLeft(),
+            forKey: kCATransition
+        )
+        present(
+            navigationController,
+            animated: false
+        )
     }
 }
 
@@ -108,9 +145,9 @@ extension TravelTalkViewController: UISearchBarDelegate {
             with: ""
         )
         if text.isEmpty {
-            showingList = list
+            showingList = mockChatList
         } else {
-            showingList = list.filter({
+            showingList = mockChatList.filter({
                 $0.chatroomName
                     .lowercased()
                     .replacingOccurrences(
