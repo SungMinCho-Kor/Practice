@@ -14,11 +14,19 @@ final class ChatViewController: UIViewController {
     @IBOutlet private var textView: UITextView!
     @IBOutlet private var chatButton: UIButton!
     
-    var list: [Chat] = []
+    private var list: [Chat] {
+        guard let chatList = mockChatList.first(where: { $0.chatroomId == chatRoomID })?.chatList else {
+            print(#function, "ChatRoomID wrong")
+            return []
+        }
+        return chatList
+    }
+    var chatRoomID: Int = -1
     
     private let textViewPlaceholder = "메세지를 입력하세요"
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureChatList()
         navigationDesign()
         tableViewDesign()
         bottomContainerViewDesign()
@@ -30,16 +38,9 @@ final class ChatViewController: UIViewController {
         configureChatButton()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.scrollToRow(
-            at: IndexPath(
-                row: list.count - 1,
-                section: 0
-            ),
-            at: .bottom,
-            animated: false
-        )
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableViewScrollDown()
     }
 }
 
@@ -96,17 +97,29 @@ extension ChatViewController {
 
 //MARK: Configure
 extension ChatViewController {
+    private func configureChatList() {
+    }
+    
     private func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        let identifier = ChatTableViewCell.identifier
-        let xib = UINib(
-            nibName: identifier,
+        let chatIdentifier = ChatTableViewCell.identifier
+        let chatXIB = UINib(
+            nibName: chatIdentifier,
+            bundle: nil
+        )
+        let userChatIdentifier = UserChatTableViewCell.identifier
+        let userChatXIB = UINib(
+            nibName: userChatIdentifier,
             bundle: nil
         )
         tableView.register(
-            xib,
-            forCellReuseIdentifier: identifier
+            chatXIB,
+            forCellReuseIdentifier: chatIdentifier
+        )
+        tableView.register(
+            userChatXIB,
+            forCellReuseIdentifier: userChatIdentifier
         )
     }
     
@@ -128,10 +141,26 @@ extension ChatViewController {
 extension ChatViewController {
     private func chatButtonTapped(_ sender: UIButton) {
         //TODO: Chat 추가
-        
+        let todayDate = Date()
+        let dateFormatter = Chat.dateFormatter
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        guard let text = textView.text else {
+            print(#function, "Nil text in TextView")
+            return
+        }
+        mockChatList.first(where: {$0.chatroomId == chatRoomID})?
+            .chatList.append(
+            Chat(
+                user: .user,
+                date: dateFormatter.string(from: todayDate),
+                message: text
+            )
+        )
         textView.text = textViewPlaceholder
         textView.textColor = .lightGray
         chatButton.isEnabled = false
+        tableView.reloadData()
+        tableViewScrollDown()
         view.endEditing(true)
     }
     
@@ -181,8 +210,16 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         if list[indexPath.row].user == .user {
-            // TODO: userCell
-            return UITableViewCell()
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: UserChatTableViewCell.identifier,
+                for: indexPath
+            ) as? UserChatTableViewCell else {
+                print(#function, "UserChatTableViewCell Wrong")
+                return UITableViewCell()
+            }
+            cell.configure(list[indexPath.row])
+            return cell
+
         } else {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: ChatTableViewCell.identifier,
@@ -201,5 +238,16 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    private func tableViewScrollDown() {
+        tableView.scrollToRow(
+            at: IndexPath(
+                row: list.count - 1,
+                section: 0
+            ),
+            at: .bottom,
+            animated: false
+        )
     }
 }

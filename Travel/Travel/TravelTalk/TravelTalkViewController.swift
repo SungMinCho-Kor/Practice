@@ -21,6 +21,11 @@ final class TravelTalkViewController: UIViewController {
         configureCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.endEditing(true)
@@ -120,7 +125,8 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
             return
         }
         chatViewController.navigationItem.title = showingList[indexPath.row].chatroomName
-        chatViewController.list = showingList[indexPath.row].chatList
+        chatViewController.chatRoomID = showingList[indexPath.row].chatroomId
+//        chatViewController.list = showingList[indexPath.row].chatList
         let navigationController = UINavigationController(rootViewController: chatViewController)
         navigationController.modalPresentationStyle = .fullScreen
         view.window?.layer.add(
