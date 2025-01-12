@@ -1,5 +1,5 @@
 //
-//  TravelTalkCollectionViewCell.swift
+//  TravelTalkOneCollectionViewCell.swift
 //  Travel
 //
 //  Created by 조성민 on 1/10/25.
@@ -7,13 +7,13 @@
 
 import UIKit
 
-struct TravelTalkCollectionViewCellContent {
+struct TravelTalkOneCollectionViewCellContent {
     let chatroomImage: String
     let chatroomName: String
     let lastChat: Chat
 }
 
-final class TravelTalkCollectionViewCell: UICollectionViewCell {
+final class TravelTalkOneCollectionViewCell: UICollectionViewCell {
     @IBOutlet private var profileImageView: UIImageView!
     @IBOutlet private var nameLabel: UILabel!
     @IBOutlet private var latestMessageLabel: UILabel!
@@ -34,7 +34,7 @@ final class TravelTalkCollectionViewCell: UICollectionViewCell {
 }
 
 //MARK: Design
-extension TravelTalkCollectionViewCell {
+extension TravelTalkOneCollectionViewCell {
     private func profileImageViewDesign() {
         profileImageView.layer.borderWidth = 0.5
         profileImageView.layer.borderColor = UIColor.lightGray.cgColor
@@ -59,17 +59,17 @@ extension TravelTalkCollectionViewCell {
 }
 
 //MARK: Configure
-extension TravelTalkCollectionViewCell {
-    func configure(_ content: TravelTalkCollectionViewCellContent) {
+extension TravelTalkOneCollectionViewCell {
+    func configure(_ content: TravelTalkOneCollectionViewCellContent) {
         profileImageView.image = UIImage(named: content.chatroomImage) 
         nameLabel.text = content.chatroomName
         latestMessageLabel.text = content.lastChat.message
-        latestMessageTimeLabel.text = TravelTalkCollectionViewCell.convertDateFormat(date: content.lastChat.date)
+        latestMessageTimeLabel.text = TravelTalkOneCollectionViewCell.convertDateFormat(date: content.lastChat.date)
     }
 }
 
 //MARK: Type Property & Method
-extension TravelTalkCollectionViewCell {
+extension TravelTalkOneCollectionViewCell {
     static let dateFormatter = DateFormatter()
     static func convertDateFormat(date: String) -> String {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"

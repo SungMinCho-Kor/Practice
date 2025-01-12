@@ -8,8 +8,8 @@
 import UIKit
 
 final class TravelTalkViewController: UIViewController {
-    @IBOutlet var searchBar: UISearchBar!
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet private var searchBar: UISearchBar!
+    @IBOutlet private var collectionView: UICollectionView!
     
     private var showingList: [ChatRoom] = mockChatList
     
@@ -61,7 +61,7 @@ extension TravelTalkViewController {
 //MARK: Configure
 extension TravelTalkViewController {
     private func configureCollectionView() {
-        let firstIdentifier = TravelTalkCollectionViewCell.identifier
+        let firstIdentifier = TravelTalkOneCollectionViewCell.identifier
         let firstXIB = UINib(
             nibName: firstIdentifier,
             bundle: nil
@@ -120,14 +120,14 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
     ) -> UICollectionViewCell {
         if showingList[indexPath.row].chatroomImage.count == 1 {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TravelTalkCollectionViewCell.identifier,
+                withReuseIdentifier: TravelTalkOneCollectionViewCell.identifier,
                 for: indexPath
-            ) as? TravelTalkCollectionViewCell else {
-                print(#function, "TravelTalkCollectionViewCell wrong")
+            ) as? TravelTalkOneCollectionViewCell else {
+                print(#function, "TravelTalkOneCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
-            guard let cellContent = showingList[indexPath.row].travelTalkCollectionViewCellContent else {
-                print(#function, "CellContent wrong")
+            guard let cellContent = showingList[indexPath.row].travelTalkOneCollectionViewCellContent else {
+                print(#function, "travelTalkOneCollectionViewCellContent wrong")
                 return cell
             }
             cell.configure(cellContent)
@@ -138,11 +138,11 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
                 withReuseIdentifier: TravelTalkTwoCollectionViewCell.identifier,
                 for: indexPath
             ) as? TravelTalkTwoCollectionViewCell else {
-                print(#function, "TravelTalkCollectionViewCell wrong")
+                print(#function, "TravelTalkTwoCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
             guard let cellContent = showingList[indexPath.row].travelTalkTwoCollectionViewCellContent else {
-                print(#function, "CellContent wrong")
+                print(#function, "travelTalkTwoCollectionViewCellContent wrong")
                 return cell
             }
             cell.configure(cellContent)
@@ -153,11 +153,11 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
                 withReuseIdentifier: TravelTalkThreeCollectionViewCell.identifier,
                 for: indexPath
             ) as? TravelTalkThreeCollectionViewCell else {
-                print(#function, "TravelTalkCollectionViewCell wrong")
+                print(#function, "TravelTalkThreeCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
             guard let cellContent = showingList[indexPath.row].travelTalkThreeCollectionViewCellContent else {
-                print(#function, "CellContent wrong")
+                print(#function, "travelTalkThreeCollectionViewCellContent wrong")
                 return cell
             }
             cell.configure(cellContent)
@@ -168,11 +168,11 @@ extension TravelTalkViewController: UICollectionViewDelegate, UICollectionViewDa
                 withReuseIdentifier: TravelTalkFourCollectionViewCell.identifier,
                 for: indexPath
             ) as? TravelTalkFourCollectionViewCell else {
-                print(#function, "TravelTalkCollectionViewCell wrong")
+                print(#function, "TravelTalkFourCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
             guard let cellContent = showingList[indexPath.row].travelTalkFourCollectionViewCellContent else {
-                print(#function, "CellContent wrong")
+                print(#function, "travelTalkFourCollectionViewCellContent wrong")
                 return cell
             }
             cell.configure(cellContent)

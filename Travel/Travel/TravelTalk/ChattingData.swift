@@ -36,13 +36,13 @@ class ChatRoom {
 }
 
 extension ChatRoom {
-    var travelTalkCollectionViewCellContent: TravelTalkCollectionViewCellContent? {
+    var travelTalkOneCollectionViewCellContent: TravelTalkOneCollectionViewCellContent? {
         guard let chatroomImage = chatroomImage.first,
               let lastChat = chatList.last else {
             print(#function, "no chatroomImage")
             return nil
         }
-        return TravelTalkCollectionViewCellContent(
+        return TravelTalkOneCollectionViewCellContent(
             chatroomImage: chatroomImage,
             chatroomName: chatroomName,
             lastChat: lastChat

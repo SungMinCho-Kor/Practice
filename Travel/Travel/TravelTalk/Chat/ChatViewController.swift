@@ -22,14 +22,12 @@ final class ChatViewController: UIViewController {
         return chatList
     }
     var chatRoomID: Int = -1
-    
     private let textViewPlaceholder = "메세지를 입력하세요"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureChatList()
         navigationDesign()
         tableViewDesign()
-        bottomContainerViewDesign()
         textViewContainerViewDesign()
         textViewDesign()
         chatButtonDesign()
@@ -66,10 +64,6 @@ extension ChatViewController {
         tableView.separatorStyle = .none
     }
     
-    private func bottomContainerViewDesign() {
-        
-    }
-    
     private func textViewContainerViewDesign() {
         textViewContainerView.backgroundColor = .systemGray6
         textViewContainerView.layer.cornerRadius = 10
@@ -97,9 +91,6 @@ extension ChatViewController {
 
 //MARK: Configure
 extension ChatViewController {
-    private func configureChatList() {
-    }
-    
     private func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -140,7 +131,6 @@ extension ChatViewController {
 @objc
 extension ChatViewController {
     private func chatButtonTapped(_ sender: UIButton) {
-        //TODO: Chat 추가
         let todayDate = Date()
         let dateFormatter = Chat.dateFormatter
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -198,9 +188,6 @@ extension ChatViewController: UITextViewDelegate {
         return true
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-    }
-    
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         if textView.text.isEmpty {
             textView.textColor = .lightGray
@@ -233,7 +220,6 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(list[indexPath.row])
             return cell
-
         } else {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: ChatTableViewCell.identifier,
@@ -261,7 +247,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         view.endEditing(true)
     }
     
-    // TODO: Keyboard event에 대한 반응으로 수정
+    // TODO: Keyboard event 종료에 대한 반응으로 수정
     private func tableViewScrollDown(animated: Bool = true) {
         Task {
             try await Task.sleep(for: .milliseconds(5))
