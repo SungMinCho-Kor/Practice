@@ -9,14 +9,12 @@ import UIKit
 import SnapKit
 
 final class SignUpViewController: UIViewController {
-    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "wordmark")
         
         return imageView
     }()
-    
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "이메일 주소 또는 전화번호"
@@ -94,9 +92,8 @@ final class SignUpViewController: UIViewController {
         super.viewDidLoad()
         setView()
         setUI()
-        autoLayout()
+        setLayout()
     }
-    
 }
 
 //MARK: Design
@@ -119,7 +116,7 @@ extension SignUpViewController {
         ].forEach(view.addSubview)
     }
     
-    private func autoLayout() {
+    private func setLayout() {
         logoImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(80)
             make.centerX.equalToSuperview()

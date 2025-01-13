@@ -180,7 +180,9 @@ extension ChatViewController {
         textView.text = ""
         chatButton.isEnabled = false
         tableView.reloadData()
-        tableViewScrollDown(animated: true)
+        DispatchQueue.main.async { [self] in
+            tableViewScrollDown(animated: true)
+        }
     }
     
     private func dismissViewController(_ sender: UIBarButtonItem) {
@@ -303,7 +305,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     // TODO: Keyboard event 종료에 대한 반응으로 수정
     private func tableViewScrollDown(animated: Bool = true) {
         Task {
-            try await Task.sleep(for: .milliseconds(5))
+//            try await Task.sleep(for: .milliseconds(5))
             if nextSectionIndex.count >= 2 {
                 tableView.scrollToRow(
                     at: IndexPath(

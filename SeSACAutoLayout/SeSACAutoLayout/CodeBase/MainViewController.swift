@@ -106,7 +106,11 @@ extension MainViewController {
     }
     
     private func nPayButtonTapped(_ sender: UIButton) {
-        
+        let npayViewController = NPayViewController()
+        present(
+            npayViewController,
+            animated: true
+        )
     }
     
     private func searchButtonTapped(_ sender: UIButton) {

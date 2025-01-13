@@ -1,5 +1,5 @@
 //
-//  NPayViewController.swift
+//  NPay2ViewController.swift
 //  SeSACAutoLayout
 //
 //  Created by 조성민 on 12/31/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NPayViewController: UIViewController {
+class NPay2ViewController: UIViewController {
     
     @IBOutlet var segmentContainerView: UIView!
     @IBOutlet var segmentButtonList: [UIButton]!
