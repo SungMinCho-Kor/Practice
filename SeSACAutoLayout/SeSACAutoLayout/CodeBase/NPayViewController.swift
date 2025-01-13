@@ -209,15 +209,11 @@ extension NPayViewController {
         
         logoImageView.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(12)
-//            make.width.equalTo(60)
-//            make.height.equalTo(30)
         }
         
         toggleButton.snp.makeConstraints { make in
             make.leading.equalTo(logoImageView.snp.trailing)
             make.centerY.equalTo(logoImageView)
-//            make.width.equalTo(28)
-//            make.height.equalTo(14)
         }
         
         closeButton.snp.makeConstraints { make in
@@ -227,7 +223,6 @@ extension NPayViewController {
         lockImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(60)
-//            make.size.equalTo(80)
         }
         
         mainLabel.snp.makeConstraints { make in

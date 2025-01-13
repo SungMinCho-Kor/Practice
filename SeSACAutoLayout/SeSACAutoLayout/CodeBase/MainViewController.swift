@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 final class MainViewController: UIViewController {
-    
     private let signUpButton = UIButton()
     private let nPayButton = UIButton()
     private let searchButton = UIButton()
@@ -35,7 +34,6 @@ final class MainViewController: UIViewController {
             for: .touchUpInside
         )
     }
-    
 }
 
 //MARK: Design
@@ -114,6 +112,10 @@ extension MainViewController {
     }
     
     private func searchButtonTapped(_ sender: UIButton) {
-        
+        let searchMovieViewController = SearchMovieViewController()
+        present(
+            searchMovieViewController,
+            animated: true
+        )
     }
 }
