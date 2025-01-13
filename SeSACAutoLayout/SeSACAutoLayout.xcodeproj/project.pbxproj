@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		596F1FB12D34F0BB00FE0B54 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 596F1FB02D34F0BB00FE0B54 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		59A1F4532D2420DC000905DC /* SeSACAutoLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeSACAutoLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				596F1FB12D34F0BB00FE0B54 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = SeSACAutoLayout;
 			packageProductDependencies = (
+				596F1FB02D34F0BB00FE0B54 /* SnapKit */,
 			);
 			productName = SeSACAutoLayout;
 			productReference = 59A1F4532D2420DC000905DC /* SeSACAutoLayout.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 59A1F44A2D2420DC000905DC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				596F1FAF2D34F0BB00FE0B54 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 59A1F4542D2420DC000905DC /* Products */;
 			projectDirPath = "";
@@ -345,6 +354,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		596F1FAF2D34F0BB00FE0B54 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		596F1FB02D34F0BB00FE0B54 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 596F1FAF2D34F0BB00FE0B54 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 59A1F44B2D2420DC000905DC /* Project object */;
 }
