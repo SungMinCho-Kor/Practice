@@ -14,14 +14,37 @@ final class ChatViewController: UIViewController {
     @IBOutlet private var textView: UITextView!
     @IBOutlet private var chatButton: UIButton!
     
-    private var list: [Chat] {
-        guard let chatList = mockChatList.first(where: { $0.chatroomId == chatRoomID })?.chatList else {
+    private lazy var list: [Chat] = {
+        guard let chatList = mockChatList.first(where: { $0.chatroomId == self.chatRoomID })?.chatList else {
             print(#function, "ChatRoomID wrong")
             return []
         }
         return chatList
-    }
+    }()
     var chatRoomID: Int = -1
+    private var nextSectionIndex: [Int] {
+        var array: [Int] = [0]
+        for idx in 0..<list.count-1 {
+            let calendar = Calendar.autoupdatingCurrent
+            let dateFormatter = Chat.dateFormatter
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            if let date = dateFormatter.date(from: list[idx].date),
+               let nextDate = dateFormatter.date(from: list[idx+1].date) {
+                let dateComponents = calendar.dateComponents(
+                    [.year, .month, .day],
+                    from: date
+                )
+                let nextDateComponents = calendar.dateComponents(
+                    [.year, .month, .day],
+                    from: nextDate
+                )
+                if dateComponents != nextDateComponents {
+                    array.append(idx + 1)
+                }
+            }
+        }
+        return array
+    }
     private let textViewPlaceholder = "메세지를 입력하세요"
     
     override func viewDidLoad() {
@@ -62,6 +85,7 @@ extension ChatViewController {
     
     private func tableViewDesign() {
         tableView.separatorStyle = .none
+        tableView.sectionHeaderHeight = 40
     }
     
     private func textViewContainerViewDesign() {
@@ -146,6 +170,13 @@ extension ChatViewController {
                 message: text
             )
         )
+        list.append(
+            Chat(
+                user: .user,
+                date: dateFormatter.string(from: todayDate),
+                message: text
+            )
+        )
         textView.text = ""
         chatButton.isEnabled = false
         tableView.reloadData()
@@ -201,16 +232,38 @@ extension ChatViewController: UITextViewDelegate {
 extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(
         _ tableView: UITableView,
+        titleForHeaderInSection section: Int
+    ) -> String? {
+        let dateFormatter = Chat.dateFormatter
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        guard let date = dateFormatter.date(from: list[nextSectionIndex[section]].date) else {
+            print(#function, "wrong date header")
+            return ""
+        }
+        dateFormatter.dateFormat = "yyyy년 M월 d일"
+        return dateFormatter.string(from: date)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return nextSectionIndex.count
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return list.count
+        if section == nextSectionIndex.count - 1 {
+            return list.count - nextSectionIndex[section]
+        } else {
+            return nextSectionIndex[section + 1] - nextSectionIndex[section]
+        }
     }
     
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        if list[indexPath.row].user == .user {
+        if list[nextSectionIndex[indexPath.section] + indexPath.row].user == .user {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: UserChatTableViewCell.identifier,
                 for: indexPath
@@ -218,7 +271,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
                 print(#function, "UserChatTableViewCell Wrong")
                 return UITableViewCell()
             }
-            cell.configure(list[indexPath.row])
+            cell.configure(list[nextSectionIndex[indexPath.section] + indexPath.row])
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(
@@ -228,7 +281,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
                 print(#function, "ChatTableViewCell Wrong")
                 return UITableViewCell()
             }
-            cell.configure(list[indexPath.row])
+            cell.configure(list[nextSectionIndex[indexPath.section] + indexPath.row])
             return cell
         }
     }
@@ -251,14 +304,25 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     private func tableViewScrollDown(animated: Bool = true) {
         Task {
             try await Task.sleep(for: .milliseconds(5))
-            tableView.scrollToRow(
-                at: IndexPath(
-                    row: list.count - 1,
-                    section: 0
-                ),
-                at: .bottom,
-                animated: animated
-            )
+            if nextSectionIndex.count >= 2 {
+                tableView.scrollToRow(
+                    at: IndexPath(
+                        row: list.count - nextSectionIndex[nextSectionIndex.count - 1] - 1,
+                        section: nextSectionIndex.count - 1
+                    ),
+                    at: .bottom,
+                    animated: animated
+                )
+            } else if nextSectionIndex.count == 1  {
+                tableView.scrollToRow(
+                    at: IndexPath(
+                        row: list.count - 1,
+                        section: 0
+                    ),
+                    at: .bottom,
+                    animated: animated
+                )
+            }
         }
     }
 }
