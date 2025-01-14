@@ -138,7 +138,11 @@ extension SearchMovieViewController: UITableViewDataSource, UITableViewDelegate 
 //MARK: Data
 extension SearchMovieViewController {
     private func fetchMoview() {
-        let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=20120101"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        let yesterday = Date().addingTimeInterval(-86400)
+        let yesterdayString = formatter.string(from: yesterday)
+        let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=\(yesterdayString)"
         AF.request(url, method: .get)
             .responseString { response in
                 print(response)
