@@ -9,10 +9,20 @@ import UIKit
 import SnapKit
 import Alamofire
 
+enum DateStyle: String {
+    case searchMovieDate = "yyyyMMdd"
+    case movieCell = "yyyy-MM-dd"
+}
+
+extension DateFormatter {
+    func setDateStyle(_ style: DateStyle) {
+        self.dateFormat = style.rawValue    }
+}
+
 final class SearchMovieViewController: UIViewController {
     
+    static let dateFormatter = DateFormatter()
     private var movieList: [Movie] = []
-    
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .profileBackground)
@@ -27,7 +37,7 @@ final class SearchMovieViewController: UIViewController {
     }()
     private let searchTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "검색어를 입력하세요"
+        textField.placeholder = "yyyyMMdd 형식의 날짜를 입력하세요"
         textField.backgroundColor = .clear
         textField.borderStyle = .none
         return textField
@@ -37,11 +47,16 @@ final class SearchMovieViewController: UIViewController {
         view.backgroundColor = .white
         return view
     }()
-    private let searchButton: UIButton = {
+    private lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setTitle("검색", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
+        button.addTarget(
+            self,
+            action: #selector(searchButtonTapped),
+            for: .touchUpInside
+        )
         return button
     }()
     private lazy var movieTableView: UITableView = {
@@ -57,10 +72,24 @@ final class SearchMovieViewController: UIViewController {
         tableView.delegate = self
         return tableView
     }()
+    private lazy var wrongSearchAlert: UIAlertController = {
+        let alert = UIAlertController(
+            title: nil,
+            message: "형식에 맞는 검색어를 입력하세요",
+            preferredStyle: .alert
+        )
+        alert.addAction(
+            UIAlertAction(
+                title: "확인",
+                style: .default
+            )
+        )
+        return alert
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchMoview()
+        fetchMoview(date: Date().addingTimeInterval(-86400))
         setUI()
         setLayout()
     }
@@ -116,6 +145,23 @@ extension SearchMovieViewController {
     }
 }
 
+//MARK: Objective-C
+@objc
+extension SearchMovieViewController {
+    private func searchButtonTapped(_ sender: UIButton) {
+        Self.dateFormatter.setDateStyle(.searchMovieDate)
+        guard let text = searchTextField.text, !text.isEmpty,
+              let searchDate = Self.dateFormatter.date(from: text) else {
+            searchTextField.text = ""
+            print("searchTextField.text DateFormat wrong")
+            present(wrongSearchAlert, animated: true)
+            return
+        }
+        fetchMoview(date: searchDate)
+        view.endEditing(true)
+    }
+}
+
 //MARK: TableView
 extension SearchMovieViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -137,12 +183,10 @@ extension SearchMovieViewController: UITableViewDataSource, UITableViewDelegate 
 
 //MARK: Data
 extension SearchMovieViewController {
-    private func fetchMoview() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd"
-        let yesterday = Date().addingTimeInterval(-86400)
-        let yesterdayString = formatter.string(from: yesterday)
-        let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=\(yesterdayString)"
+    private func fetchMoview(date: Date) {
+        Self.dateFormatter.setDateStyle(.searchMovieDate)
+        let dateString = Self.dateFormatter.string(from: date)
+        let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=\(dateString)"
         AF.request(url, method: .get)
             .responseString { response in
                 print(response)
