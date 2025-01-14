@@ -73,14 +73,19 @@ extension SearchMovieTableViewCell {
         movieTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(indexLabel.snp.trailing).offset(20)
             make.centerY.equalToSuperview()
-            make.trailing.greaterThanOrEqualTo(dateLabel.snp.leading).offset(-12)
+            make.trailing.equalTo(dateLabel.snp.leading)
         }
         
         dateLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(16)
             make.centerY.equalTo(safeAreaLayoutGuide)
         }
-        dateLabel.setContentHuggingPriority(
+        
+        movieTitleLabel.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
+        dateLabel.setContentCompressionResistancePriority(
             .defaultHigh,
             for: .horizontal
         )
@@ -91,7 +96,7 @@ extension SearchMovieTableViewCell {
 extension SearchMovieTableViewCell {
     func configure(_ content: Movie) {
         indexLabel.text = "\(content.rank)"
-        movieTitleLabel.text = content.title
-        dateLabel.text = content.date
+        movieTitleLabel.text = content.movieNm
+        dateLabel.text = content.openDt
     }
 }

@@ -6,8 +6,13 @@
 //
 
 import UIKit
+import SnapKit
+import Alamofire
 
 final class SearchMovieViewController: UIViewController {
+    
+    private var movieList: [Movie] = []
+    
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(resource: .profileBackground)
@@ -55,6 +60,7 @@ final class SearchMovieViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchMoview()
         setUI()
         setLayout()
     }
@@ -113,7 +119,7 @@ extension SearchMovieViewController {
 //MARK: TableView
 extension SearchMovieViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Movie.mockList.count
+        return movieList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -124,8 +130,27 @@ extension SearchMovieViewController: UITableViewDataSource, UITableViewDelegate 
             print(#function, "SearchMovieTableViewCell wrong")
             return UITableViewCell()
         }
-        cell.configure(Movie.mockList[indexPath.row])
+        cell.configure(movieList[indexPath.row])
         return cell
     }
 }
 
+//MARK: Data
+extension SearchMovieViewController {
+    private func fetchMoview() {
+        let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=20120101"
+        AF.request(url, method: .get)
+            .responseString { response in
+                print(response)
+            }
+            .responseDecodable(of: MovieResponse.self) { response in
+                switch response.result {
+                case .success(let value):
+                    self.movieList = value.boxOfficeResult.dailyBoxOfficeList
+                    self.movieTableView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+    }
+}
