@@ -12,7 +12,6 @@ import Alamofire
 final class ViewController: UIViewController, ViewConfiguration {
     private let dateFormatter = DateFormatter()
     private var maxRound: Int = 1
-    
     private let pickerView = UIPickerView()
     private let lottoTextField = UITextField()
     private let announceLabel = UILabel()
@@ -37,7 +36,7 @@ final class ViewController: UIViewController, ViewConfiguration {
         maxRound = calculateLastSaturdayIteration()
     }
     
-    func calculateLastSaturdayIteration() -> Int {
+    private func calculateLastSaturdayIteration() -> Int {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         guard let firstRoundDate = dateFormatter.date(from: "2002-12-07") else {
             return 1
