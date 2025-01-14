@@ -16,7 +16,8 @@ enum DateStyle: String {
 
 extension DateFormatter {
     func setDateStyle(_ style: DateStyle) {
-        self.dateFormat = style.rawValue    }
+        self.dateFormat = style.rawValue
+    }
 }
 
 final class SearchMovieViewController: UIViewController {
