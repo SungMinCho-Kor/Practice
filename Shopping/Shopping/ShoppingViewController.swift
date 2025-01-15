@@ -73,11 +73,6 @@ extension ShoppingViewController: ViewConfiguration {
         )
     }
     
-    @objc
-    private func tapGestureTapped(_ sender: UITapGestureRecognizer) {
-        view.endEditing(true)
-    }
-    
     private func configureNavigation() {
         navigationItem.title = "도봉러의 쇼핑쇼핑"
         let backButton = UIBarButtonItem(
@@ -91,6 +86,7 @@ extension ShoppingViewController: ViewConfiguration {
     }
 }
 
+//MARK: SearchBar
 extension ShoppingViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -103,5 +99,13 @@ extension ShoppingViewController: UISearchBarDelegate {
             ShoppingDetailViewController(searchText: text),
             animated: true
         )
+    }
+}
+
+//MARK: Objective-C
+@objc
+extension ShoppingViewController {
+    private func tapGestureTapped(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
 }

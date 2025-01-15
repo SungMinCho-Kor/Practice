@@ -8,6 +8,12 @@
 import UIKit
 
 final class ShoppingFilterCollectionViewCell: UICollectionViewCell {
+    override var isSelected: Bool {
+        didSet {
+            filterLabel.textColor = isSelected ? .black : .white
+            backgroundColor = isSelected ? .white : .black
+        }
+    }
     static let identifier = "ShoppingFilterCollectionViewCell"
     private let filterLabel = UILabel()
     override init(frame: CGRect) {
@@ -20,12 +26,9 @@ final class ShoppingFilterCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func configure(title: String) {
-        filterLabel.text = title
-    }
 }
 
+//MARK: Design
 extension ShoppingFilterCollectionViewCell: ViewConfiguration {
     func configureHierarchy() {
         contentView.addSubview(filterLabel)
@@ -46,11 +49,11 @@ extension ShoppingFilterCollectionViewCell: ViewConfiguration {
         layer.borderWidth = 0.8
         layer.borderColor = UIColor.white.cgColor
     }
-    
-    override var isSelected: Bool {
-        didSet {
-            filterLabel.textColor = isSelected ? .black : .white
-            backgroundColor = isSelected ? .white : .black
-        }
+}
+
+//MARK: Configure
+extension ShoppingFilterCollectionViewCell {
+    func configure(title: String) {
+        filterLabel.text = title
     }
 }

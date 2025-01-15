@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SnapKit
 import Kingfisher
 
 final class ShoppingDetailCollectionViewCell: UICollectionViewCell {
@@ -28,6 +28,7 @@ final class ShoppingDetailCollectionViewCell: UICollectionViewCell {
     }
 }
 
+//MARK: Design
 extension ShoppingDetailCollectionViewCell: ViewConfiguration {
     func configureHierarchy() {
         [
@@ -79,6 +80,7 @@ extension ShoppingDetailCollectionViewCell: ViewConfiguration {
     }
 }
 
+//MARK: Configure
 extension ShoppingDetailCollectionViewCell {
     func configure(_ content: ShoppingItem) {
         thumbnailImageView.kf.setImage(with: URL(string: content.image))

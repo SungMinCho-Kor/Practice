@@ -129,7 +129,6 @@ extension ShoppingDetailViewController: ViewConfiguration {
                     subitems: [item, item]
                 )
                 group.interItemSpacing = NSCollectionLayoutSpacing.fixed(itemSpacing)
-                
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(
                     top: sectionInset,
@@ -225,7 +224,8 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         _ collectionView: UICollectionView,
         shouldSelectItemAt indexPath: IndexPath
     ) -> Bool {
-        if indexPath.section == 0, indexPath != collectionView.indexPathsForSelectedItems?.first {
+        if indexPath.section == 0,
+            indexPath != collectionView.indexPathsForSelectedItems?.first {
             return true
         } else {
             return false
