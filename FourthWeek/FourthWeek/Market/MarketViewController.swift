@@ -7,6 +7,19 @@
 
 import UIKit
 import SnapKit
+import Alamofire
+
+struct Market: Decodable {
+    let market: String
+    let korean: String
+    let english: String
+    
+    enum CodingKeys: String, CodingKey {
+        case market
+        case korean = "korean_name"
+        case english = "english_name"
+    }
+}
 
 class MarketViewController: UIViewController {
  
@@ -19,7 +32,7 @@ class MarketViewController: UIViewController {
 
         configureView()
         configureTableView()
-
+        callRequest()
     }
     
     func configureTableView() {
@@ -40,6 +53,19 @@ class MarketViewController: UIViewController {
         view.backgroundColor = .white
     }
 
+    private func callRequest() {
+        let url = "https://api.upbit.com/v1/market/all"
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: [Market].self) { response in
+                switch response.result {
+                case .success(let value):
+                    dump(value)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+    }
 }
 
 extension MarketViewController: UITableViewDelegate, UITableViewDataSource {

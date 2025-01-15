@@ -83,6 +83,7 @@ extension KakaoBookSearchViewController: UISearchBarDelegate {
 //            .responseString { value in
 //                dump(value)
 //            }
+            .validate()
             .responseDecodable(of: Book.self) { response in
                 print(response.response?.statusCode)
                 switch response.result {
