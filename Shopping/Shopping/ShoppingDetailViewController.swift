@@ -9,43 +9,11 @@ import UIKit
 import SnapKit
 import Alamofire
 
-enum ShoppingDetailFilter: Int, CaseIterable {
-    case accuracy
-    case date
-    case highPrice
-    case lowPrice
-    
-    var buttonTitle: String {
-        switch self {
-        case .accuracy:
-            return "정확도"
-        case .date:
-            return "날짜순"
-        case .highPrice:
-            return "가격높은순"
-        case .lowPrice:
-            return "가격낮은순"
-        }
-    }
-}
-
 final class ShoppingDetailViewController: UIViewController {
-    
     private let searchText: String
-    private var filterState = ShoppingDetailFilter.accuracy {
-        didSet {
-            let prevButton = filterButtons[oldValue.rawValue]
-            let nextButton = filterButtons[filterState.rawValue]
-            prevButton.configuration?.baseForegroundColor = .white
-            prevButton.configuration?.baseBackgroundColor = .black
-            nextButton.configuration?.baseForegroundColor = .black
-            nextButton.configuration?.baseBackgroundColor = .white
-        }
-    }
+    private var list: [ShoppingItem] = []
     
     private let resultCountLabel = UILabel()
-    private let filterButtonStackView = UIStackView()
-    private var filterButtons: [UIButton] = []
     private lazy var shoppingCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout()
@@ -66,39 +34,20 @@ final class ShoppingDetailViewController: UIViewController {
         configureLayout()
         configureViews()
         configureNavigation()
-        fetchShoppingList()
+        fetchShoppingList(filter: .accuracy)
     }
 }
 
+//MARK: Design
 extension ShoppingDetailViewController: ViewConfiguration {
     func configureHierarchy() {
         [
             resultCountLabel,
-            filterButtonStackView,
             shoppingCollectionView
         ].forEach(view.addSubview)
         
-        ShoppingDetailFilter.allCases.forEach { filter in
-            var configuration = UIButton.Configuration.filled()
-            configuration.title = filter.buttonTitle
-            configuration.baseBackgroundColor = .black
-            configuration.baseForegroundColor = .white
-            configuration.titlePadding = .zero
-            let button = UIButton(configuration: configuration)
-            button.layer.borderWidth = 0.5
-            button.layer.cornerRadius = 8
-            button.layer.borderColor = UIColor.white.cgColor
-            button.tag = filter.rawValue
-            button.addTarget(
-                self,
-                action: #selector(filterButtonTapped),
-                for: .touchUpInside
-            )
-            filterButtons.append(button)
-            filterButtonStackView.addArrangedSubview(button)
-        }
-        filterButtons[0].configuration?.baseForegroundColor = .black
-        filterButtons[0].configuration?.baseBackgroundColor = .white
+        shoppingCollectionView.delegate = self
+        shoppingCollectionView.dataSource = self
     }
     
     func configureLayout() {
@@ -106,13 +55,8 @@ extension ShoppingDetailViewController: ViewConfiguration {
             make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
         
-        filterButtonStackView.snp.makeConstraints { make in
-            make.top.equalTo(resultCountLabel.snp.bottom)
-            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).inset(16)
-        }
-        
         shoppingCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(filterButtonStackView.snp.bottom).offset(8)
+            make.top.equalTo(resultCountLabel.snp.bottom).offset(8)
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -120,11 +64,22 @@ extension ShoppingDetailViewController: ViewConfiguration {
     func configureViews() {
         view.backgroundColor = .black
         
-        resultCountLabel.font = .systemFont(ofSize: 12)
-        resultCountLabel.textColor = .green
+        resultCountLabel.font = .systemFont(ofSize: 14)
+        resultCountLabel.textColor = .systemGreen
         
-        filterButtonStackView.spacing = 1
-        filterButtonStackView.distribution = .equalSpacing
+        shoppingCollectionView.register(
+            ShoppingDetailCollectionViewCell.self,
+            forCellWithReuseIdentifier: ShoppingDetailCollectionViewCell.identifier
+        )
+        shoppingCollectionView.register(
+            ShoppingFilterCollectionViewCell.self,
+            forCellWithReuseIdentifier: ShoppingFilterCollectionViewCell.identifier
+        )
+        shoppingCollectionView.selectItem(
+            at: IndexPath(item: 0, section: 0),
+            animated: false,
+            scrollPosition: .left
+        )
     }
     
     private func configureNavigation() {
@@ -132,40 +87,148 @@ extension ShoppingDetailViewController: ViewConfiguration {
     }
     
     private func collectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-              let window = sceneDelegate.window else {
-            print(#function, "SceneDelegate Wrong")
-            return layout
+        return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
+            if sectionIndex == 0 {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(100),
+                    heightDimension: .estimated(44)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(100),
+                    heightDimension: .estimated(44)
+                )
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 10
+                section.orthogonalScrollingBehavior = .continuous
+                return section
+            } else {
+                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
+                      let window = sceneDelegate.window else {
+                    print(#function, "SceneDelegate Wrong")
+                    return nil
+                }
+                let sectionInset: CGFloat = 10
+                let itemSpacing: CGFloat = 12
+                let width = (window.bounds.width - sectionInset * 2 - itemSpacing) / 2
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(width),
+                    heightDimension: .absolute(width + 100)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(window.bounds.width - sectionInset * 2),
+                    heightDimension: .absolute(width + 100)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item, item]
+                )
+                group.interItemSpacing = NSCollectionLayoutSpacing.fixed(itemSpacing)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: sectionInset,
+                    leading: sectionInset,
+                    bottom: sectionInset,
+                    trailing: sectionInset
+                )
+                section.interGroupSpacing = 10
+                return section
+            }
         }
-        let sectionInset: CGFloat = 10
-        let itemSpacing: CGFloat = 12
-        let width = (window.bounds.width - sectionInset * 2 - itemSpacing) / 2
-        layout.itemSize = CGSize(width: width, height: width + 90)
-        layout.minimumLineSpacing = itemSpacing
-        layout.minimumInteritemSpacing = itemSpacing
-        layout.sectionInset = UIEdgeInsets(
-            top: sectionInset,
-            left: sectionInset,
-            bottom: sectionInset,
-            right: sectionInset
-        )
-        return layout
     }
 }
 
+// MARK: API
 extension ShoppingDetailViewController {
-    private func fetchShoppingList() {
-        print("Fetch \(filterState.buttonTitle)")
+    private func fetchShoppingList(filter: ShoppingDetailFilter) {
+        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchText)&display=100&sort=\(filter.query)"
+        let header = HTTPHeaders([
+            "X-Naver-Client-Id": APIKey.naverClientID,
+            "X-Naver-Client-Secret": APIKey.naverSecretKey
+        ])
+        AF.request(url, method: .get, headers: header)
+            .validate()
+            .responseDecodable(of: ShoppingItemList.self) { response in
+                switch response.result {
+                case .success(let list):
+                    self.list = list.items
+                    self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
+                    
+                    self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
+                case .failure(let error):
+                    dump(error)
+                }
+            }
+    }
+}
+
+//MAKR: CollectionView
+extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
     }
     
-    @objc
-    private func filterButtonTapped(_ sender: UIButton) {
-        let nextState = ShoppingDetailFilter.allCases[sender.tag]
-        if filterState == nextState {
-            return
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+        if section == 0 {
+            return ShoppingDetailFilter.allCases.count
+        } else {
+            return list.count
         }
-        filterState = nextState
-        fetchShoppingList()
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        if indexPath.section == 0 {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ShoppingFilterCollectionViewCell.identifier,
+                for: indexPath
+            ) as? ShoppingFilterCollectionViewCell else {
+                print(#function, "ShoppingFilterCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            cell.configure(title: ShoppingDetailFilter.allCases[indexPath.row].buttonTitle)
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ShoppingDetailCollectionViewCell.identifier,
+                for: indexPath
+            ) as? ShoppingDetailCollectionViewCell else {
+                print(#function, "ShoppingDetailCollectionViewCell wrong")
+                return UICollectionViewCell()
+            }
+            cell.configure(list[indexPath.row])
+            return cell
+        }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        if indexPath.section == 0 {
+            fetchShoppingList(filter: ShoppingDetailFilter.allCases[indexPath.row])
+        }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        shouldSelectItemAt indexPath: IndexPath
+    ) -> Bool {
+        if indexPath.section == 0, indexPath != collectionView.indexPathsForSelectedItems?.first {
+            return true
+        } else {
+            return false
+        }
     }
 }

@@ -32,6 +32,10 @@ final class SearchMovieTableViewCell: UITableViewCell {
             .defaultLow,
             for: .horizontal
         )
+//        label.setContentHuggingPriority(
+//            .defaultLow,
+//            for: .horizontal
+//        )
         return label
     }()
     private let dateLabel: UILabel = {
@@ -41,6 +45,10 @@ final class SearchMovieTableViewCell: UITableViewCell {
             .defaultHigh,
             for: .horizontal
         )
+//        label.setContentHuggingPriority(
+//            .defaultHigh,
+//            for: .horizontal
+//        )
         return label
     }()
     
