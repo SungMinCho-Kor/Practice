@@ -80,6 +80,14 @@ extension ShoppingViewController: ViewConfiguration {
     
     private func configureNavigation() {
         navigationItem.title = "도봉러의 쇼핑쇼핑"
+        let backButton = UIBarButtonItem(
+            title: "",
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        backButton.tintColor = .white
+        navigationItem.backBarButtonItem = backButton
     }
 }
 
@@ -91,6 +99,9 @@ extension ShoppingViewController: UISearchBarDelegate {
             return
         }
         view.endEditing(true)
-        print("다음 화면으로")
+        navigationController?.pushViewController(
+            ShoppingDetailViewController(searchText: text),
+            animated: true
+        )
     }
 }
