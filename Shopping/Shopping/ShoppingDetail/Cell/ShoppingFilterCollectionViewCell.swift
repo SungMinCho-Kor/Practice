@@ -7,41 +7,27 @@
 
 import UIKit
 
-final class ShoppingFilterCollectionViewCell: UICollectionViewCell {
+final class ShoppingFilterCollectionViewCell: BaseCollectionViewCell {
     override var isSelected: Bool {
         didSet {
             filterLabel.textColor = isSelected ? .black : .white
             backgroundColor = isSelected ? .white : .black
         }
     }
-    static let identifier = "ShoppingFilterCollectionViewCell"
     private let filterLabel = UILabel()
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configureHierarchy()
-        configureLayout()
-        configureViews()
-    }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-//MARK: Design
-extension ShoppingFilterCollectionViewCell {
-    func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(filterLabel)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         filterLabel.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview().inset(8)
             make.horizontalEdges.equalToSuperview().inset(12)
         }
     }
     
-    func configureViews() {
+    override func configureViews() {
         filterLabel.textColor = .white
         backgroundColor = .black
         layer.cornerRadius = 8

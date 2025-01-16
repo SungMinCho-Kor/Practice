@@ -9,28 +9,13 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-final class ShoppingDetailCollectionViewCell: UICollectionViewCell {
-    static let identifier = "ShoppingDetailCollectionViewCell"
+final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
     private let thumbnailImageView = UIImageView()
     private let mallLabel = UILabel()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configureHierarchy()
-        configureLayout()
-        configureViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-//MARK: Design
-extension ShoppingDetailCollectionViewCell {
-    func configureHierarchy() {
+    override func configureHierarchy() {
         [
             thumbnailImageView,
             mallLabel,
@@ -39,7 +24,7 @@ extension ShoppingDetailCollectionViewCell {
         ].forEach(contentView.addSubview)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         thumbnailImageView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview()
             make.height.equalTo(thumbnailImageView.snp.width)
@@ -61,7 +46,7 @@ extension ShoppingDetailCollectionViewCell {
         }
     }
     
-    func configureViews() {
+    override func configureViews() {
         thumbnailImageView.backgroundColor = .white
         thumbnailImageView.layer.cornerRadius = 10
         thumbnailImageView.clipsToBounds = true
