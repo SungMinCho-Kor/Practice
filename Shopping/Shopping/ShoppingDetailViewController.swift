@@ -11,10 +11,7 @@ import Alamofire
 import Kingfisher
 
 final class ShoppingDetailViewController: UIViewController {
-    private let searchText: String
-    private var list: [ShoppingItem] = []
-    private var isEnd: Bool = false
-    private var currentFilter = ShoppingDetailFilter.accuracy
+    private var state: ShoppingDetailState
     private let resultCountLabel = UILabel()
     private lazy var shoppingCollectionView = UICollectionView(
         frame: .zero,
@@ -22,7 +19,7 @@ final class ShoppingDetailViewController: UIViewController {
     )
     
     init(searchText: String) {
-        self.searchText = searchText
+        self.state = ShoppingDetailState(searchText: searchText)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,7 +33,7 @@ final class ShoppingDetailViewController: UIViewController {
         configureLayout()
         configureViews()
         configureNavigation()
-        fetchShoppingList(filter: currentFilter, start: 1)
+        fetchShoppingList(filter: state.currentFilter, start: 1)
     }
 }
 
@@ -86,7 +83,7 @@ extension ShoppingDetailViewController: ViewConfiguration {
     }
     
     private func configureNavigation() {
-        navigationItem.title = searchText
+        navigationItem.title = state.searchText
     }
     
     private func collectionViewLayout() -> UICollectionViewLayout {
@@ -150,10 +147,10 @@ extension ShoppingDetailViewController: ViewConfiguration {
 extension ShoppingDetailViewController {
     private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
         if start == 1 {
-            isEnd = false
+            state.isEnd = false
         }
-        if !isEnd {
-            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchText)&display=30&sort=\(filter.query)&start=\(start)"
+        if !state.isEnd {
+            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(state.searchText)&display=30&sort=\(filter.query)&start=\(start)"
             let header = HTTPHeaders([
                 "X-Naver-Client-Id": APIKey.naverClientID,
                 "X-Naver-Client-Secret": APIKey.naverSecretKey
@@ -164,11 +161,11 @@ extension ShoppingDetailViewController {
                     switch response.result {
                     case .success(let list):
                         if start != 1 {
-                            self.list.append(contentsOf: list.items)
+                            self.state.list.append(contentsOf: list.items)
                         } else {
-                            self.list = list.items
+                            self.state.list = list.items
                         }
-                        self.isEnd = list.total < start + 30
+                        self.state.isEnd = list.total < start + 30
                         self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
                         self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
                         if start == 1 {
@@ -199,7 +196,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         if section == 0 {
             return ShoppingDetailFilter.allCases.count
         } else {
-            return list.count
+            return state.list.count
         }
     }
     
@@ -225,7 +222,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
                 print(#function, "ShoppingDetailCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
-            cell.configure(list[indexPath.row])
+            cell.configure(state.list[indexPath.row])
             return cell
         }
     }
@@ -235,8 +232,8 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         didSelectItemAt indexPath: IndexPath
     ) {
         if indexPath.section == 0 {
-            currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
-            fetchShoppingList(filter: currentFilter, start: 1)
+            state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
+            fetchShoppingList(filter: state.currentFilter, start: 1)
         }
     }
     
@@ -260,8 +257,8 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
     ) {
         if let lastIndexPath = indexPaths.last,
            lastIndexPath.section == 1,
-           (list.count-10...list.count-1).contains(lastIndexPath.row) {
-            fetchShoppingList(filter: currentFilter, start: list.count)
+           (state.list.count-10...state.list.count-1).contains(lastIndexPath.row) {
+            fetchShoppingList(filter: state.currentFilter, start: state.list.count)
         }
     }
     
@@ -270,7 +267,7 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         cancelPrefetchingForItemsAt indexPaths: [IndexPath]
     ) {
         for indexPath in indexPaths {
-            if let url = URL(string: list[indexPath.row].image) {
+            if let url = URL(string: state.list[indexPath.row].image) {
                 KingfisherManager.shared.downloader.cancel(url: url)
             }
         }
