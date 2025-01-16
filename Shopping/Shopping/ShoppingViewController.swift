@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class ShoppingViewController: UIViewController {
+final class ShoppingViewController: BaseViewController {
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
     private let searchAlertController = UIAlertController(
@@ -17,25 +17,14 @@ final class ShoppingViewController: UIViewController {
         preferredStyle: .alert
     )
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureHierarchy()
-        configureLayout()
-        configureViews()
-        configureNavigation()
-    }
-}
-
-//MARK: Design
-extension ShoppingViewController: ViewConfiguration {
-    func configureHierarchy() {
+    override func configureHierarchy() {
         [
             searchBar,
             centerLabel
         ].forEach(view.addSubview)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         searchBar.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(44)
@@ -48,7 +37,7 @@ extension ShoppingViewController: ViewConfiguration {
         }
     }
     
-    func configureViews() {
+    override func configureViews() {
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(tapGestureTapped)
@@ -73,7 +62,7 @@ extension ShoppingViewController: ViewConfiguration {
         )
     }
     
-    private func configureNavigation() {
+    override func configureNavigation() {
         navigationItem.title = "도봉러의 쇼핑쇼핑"
         let backButton = UIBarButtonItem(
             title: "",

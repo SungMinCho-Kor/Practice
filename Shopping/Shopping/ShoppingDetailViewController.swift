@@ -10,7 +10,7 @@ import SnapKit
 import Alamofire
 import Kingfisher
 
-final class ShoppingDetailViewController: UIViewController {
+final class ShoppingDetailViewController: BaseViewController {
     private var state: ShoppingDetailState
     private let resultCountLabel = UILabel()
     private lazy var shoppingCollectionView = UICollectionView(
@@ -20,7 +20,7 @@ final class ShoppingDetailViewController: UIViewController {
     
     init(searchText: String) {
         self.state = ShoppingDetailState(searchText: searchText)
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -29,17 +29,10 @@ final class ShoppingDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureHierarchy()
-        configureLayout()
-        configureViews()
-        configureNavigation()
         fetchShoppingList(filter: state.currentFilter, start: 1)
     }
-}
-
-//MARK: Design
-extension ShoppingDetailViewController: ViewConfiguration {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         [
             resultCountLabel,
             shoppingCollectionView
@@ -50,7 +43,7 @@ extension ShoppingDetailViewController: ViewConfiguration {
         shoppingCollectionView.prefetchDataSource = self
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         resultCountLabel.snp.makeConstraints { make in
             make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
@@ -61,7 +54,7 @@ extension ShoppingDetailViewController: ViewConfiguration {
         }
     }
     
-    func configureViews() {
+    override func configureViews() {
         view.backgroundColor = .black
         
         resultCountLabel.font = .systemFont(ofSize: 14)
@@ -82,10 +75,13 @@ extension ShoppingDetailViewController: ViewConfiguration {
         )
     }
     
-    private func configureNavigation() {
+    override func configureNavigation() {
         navigationItem.title = state.searchText
     }
-    
+}
+
+//MARK: Design
+extension ShoppingDetailViewController {
     private func collectionViewLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
             if sectionIndex == 0 {
