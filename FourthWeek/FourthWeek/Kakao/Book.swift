@@ -6,7 +6,8 @@
 //
 
 struct Book: Decodable {
-    let documents: [BookDetail]
+    var documents: [BookDetail]
+    let meta: Meta
 }
 
 struct BookDetail: Decodable {
@@ -14,4 +15,8 @@ struct BookDetail: Decodable {
     let price: Int
     let title: String
     let thumbnail: String
+}
+
+struct Meta: Decodable {
+    let is_end: Bool
 }
