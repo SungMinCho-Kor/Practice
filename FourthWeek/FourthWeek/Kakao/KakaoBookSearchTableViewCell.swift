@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class KakaoBookSearchTableViewCell: UITableViewCell {
+class KakaoBookSearchTableViewCell: BaseTableViewCell {
     
     static let id = "BookTableViewCell"
     
@@ -30,14 +30,14 @@ class KakaoBookSearchTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(subTitleLabel)
         contentView.addSubview(overviewLabel)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         thumbnailImageView.snp.makeConstraints { make in
             make.leading.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(16)
             make.width.equalTo(80)
@@ -64,7 +64,7 @@ class KakaoBookSearchTableViewCell: UITableViewCell {
         
     }
     
-    func configureView() {
+    override func configureView() {
         thumbnailImageView.contentMode = .scaleAspectFill
         overviewLabel.numberOfLines = 0
         overviewLabel.font = .systemFont(ofSize: 13)

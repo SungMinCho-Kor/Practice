@@ -114,15 +114,7 @@ class RandomViewController: UIViewController, ViewConfiguration {
 //                dump(error)
 //            }
 //        }
-        let url = "https://randomuser.me/api/?results=5"
-        AF.request(url, method: .get).responseDecodable(of: User.self) { response in
-            switch response.result {
-            case .success(let model):
-                dump(model)
-            case .failure(let error):
-                dump(error)
-            }
-        }
+
     }
     
 }
