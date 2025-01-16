@@ -9,50 +9,29 @@ import UIKit
 import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
-    private let searchBar = UISearchBar()
-    private let centerLabel = UILabel()
+    private let shoppingSearchView: ShoppingSearchView
     private let searchAlertController = UIAlertController(
         title: nil,
         message: "두 글자 이상으로 검색하세요.",
         preferredStyle: .alert
     )
     
-    override func configureHierarchy() {
-        [
-            searchBar,
-            centerLabel
-        ].forEach(view.addSubview)
+    override init() {
+        self.shoppingSearchView = ShoppingSearchView()
+        super.init()
     }
     
-    override func configureLayout() {
-        searchBar.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(44)
-        }
-        
-        centerLabel.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom)
-            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-        }
+    override func loadView() {
+        self.view = shoppingSearchView
     }
     
-    override func configureViews() {
+    override func configureView() {
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(tapGestureTapped)
         )
-        view.backgroundColor = .black
         view.addGestureRecognizer(tapGesture)
-        view.isUserInteractionEnabled = true
-        
-        searchBar.delegate = self
-        searchBar.searchBarStyle = .minimal
-        searchBar.searchTextField.placeholder = "브랜드, 상품, 프로필, 태그 등"
-        
-        centerLabel.text = "쇼핑하구팡"
-        centerLabel.textAlignment = .center
-        centerLabel.font = .boldSystemFont(ofSize: 24)
+        shoppingSearchView.searchBar.delegate = self
         
         searchAlertController.addAction(
             UIAlertAction(
@@ -83,6 +62,7 @@ extension ShoppingSearchViewController: UISearchBarDelegate {
             present(searchAlertController, animated: true)
             return
         }
+        print(#function)
         view.endEditing(true)
         navigationController?.pushViewController(
             ShoppingDetailViewController(searchText: text),

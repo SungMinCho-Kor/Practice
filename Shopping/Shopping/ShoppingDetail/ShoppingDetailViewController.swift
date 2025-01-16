@@ -11,131 +11,35 @@ import Alamofire
 import Kingfisher
 
 final class ShoppingDetailViewController: BaseViewController {
-    private var state: ShoppingDetailState
-    private let resultCountLabel = UILabel()
-    private lazy var shoppingCollectionView = UICollectionView(
-        frame: .zero,
-        collectionViewLayout: collectionViewLayout()
-    )
+    private let shoppingDetailView: ShoppingDetailView
     
     init(searchText: String) {
-        self.state = ShoppingDetailState(searchText: searchText)
+        self.shoppingDetailView = ShoppingDetailView(searchText: searchText)
         super.init()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func loadView() {
+        view = shoppingDetailView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchShoppingList(filter: state.currentFilter, start: 1)
+        fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
     }
     
-    override func configureHierarchy() {
-        [
-            resultCountLabel,
-            shoppingCollectionView
-        ].forEach(view.addSubview)
-        
-        shoppingCollectionView.delegate = self
-        shoppingCollectionView.dataSource = self
-        shoppingCollectionView.prefetchDataSource = self
+    override func configureNavigation() {
+        navigationItem.title = shoppingDetailView.state.searchText
     }
     
-    override func configureLayout() {
-        resultCountLabel.snp.makeConstraints { make in
-            make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(16)
-        }
-        
-        shoppingCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(resultCountLabel.snp.bottom).offset(8)
-            make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
-    override func configureViews() {
-        view.backgroundColor = .black
-        
-        resultCountLabel.font = .systemFont(ofSize: 14)
-        resultCountLabel.textColor = .systemGreen
-        
-        shoppingCollectionView.register(
-            ShoppingDetailCollectionViewCell.self,
-            forCellWithReuseIdentifier: ShoppingDetailCollectionViewCell.identifier
-        )
-        shoppingCollectionView.register(
-            ShoppingFilterCollectionViewCell.self,
-            forCellWithReuseIdentifier: ShoppingFilterCollectionViewCell.identifier
-        )
-        shoppingCollectionView.selectItem(
+    override func configureView() {
+        shoppingDetailView.shoppingCollectionView.delegate = self
+        shoppingDetailView.shoppingCollectionView.dataSource = self
+        shoppingDetailView.shoppingCollectionView.prefetchDataSource = self
+        shoppingDetailView.shoppingCollectionView.selectItem(
             at: IndexPath(item: 0, section: 0),
             animated: false,
             scrollPosition: .left
         )
-    }
-    
-    override func configureNavigation() {
-        navigationItem.title = state.searchText
-    }
-}
-
-//MARK: Design
-extension ShoppingDetailViewController {
-    private func collectionViewLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
-            if sectionIndex == 0 {
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(100),
-                    heightDimension: .estimated(44)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(100),
-                    heightDimension: .estimated(44)
-                )
-                let group = NSCollectionLayoutGroup.vertical(
-                    layoutSize: groupSize,
-                    subitems: [item]
-                )
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 10
-                section.orthogonalScrollingBehavior = .continuous
-                return section
-            } else {
-                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-                      let window = sceneDelegate.window else {
-                    print(#function, "SceneDelegate Wrong")
-                    return nil
-                }
-                let sectionInset: CGFloat = 10
-                let itemSpacing: CGFloat = 12
-                let width = (window.bounds.width - sectionInset * 2 - itemSpacing) / 2
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(width),
-                    heightDimension: .absolute(width + 100)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(window.bounds.width - sectionInset * 2),
-                    heightDimension: .absolute(width + 100)
-                )
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: groupSize,
-                    subitems: [item, item]
-                )
-                group.interItemSpacing = NSCollectionLayoutSpacing.fixed(itemSpacing)
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(
-                    top: sectionInset,
-                    leading: sectionInset,
-                    bottom: sectionInset,
-                    trailing: sectionInset
-                )
-                section.interGroupSpacing = 10
-                return section
-            }
-        }
     }
 }
 
@@ -143,10 +47,10 @@ extension ShoppingDetailViewController {
 extension ShoppingDetailViewController {
     private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
         if start == 1 {
-            state.isEnd = false
+            shoppingDetailView.state.isEnd = false
         }
-        if !state.isEnd {
-            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(state.searchText)&display=30&sort=\(filter.query)&start=\(start)"
+        if !shoppingDetailView.state.isEnd {
+            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(shoppingDetailView.state.searchText)&display=30&sort=\(filter.query)&start=\(start)"
             let header = HTTPHeaders([
                 "X-Naver-Client-Id": APIKey.naverClientID,
                 "X-Naver-Client-Secret": APIKey.naverSecretKey
@@ -157,15 +61,15 @@ extension ShoppingDetailViewController {
                     switch response.result {
                     case .success(let list):
                         if start != 1 {
-                            self.state.list.append(contentsOf: list.items)
+                            self.shoppingDetailView.state.list.append(contentsOf: list.items)
                         } else {
-                            self.state.list = list.items
+                            self.shoppingDetailView.state.list = list.items
                         }
-                        self.state.isEnd = list.total < start + 30
-                        self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
-                        self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
+                        self.shoppingDetailView.state.isEnd = list.total < start + 30
+                        self.shoppingDetailView.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
+                        self.shoppingDetailView.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
                         if start == 1 {
-                            self.shoppingCollectionView.scrollToItem(
+                            self.shoppingDetailView.shoppingCollectionView.scrollToItem(
                                 at: IndexPath(row: 0, section: 0),
                                 at: .top,
                                 animated: false
@@ -192,7 +96,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         if section == 0 {
             return ShoppingDetailFilter.allCases.count
         } else {
-            return state.list.count
+            return shoppingDetailView.state.list.count
         }
     }
     
@@ -218,7 +122,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
                 print(#function, "ShoppingDetailCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
-            cell.configure(state.list[indexPath.row])
+            cell.configure(shoppingDetailView.state.list[indexPath.row])
             return cell
         }
     }
@@ -228,8 +132,8 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         didSelectItemAt indexPath: IndexPath
     ) {
         if indexPath.section == 0 {
-            state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
-            fetchShoppingList(filter: state.currentFilter, start: 1)
+            shoppingDetailView.state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
+            fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
         }
     }
     
@@ -253,8 +157,8 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
     ) {
         if let lastIndexPath = indexPaths.last,
            lastIndexPath.section == 1,
-           (state.list.count-10...state.list.count-1).contains(lastIndexPath.row) {
-            fetchShoppingList(filter: state.currentFilter, start: state.list.count)
+           (shoppingDetailView.state.list.count-10...shoppingDetailView.state.list.count-1).contains(lastIndexPath.row) {
+            fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: shoppingDetailView.state.list.count)
         }
     }
     
@@ -263,7 +167,7 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         cancelPrefetchingForItemsAt indexPaths: [IndexPath]
     ) {
         for indexPath in indexPaths {
-            if let url = URL(string: state.list[indexPath.row].image) {
+            if let url = URL(string: shoppingDetailView.state.list[indexPath.row].image) {
                 KingfisherManager.shared.downloader.cancel(url: url)
             }
         }

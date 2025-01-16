@@ -29,7 +29,7 @@ final class ShoppingDetailCollectionViewCell: UICollectionViewCell {
 }
 
 //MARK: Design
-extension ShoppingDetailCollectionViewCell: ViewConfiguration {
+extension ShoppingDetailCollectionViewCell {
     func configureHierarchy() {
         [
             thumbnailImageView,

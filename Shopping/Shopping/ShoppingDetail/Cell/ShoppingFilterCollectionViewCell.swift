@@ -29,7 +29,7 @@ final class ShoppingFilterCollectionViewCell: UICollectionViewCell {
 }
 
 //MARK: Design
-extension ShoppingFilterCollectionViewCell: ViewConfiguration {
+extension ShoppingFilterCollectionViewCell {
     func configureHierarchy() {
         contentView.addSubview(filterLabel)
     }

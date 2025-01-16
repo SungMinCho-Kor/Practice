@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseViewController: UIViewController, ViewConfiguration {
+class BaseViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,18 +19,21 @@ class BaseViewController: UIViewController, ViewConfiguration {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureHierarchy()
-        configureLayout()
-        configureViews()
+//        configureHierarchy()
+//        configureLayout()
+//        configureViews()
         configureNavigation()
+        configureView()
     }
 
-    func configureHierarchy() { }
-    
-    func configureLayout() { }
-    
-    func configureViews() { }
+//    func configureHierarchy() { }
+//    
+//    func configureLayout() { }
+//    
+//    func configureViews() { }
     
     func configureNavigation() { }
+    
+    func configureView() { }
 }
 
