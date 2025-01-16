@@ -8,11 +8,13 @@
 import UIKit
 import SnapKit
 import Alamofire
+import Kingfisher
 
 final class ShoppingDetailViewController: UIViewController {
     private let searchText: String
     private var list: [ShoppingItem] = []
-    
+    private var isEnd: Bool = false
+    private var currentFilter = ShoppingDetailFilter.accuracy
     private let resultCountLabel = UILabel()
     private lazy var shoppingCollectionView = UICollectionView(
         frame: .zero,
@@ -34,7 +36,7 @@ final class ShoppingDetailViewController: UIViewController {
         configureLayout()
         configureViews()
         configureNavigation()
-        fetchShoppingList(filter: .accuracy)
+        fetchShoppingList(filter: currentFilter, start: 1)
     }
 }
 
@@ -48,6 +50,7 @@ extension ShoppingDetailViewController: ViewConfiguration {
         
         shoppingCollectionView.delegate = self
         shoppingCollectionView.dataSource = self
+        shoppingCollectionView.prefetchDataSource = self
     }
     
     func configureLayout() {
@@ -145,25 +148,41 @@ extension ShoppingDetailViewController: ViewConfiguration {
 
 // MARK: API
 extension ShoppingDetailViewController {
-    private func fetchShoppingList(filter: ShoppingDetailFilter) {
-        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchText)&display=100&sort=\(filter.query)"
-        let header = HTTPHeaders([
-            "X-Naver-Client-Id": APIKey.naverClientID,
-            "X-Naver-Client-Secret": APIKey.naverSecretKey
-        ])
-        AF.request(url, method: .get, headers: header)
-            .validate()
-            .responseDecodable(of: ShoppingItemList.self) { response in
-                switch response.result {
-                case .success(let list):
-                    self.list = list.items
-                    self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
-                    
-                    self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
-                case .failure(let error):
-                    dump(error)
+    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
+        if start == 1 {
+            isEnd = false
+        }
+        if !isEnd {
+            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(searchText)&display=30&sort=\(filter.query)&start=\(start)"
+            let header = HTTPHeaders([
+                "X-Naver-Client-Id": APIKey.naverClientID,
+                "X-Naver-Client-Secret": APIKey.naverSecretKey
+            ])
+            AF.request(url, method: .get, headers: header)
+                .validate()
+                .responseDecodable(of: ShoppingItemList.self) { response in
+                    switch response.result {
+                    case .success(let list):
+                        if start != 1 {
+                            self.list.append(contentsOf: list.items)
+                        } else {
+                            self.list = list.items
+                        }
+                        self.isEnd = list.total < start + 30
+                        self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
+                        self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
+                        if start == 1 {
+                            self.shoppingCollectionView.scrollToItem(
+                                at: IndexPath(row: 0, section: 0),
+                                at: .top,
+                                animated: false
+                            )
+                        }
+                    case .failure(let error):
+                        dump(error)
+                    }
                 }
-            }
+        }
     }
 }
 
@@ -216,7 +235,8 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
         didSelectItemAt indexPath: IndexPath
     ) {
         if indexPath.section == 0 {
-            fetchShoppingList(filter: ShoppingDetailFilter.allCases[indexPath.row])
+            currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
+            fetchShoppingList(filter: currentFilter, start: 1)
         }
     }
     
@@ -229,6 +249,30 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
             return true
         } else {
             return false
+        }
+    }
+}
+
+extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        prefetchItemsAt indexPaths: [IndexPath]
+    ) {
+        if let lastIndexPath = indexPaths.last,
+           lastIndexPath.section == 1,
+           (list.count-10...list.count-1).contains(lastIndexPath.row) {
+            fetchShoppingList(filter: currentFilter, start: list.count)
+        }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cancelPrefetchingForItemsAt indexPaths: [IndexPath]
+    ) {
+        for indexPath in indexPaths {
+            if let url = URL(string: list[indexPath.row].image) {
+                KingfisherManager.shared.downloader.cancel(url: url)
+            }
         }
     }
 }
