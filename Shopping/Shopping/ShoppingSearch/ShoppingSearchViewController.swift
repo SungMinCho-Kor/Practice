@@ -10,11 +10,6 @@ import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
     private let shoppingSearchView: ShoppingSearchView
-    private let searchAlertController = UIAlertController(
-        title: nil,
-        message: "두 글자 이상으로 검색하세요.",
-        preferredStyle: .alert
-    )
     
     override init() {
         self.shoppingSearchView = ShoppingSearchView()
@@ -32,13 +27,6 @@ final class ShoppingSearchViewController: BaseViewController {
         )
         view.addGestureRecognizer(tapGesture)
         shoppingSearchView.searchBar.delegate = self
-        
-        searchAlertController.addAction(
-            UIAlertAction(
-                title: "확인",
-                style: .default
-            )
-        )
     }
     
     override func configureNavigation() {
@@ -59,10 +47,13 @@ extension ShoppingSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               text.count >= 2 else {
-            present(searchAlertController, animated: true)
+            presentAlert(
+                title: nil,
+                message: "두 글자 이상으로 검색하세요.",
+                actionTitle: "확인"
+            )
             return
         }
-        print(#function)
         view.endEditing(true)
         navigationController?.pushViewController(
             ShoppingDetailViewController(searchText: text),
