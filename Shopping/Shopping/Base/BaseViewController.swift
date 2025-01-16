@@ -19,18 +19,9 @@ class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        configureHierarchy()
-//        configureLayout()
-//        configureViews()
         configureNavigation()
         configureView()
     }
-
-//    func configureHierarchy() { }
-//    
-//    func configureLayout() { }
-//    
-//    func configureViews() { }
     
     func configureNavigation() { }
     

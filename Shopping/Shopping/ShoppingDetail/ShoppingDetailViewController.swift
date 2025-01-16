@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import Alamofire
 import Kingfisher
 
 final class ShoppingDetailViewController: BaseViewController {
@@ -24,7 +23,9 @@ final class ShoppingDetailViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
+        Task {
+            await fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
+        }
     }
     
     override func configureNavigation() {
@@ -45,40 +46,37 @@ final class ShoppingDetailViewController: BaseViewController {
 
 // MARK: API
 extension ShoppingDetailViewController {
-    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
+    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) async {
         if start == 1 {
             shoppingDetailView.state.isEnd = false
         }
         if !shoppingDetailView.state.isEnd {
-            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(shoppingDetailView.state.searchText)&display=30&sort=\(filter.query)&start=\(start)"
-            let header = HTTPHeaders([
-                "X-Naver-Client-Id": APIKey.naverClientID,
-                "X-Naver-Client-Secret": APIKey.naverSecretKey
-            ])
-            AF.request(url, method: .get, headers: header)
-                .validate()
-                .responseDecodable(of: ShoppingItemList.self) { response in
-                    switch response.result {
-                    case .success(let list):
-                        if start != 1 {
-                            self.shoppingDetailView.state.list.append(contentsOf: list.items)
-                        } else {
-                            self.shoppingDetailView.state.list = list.items
-                        }
-                        self.shoppingDetailView.state.isEnd = list.total < start + 30
-                        self.shoppingDetailView.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
-                        self.shoppingDetailView.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
-                        if start == 1 {
-                            self.shoppingDetailView.shoppingCollectionView.scrollToItem(
-                                at: IndexPath(row: 0, section: 0),
-                                at: .top,
-                                animated: false
-                            )
-                        }
-                    case .failure(let error):
-                        dump(error)
-                    }
+            do {
+                let list = try await NetworkManager.shared.fetchShoppingList(
+                    form: FetchShoppingListForm(
+                        query: shoppingDetailView.state.searchText,
+                        sort: filter.query,
+                        start: start
+                    )
+                )
+                if start != 1 {
+                    self.shoppingDetailView.state.list.append(contentsOf: list.items)
+                } else {
+                    self.shoppingDetailView.state.list = list.items
                 }
+                self.shoppingDetailView.state.isEnd = list.total < start + 30
+                self.shoppingDetailView.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
+                self.shoppingDetailView.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
+                if start == 1 {
+                    self.shoppingDetailView.shoppingCollectionView.scrollToItem(
+                        at: IndexPath(row: 0, section: 0),
+                        at: .top,
+                        animated: false
+                    )
+                }
+            } catch {
+                dump(error)
+            }
         }
     }
 }
@@ -133,7 +131,9 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
     ) {
         if indexPath.section == 0 {
             shoppingDetailView.state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
-            fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
+            Task {
+                await fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: 1)
+            }
         }
     }
     
@@ -158,7 +158,9 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         if let lastIndexPath = indexPaths.last,
            lastIndexPath.section == 1,
            (shoppingDetailView.state.list.count-10...shoppingDetailView.state.list.count-1).contains(lastIndexPath.row) {
-            fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: shoppingDetailView.state.list.count)
+            Task {
+                await fetchShoppingList(filter: shoppingDetailView.state.currentFilter, start: shoppingDetailView.state.list.count)
+            }
         }
     }
     
