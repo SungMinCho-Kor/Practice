@@ -43,7 +43,7 @@ final class NetworkManager {
             "X-Naver-Client-Secret": APIKey.naverSecretKey
         ])
         
-        let data = AF.request(url, method: .get)
+        let data = AF.request(url, method: .get, headers: header)
             .serializingDecodable(ShoppingItemList.self)
         
         let response = await data.response
