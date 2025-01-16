@@ -1,5 +1,5 @@
 //
-//  ShoppingViewController.swift
+//  ShoppingSearchViewController.swift
 //  Shopping
 //
 //  Created by 조성민 on 1/15/25.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class ShoppingViewController: BaseViewController {
+final class ShoppingSearchViewController: BaseViewController {
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
     private let searchAlertController = UIAlertController(
@@ -76,7 +76,7 @@ final class ShoppingViewController: BaseViewController {
 }
 
 //MARK: SearchBar
-extension ShoppingViewController: UISearchBarDelegate {
+extension ShoppingSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               text.count >= 2 else {
@@ -93,7 +93,7 @@ extension ShoppingViewController: UISearchBarDelegate {
 
 //MARK: Objective-C
 @objc
-extension ShoppingViewController {
+extension ShoppingSearchViewController {
     private func tapGestureTapped(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
