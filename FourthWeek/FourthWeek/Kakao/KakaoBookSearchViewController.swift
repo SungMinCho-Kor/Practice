@@ -75,37 +75,23 @@ extension KakaoBookSearchViewController: UISearchBarDelegate {
     }
     
     private func callRequest(searchText: String, page: Int) {
-        let url = "https://dapi.kakao.com/v3/search/book?query=\(searchText)&size=30&page=\(page)"
-        let headers: HTTPHeaders = [
-            "Authorization": "KakaoAK \(APIKey.kakao)"
-        ]
-        
-        AF.request(url, method: .get, headers: headers)
-//            .responseString { value in
-//                dump(value)
-//            }
-            .validate()
-            .responseDecodable(of: Book.self) { response in
-                print(response.response?.statusCode)
-                switch response.result {
-                case .success(let value):
-                    self.isEnd = value.meta.is_end
-                    if page == 1 {
-                        self.list = value
-                    } else {
-                        self.list.documents.append(contentsOf: value.documents)
-                    }
-                    self.tableView.reloadData()
-                    
-                    if page == 1 {
-                        self.tableView.scrollToRow(
-                            at: IndexPath(row: 0, section: 0),
-                            at: .top,
-                            animated: false
-                        )
-                    }
-                case .failure(let error):
-                    dump(error)
+        NetworkManager.shared.callBook(
+            searchText: searchText,
+            page: page) { book in
+                self.isEnd = book.meta.is_end
+                if page == 1 {
+                    self.list = book
+                } else {
+                    self.list.documents.append(contentsOf: book.documents)
+                }
+                self.tableView.reloadData()
+                
+                if page == 1 {
+                    self.tableView.scrollToRow(
+                        at: IndexPath(row: 0, section: 0),
+                        at: .top,
+                        animated: false
+                    )
                 }
             }
     }

@@ -25,4 +25,48 @@ class NetworkManager {
         }
     }
     
+    func callBook(searchText: String, page: Int, completionHandler: @escaping (Book) -> Void) {
+        let url = "https://dapi.kakao.com/v3/search/book?query=\(searchText)&size=30&page=\(page)"
+        let headers: HTTPHeaders = [
+            "Authorization": "KakaoAK \(APIKey.kakao)"
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+//            .responseString { value in
+//                dump(value)
+//            }
+            .validate()
+            .responseDecodable(of: Book.self) { response in
+                print(response.response?.statusCode)
+                switch response.result {
+                case .success(let value):
+                    completionHandler(value)
+                case .failure(let error):
+                    dump(error)
+                }
+            }
+    }
+    
+    func callBook(searchText: String, page: Int, completionHandler: @escaping (Book) -> Void) {
+        let url = "https://dapi.kakao.com/v3/search/book?query=\(searchText)&size=30&page=\(page)"
+        let headers: HTTPHeaders = [
+            "Authorization": "KakaoAK \(APIKey.kakao)"
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+//            .responseString { value in
+//                dump(value)
+//            }
+            .validate()
+            .responseDecodable(of: Book.self) { response in
+                print(response.response?.statusCode)
+                switch response.result {
+                case .success(let value):
+                    completionHandler(value)
+                case .failure(let error):
+                    dump(error)
+                }
+            }
+    }
+    
 }
