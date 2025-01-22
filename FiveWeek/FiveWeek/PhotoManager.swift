@@ -79,48 +79,31 @@ class PhotoManager {
     
     func getAPhoto(id: String) {
         let url = "https://api.unsplash.com/photos/\(id)"
-                
-                let header: HTTPHeaders = [
-                    "Authorization": "Client-ID \(Key.unsplash)"
-                ]
-                
-                AF.request(url, method: .get, headers: header)
-                    .validate(statusCode: 200..<500)
-                    .responseDecodable(of: RandomPhoto.self) { response in
-                        switch response.result {
-                        case .success(let value):
-                            print(value)
-                        case .failure(let error):
-                            print(error)
-                        }
-                    }
+        
+        let header: HTTPHeaders = [
+            "Authorization": "Client-ID \(Key.unsplash)"
+        ]
+        
+        AF.request(url, method: .get, headers: header)
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: RandomPhoto.self) { response in
+                switch response.result {
+                case .success(let value):
+                    print(value)
+                case .failure(let error):
+                    print(error)
+                }
+            }
     }
     
     func getATopic(id: String) {
         let url = "https://api.unsplash.com/topics/\(id)"
-                
-                let header: HTTPHeaders = [
-                    "Authorization": "Client-ID \(Key.unsplash)"
-                ]
-                
-                AF.request(url, method: .get, headers: header)
-                    .validate(statusCode: 200..<500)
-                    .responseDecodable(of: Topic.self) { response in
-                        switch response.result {
-                        case .success(let value):
-                            print(value)
-                        case .failure(let error):
-                            print(error)
-                        }
-                    }
-    }
-    
-    func request(api: UnsplashRequest) {
-        AF.request(
-            api.endpoint,
-            method: api.method,
-            headers: api.header
-        )
+        
+        let header: HTTPHeaders = [
+            "Authorization": "Client-ID \(Key.unsplash)"
+        ]
+        
+        AF.request(url, method: .get, headers: header)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Topic.self) { response in
                 switch response.result {
@@ -131,6 +114,79 @@ class PhotoManager {
                 }
             }
     }
+    
+    func request(api: UnsplashRequest) {
+        AF.request(
+            api.endpoint,
+            method: api.method,
+            headers: api.header
+        )
+        .validate(statusCode: 200..<500)
+        .responseDecodable(of: Topic.self) { response in
+            switch response.result {
+            case .success(let value):
+                print(value)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    /*
+     
+     PhotoManager.shared.exampl(
+         api: .randomPhoto) { (value: RandomPhoto) in // <- 여기서 명시를 해줘서 컴파일 타임에 무슨 타입인지 결정할 수 있도록 해야한다.
+             <#code#>
+         } failureHandler: {
+             <#code#>
+         }
+     */
+    func exampl<T: Decodable>(
+        api: UnsplashRequest,
+        successHandler: @escaping (T) -> Void,
+        failureHandler: @escaping () -> Void
+    ) {
+        AF.request(
+            api.endpoint,
+            method: api.method,
+            headers: api.header
+        )
+        .validate(statusCode: 200..<500)
+        .responseDecodable(of: T.self) { response in
+            switch response.result {
+            case .success(let value):
+                print(value)
+                successHandler(value)
+            case .failure(let error):
+                print(error)
+                failureHandler()
+            }
+        }
+    }
+    
+   func exampl2<T: Decodable>(
+       api: UnsplashRequest,
+       type: T.Type,
+       successHandler: @escaping (T) -> Void,
+       failureHandler: @escaping () -> Void
+   ) {
+       AF.request(
+        api.endpoint,
+        method: api.method,
+        headers: api.header
+       )
+       .validate(statusCode: 200..<500)
+       .responseDecodable(of: T.self) { response in
+           switch response.result {
+           case .success(let value):
+               print(value)
+               successHandler(value)
+           case .failure(let error):
+               print(error)
+               failureHandler()
+           }
+       }
+   }
 }
 
 struct Topic: Decodable {

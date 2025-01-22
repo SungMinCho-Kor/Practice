@@ -38,6 +38,20 @@ class GroupViewController: UIViewController {
         super.viewDidLoad()
         configureView()
         view.backgroundColor = .white
+        
+        
+        PhotoManager.shared.exampl(api: .randomPhoto) { (value: RandomPhoto) in
+                dump(value)
+            } failureHandler: {
+            print("실패")
+            }
+        
+        PhotoManager.shared.exampl2(api: .randomPhoto, type: RandomPhoto.self) { value in
+                dump(value)
+            } failureHandler: {
+            print("실패")
+            }
+
     }
     
     func configureView() {
@@ -78,44 +92,49 @@ class GroupViewController: UIViewController {
     @objc
     private func checkButtonTappp(_ sender: UITapGestureRecognizer) {
         print(#function)
-        let group = DispatchGroup()
+//        let group = DispatchGroup()
+//        
+//        group.enter()
+//        PhotoManager.shared.getRandomPhoto { photo in
+//            print(photo.id)
+//            self.firstValue = photo.urls.thumb
+//            group.leave()
+//        } failHandler: {
+//            group.leave()
+//        }
+//        
+//        group.enter()
+//        PhotoManager.shared.getRandomPhoto { photo in
+//            print(photo.id)
+//            self.secondValue = photo.urls.thumb
+//            group.leave()
+//        } failHandler: {
+//            group.leave()
+//        }
+//        
+//        group.enter()
+//        PhotoManager.shared.getRandomPhoto { photo in
+//            print(photo.id)
+//            self.thirdValue = photo.urls.thumb
+//            group.leave()
+//        } failHandler: {
+//            group.leave()
+//        }
+//        
+//        group.notify(queue: .main) {
+//            print()
+//            self.firstImageView.kf.setImage(with: URL(string: self.firstValue))
+//            self.secondImageView.kf.setImage(with: URL(string: self.secondValue))
+//            self.thirdImageView.kf.setImage(with: URL(string: self.thirdValue))
+//        }
+//        
+//        PhotoManager.shared.getAPhoto(id: "yd4daZHEtcA")
+//        PhotoManager.shared.getATopic(id: "wallpapers")
         
-        group.enter()
-        PhotoManager.shared.getRandomPhoto { photo in
-            print(photo.id)
-            self.firstValue = photo.urls.thumb
-            group.leave()
-        } failHandler: {
-            group.leave()
-        }
-        
-        group.enter()
-        PhotoManager.shared.getRandomPhoto { photo in
-            print(photo.id)
-            self.secondValue = photo.urls.thumb
-            group.leave()
-        } failHandler: {
-            group.leave()
-        }
-        
-        group.enter()
-        PhotoManager.shared.getRandomPhoto { photo in
-            print(photo.id)
-            self.thirdValue = photo.urls.thumb
-            group.leave()
-        } failHandler: {
-            group.leave()
-        }
-        
-        group.notify(queue: .main) {
-            print()
-            self.firstImageView.kf.setImage(with: URL(string: self.firstValue))
-            self.secondImageView.kf.setImage(with: URL(string: self.secondValue))
-            self.thirdImageView.kf.setImage(with: URL(string: self.thirdValue))
-        }
-        
-        PhotoManager.shared.getAPhoto(id: "yd4daZHEtcA")
-        PhotoManager.shared.getATopic(id: "wallpapers")
+        navigationController?.pushViewController(
+            SearchViewController(),
+            animated: true
+        )
         
     }
     
