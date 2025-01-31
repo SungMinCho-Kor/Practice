@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		590A12772D4C649700642E5C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 590A12762D4C649700642E5C /* Lottie */; };
 		594C9BCE2D3DD71B00DC3650 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 594C9BCD2D3DD71B00DC3650 /* SnapKit */; };
 		594C9BD12D3DD72B00DC3650 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 594C9BD02D3DD72B00DC3650 /* Alamofire */; };
 		594C9BD42D3DD73800DC3650 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 594C9BD32D3DD73800DC3650 /* Kingfisher */; };
@@ -47,6 +48,7 @@
 				594C9BD42D3DD73800DC3650 /* Kingfisher in Frameworks */,
 				594C9BCE2D3DD71B00DC3650 /* SnapKit in Frameworks */,
 				594C9BD12D3DD72B00DC3650 /* Alamofire in Frameworks */,
+				590A12772D4C649700642E5C /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,7 @@
 				594C9BCD2D3DD71B00DC3650 /* SnapKit */,
 				594C9BD02D3DD72B00DC3650 /* Alamofire */,
 				594C9BD32D3DD73800DC3650 /* Kingfisher */,
+				590A12762D4C649700642E5C /* Lottie */,
 			);
 			productName = FiveWeek;
 			productReference = 594C9BB42D3DD54700DC3650 /* FiveWeek.app */;
@@ -126,6 +129,7 @@
 				594C9BCC2D3DD71B00DC3650 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				594C9BCF2D3DD72B00DC3650 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				594C9BD22D3DD73800DC3650 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				590A12752D4C649700642E5C /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 594C9BB52D3DD54700DC3650 /* Products */;
@@ -366,6 +370,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		590A12752D4C649700642E5C /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 		594C9BCC2D3DD71B00DC3650 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -393,6 +405,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		590A12762D4C649700642E5C /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 590A12752D4C649700642E5C /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
 		594C9BCD2D3DD71B00DC3650 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 594C9BCC2D3DD71B00DC3650 /* XCRemoteSwiftPackageReference "SnapKit" */;
