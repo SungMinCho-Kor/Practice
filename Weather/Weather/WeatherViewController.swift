@@ -192,6 +192,7 @@ extension WeatherViewController {
 extension WeatherViewController {
     private func setupLocationManager() {
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
     private func checkDeviceLocation() {
