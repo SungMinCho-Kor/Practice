@@ -98,6 +98,14 @@ final class WeatherViewController: UIViewController {
         return alert
     }()
     
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "yyyy년 M월 d일 a H시 m분"
+        
+        return formatter
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,8 +114,10 @@ final class WeatherViewController: UIViewController {
         setupActions()
         setupLocationManager()
     }
-    
-    // MARK: - UI Setup
+}
+
+// MARK: UI Setup
+extension WeatherViewController {
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -144,7 +154,10 @@ final class WeatherViewController: UIViewController {
             make.width.height.equalTo(50)
         }
     }
-    
+}
+
+// MARK: Actions
+extension WeatherViewController {
     private func setupActions() {
         currentLocationButton.addTarget(
             self,
@@ -159,20 +172,28 @@ final class WeatherViewController: UIViewController {
             for: .touchUpInside
         )
     }
-    
+
+    @objc private func currentLocationButtonTapped() {
+        checkDeviceLocation()
+    }
+
+    @objc private func refreshButtonTapped() {
+        guard let centerAnnotation else {
+            return
+        }
+        fetchWeatherData(
+            latitude: centerAnnotation.coordinate.latitude,
+            longitude: centerAnnotation.coordinate.longitude
+        )
+    }
+}
+
+// MARK: Location & Authorization
+extension WeatherViewController {
     private func setupLocationManager() {
         locationManager.delegate = self
     }
 
-    // MARK: - Actions
-    @objc private func currentLocationButtonTapped() {
-        checkDeviceLocation()
-    }
-    
-    @objc private func refreshButtonTapped() {
-        // 날씨 새로고침 구현
-    }
-    
     private func checkDeviceLocation() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
@@ -241,26 +262,32 @@ final class WeatherViewController: UIViewController {
             longitude: center.longitude
         )
     }
-    
+}
+
+//MARK: Network
+extension WeatherViewController {
     private func fetchWeatherData(
         latitude: Double,
         longitude: Double
     ) {
+        weatherInfoLabel.text = "날씨 정보를 불러오는 중..."
         APIService.shared.request(
             api: DefaultRouter.fetchWeather(
                 lat: latitude,
                 lon: longitude
-            )) { (result: Result<FetchWeatherResponseDTO, NetworkError>) in
+            )) { [weak self] (result: Result<FetchWeatherResponseDTO, NetworkError>) in
+                guard let self else { return }
                 switch result {
-                case .success(let success):
-                    dump(success)
+                case .success(let data):
+                    weatherInfoLabel.text = "\(dateFormatter.string(from: Date()))\n현재온도: \(((data.main.temp - 273.15) * 100).rounded()/100.0)℃\n최저온도: \(((data.main.temp_min - 273.15) * 100).rounded()/100.0)℃\n최고온도: \(((data.main.temp_max - 273.15) * 100).rounded()/100.0)℃\n습도: \(data.main.humidity)\n풍속: \(data.wind.speed)"
                 case .failure(let failure):
-                    dump(failure)
+                    weatherInfoLabel.text = "날씨 정보를 불러오는 데에 실패했습니다.\n네트워크를 확인해주세요."
                 }
             }
     }
 }
 
+// MARK: LocationManager Delegate
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(
         _ manager: CLLocationManager,
