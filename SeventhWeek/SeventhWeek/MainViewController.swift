@@ -17,7 +17,6 @@ final class MainViewController: UIViewController {
     private let mapView = MKMapView()
     private let locationButton = UIButton()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemPink
