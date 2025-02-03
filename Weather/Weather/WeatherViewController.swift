@@ -11,7 +11,14 @@ import SnapKit
 import MapKit
 
 final class WeatherViewController: UIViewController {
-    private let mapView = MKMapView()
+    private let mapView: MKMapView = {
+        let mapView = MKMapView()
+        
+        return mapView
+    }()
+    
+    private var centerAnnotation: MKPointAnnotation?
+    
     private let locationManager = CLLocationManager()
     
     private let weatherInfoLabel: UILabel = {
@@ -48,6 +55,47 @@ final class WeatherViewController: UIViewController {
         button.layer.shadowOpacity = 0.2
         button.layer.shadowRadius = 4
         return button
+    }()
+    
+    private let locationSettingAlert: UIAlertController = {
+        let alert = UIAlertController(
+            title: "권한 에러",
+            message: "위치 권한이 없습니다.\n위치 권한 수정을 위해 설정으로 이동하시겠습니까?",
+            preferredStyle: .alert
+        )
+        let ok = UIAlertAction(
+            title: "이동",
+            style: .default
+        ) { action in
+            guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            
+            if UIApplication.shared.canOpenURL(settingURL) {
+                UIApplication.shared.open(settingURL)
+            }
+        }
+        alert.addAction(ok)
+        let cancel = UIAlertAction(
+            title: "취소",
+            style: .cancel
+        )
+        alert.addAction(cancel)
+        
+        return alert
+    }()
+    
+    private let privacyLocationSettingAlert: UIAlertController = {
+        let alert = UIAlertController(
+            title: "권한 에러",
+            message: "위치 권한이 없습니다.\n위치 권한 수정을 위해 [설정 > 개인정보 보호 및 보안 > 위치 서비스 > 위치 서비스]를 수정해주세요.",
+            preferredStyle: .alert
+        )
+        let ok = UIAlertAction(
+            title: "확인",
+            style: .default
+        )
+        alert.addAction(ok)
+        
+        return alert
     }()
     
     // MARK: - Lifecycle
@@ -125,7 +173,6 @@ final class WeatherViewController: UIViewController {
         // 날씨 새로고침 구현
     }
     
-    // Alert: 위치 서비스 -> 허용 Alert
     private func checkDeviceLocation() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
@@ -133,7 +180,18 @@ final class WeatherViewController: UIViewController {
                     self.checkCurrentLocation()
                 }
             } else {
-                print("위치 서비스가 꺼져 있어서 위치 권한 요청을 할 수 없습니다.")
+                DispatchQueue.main.async {
+                    self.setRegionAndAnnotation(
+                        center: CLLocationCoordinate2D(
+                            latitude: 37.65440756152861,
+                            longitude: 127.04974613082048
+                        )
+                    )
+                    self.present(
+                        self.privacyLocationSettingAlert,
+                        animated: true
+                    )
+                }
             }
         }
     }
@@ -142,12 +200,19 @@ final class WeatherViewController: UIViewController {
         let status = locationManager.authorizationStatus
         switch status {
         case .notDetermined:
-            print("이 권한에서만 권한 문구 띄울 수 있음")
             locationManager.requestWhenInUseAuthorization()
         case .denied:
-            print("설정으로 이동하는 Alert 띄우기")
+            setRegionAndAnnotation(
+                center: CLLocationCoordinate2D(
+                    latitude: 37.654508171933124,
+                    longitude: 127.05149421331994
+                )
+            )
+            present(
+                locationSettingAlert,
+                animated: true
+            )
         case .authorizedWhenInUse:
-            print("정상 로직 실행")
             locationManager.startUpdatingLocation()
         default:
             print("오류 발생")
@@ -164,6 +229,13 @@ final class WeatherViewController: UIViewController {
             region,
             animated: true
         )
+        if let centerAnnotation {
+            centerAnnotation.coordinate = center
+        } else {
+            centerAnnotation = MKPointAnnotation()
+            centerAnnotation?.coordinate = center
+            mapView.addAnnotation(centerAnnotation!)
+        }
     }
 }
 
@@ -186,9 +258,9 @@ extension WeatherViewController: CLLocationManagerDelegate {
     ) {
         print(#function)
         dump(error)
+        checkDeviceLocation()
     }
     
-    // locationManager 인스턴스 생성시 1회 호출
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         print(#function)
         checkDeviceLocation()
