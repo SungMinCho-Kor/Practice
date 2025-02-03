@@ -236,6 +236,28 @@ final class WeatherViewController: UIViewController {
             centerAnnotation?.coordinate = center
             mapView.addAnnotation(centerAnnotation!)
         }
+        fetchWeatherData(
+            latitude: center.latitude,
+            longitude: center.longitude
+        )
+    }
+    
+    private func fetchWeatherData(
+        latitude: Double,
+        longitude: Double
+    ) {
+        APIService.shared.request(
+            api: DefaultRouter.fetchWeather(
+                lat: latitude,
+                lon: longitude
+            )) { (result: Result<FetchWeatherResponseDTO, NetworkError>) in
+                switch result {
+                case .success(let success):
+                    dump(success)
+                case .failure(let failure):
+                    dump(failure)
+                }
+            }
     }
 }
 
