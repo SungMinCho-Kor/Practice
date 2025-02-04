@@ -57,6 +57,19 @@ final class WeatherViewController: UIViewController {
         return button
     }()
     
+    private let presentPhotoViewcontrollerButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "photo"), for: .normal)
+        button.backgroundColor = .white
+        button.tintColor = .systemBlue
+        button.layer.cornerRadius = 25
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 4
+        return button
+    }()
+    
     private let locationSettingAlert: UIAlertController = {
         let alert = UIAlertController(
             title: "권한 에러",
@@ -125,6 +138,7 @@ extension WeatherViewController {
             mapView,
             weatherInfoLabel,
             currentLocationButton,
+            presentPhotoViewcontrollerButton,
             refreshButton
         ].forEach {
             view.addSubview($0)
@@ -148,6 +162,12 @@ extension WeatherViewController {
             make.width.height.equalTo(50)
         }
         
+        presentPhotoViewcontrollerButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.width.height.equalTo(50)
+        }
+        
         refreshButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-20)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
@@ -161,9 +181,12 @@ extension WeatherViewController {
     private func setupActions() {
         currentLocationButton.addTarget(
             self,
-            action: #selector(
-                currentLocationButtonTapped
-            ),
+            action: #selector(currentLocationButtonTapped),
+            for: .touchUpInside
+        )
+        presentPhotoViewcontrollerButton.addTarget(
+            self,
+            action: #selector(presentPhotoViewcontrollerButtonTapped),
             for: .touchUpInside
         )
         refreshButton.addTarget(
@@ -175,6 +198,13 @@ extension WeatherViewController {
 
     @objc private func currentLocationButtonTapped() {
         checkDeviceLocation()
+    }
+    
+    @objc private func presentPhotoViewcontrollerButtonTapped() {
+        present(
+            PhotoViewController(),
+            animated: true
+        )
     }
 
     @objc private func refreshButtonTapped() {
