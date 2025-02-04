@@ -8,6 +8,10 @@
 import UIKit
 import PhotosUI
 
+protocol PhotoViewControllerDelegate: AnyObject {
+    func imageSelected(image: UIImage)
+}
+
 final class PhotoViewController: UIViewController {
     private let addPhotoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -38,6 +42,8 @@ final class PhotoViewController: UIViewController {
     }()
     
     private var photos: [UIImage] = []
+    
+    weak var delegate: PhotoViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,6 +132,14 @@ extension PhotoViewController: UICollectionViewDelegate, UICollectionViewDataSou
         cell.configure(image: photos[indexPath.row])
         
         return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        delegate?.imageSelected(image: photos[indexPath.row])
+        dismiss(animated: true)
     }
 }
 

@@ -119,6 +119,13 @@ final class WeatherViewController: UIViewController {
         return formatter
     }()
     
+    private let selectedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = .systemGray
+        
+        return imageView
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +146,8 @@ extension WeatherViewController {
             weatherInfoLabel,
             currentLocationButton,
             presentPhotoViewcontrollerButton,
-            refreshButton
+            refreshButton,
+            selectedImageView
         ].forEach {
             view.addSubview($0)
         }
@@ -173,6 +181,13 @@ extension WeatherViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
             make.width.height.equalTo(50)
         }
+        
+        selectedImageView.snp.makeConstraints { make in
+            make.bottom.equalTo(presentPhotoViewcontrollerButton.snp.top).offset(-20)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(120)
+            make.height.equalTo(80)
+        }
     }
 }
 
@@ -201,8 +216,10 @@ extension WeatherViewController {
     }
     
     @objc private func presentPhotoViewcontrollerButtonTapped() {
+        let photoViewController = PhotoViewController()
+        photoViewController.delegate = self
         present(
-            PhotoViewController(),
+            photoViewController,
             animated: true
         )
     }
@@ -344,5 +361,11 @@ extension WeatherViewController: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         print(#function)
         checkDeviceLocation()
+    }
+}
+
+extension WeatherViewController: PhotoViewControllerDelegate {
+    func imageSelected(image: UIImage) {
+        selectedImageView.image = image
     }
 }
