@@ -1,14 +1,14 @@
 //
-//  ImagePickerViewController.swift
+//  BasicPHPickerViewController.swift
 //  SeventhWeek
 //
 //  Created by 조성민 on 2/4/25.
 //
 
 import UIKit
-import SnapKit
+import PhotosUI
 
-final class ImagePickerViewController: UIViewController {
+final class BasicPHPickerViewController: UIViewController {
     
     private let pickerButton = UIButton()
     private let photoImageView = UIImageView()
@@ -62,44 +62,32 @@ final class ImagePickerViewController: UIViewController {
     }
     
     @objc private func pickerButtonTapped() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.allowsEditing = true
-        
-        present(
-            imagePicker,
-            animated: true
-        )
-        
-        /*
-         UIDocumentViewController
-         UIAcitivityViewController
-         UIColorPickerViewController
-         UIFontPickerViewController
-         ... 등.. 가능
-         */
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 4
+        let phPicker = PHPickerViewController(configuration: configuration)
+        phPicker.delegate = self
+        present(phPicker, animated: true)
     }
 }
 
-// UIImagePickerController가 UINavigationController를 상속받기도 하고,
-// NavigationBar를 사용하여 UINavigationControllerDelegate를 많이 사용한다고 함
-extension ImagePickerViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(
-        _ picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+extension BasicPHPickerViewController: PHPickerViewControllerDelegate {
+    func picker(
+        _ picker: PHPickerViewController,
+        didFinishPicking results: [PHPickerResult]
     ) {
         print(#function)
-        let image = info[UIImagePickerController.InfoKey.editedImage]
-        if let result = image as? UIImage {
-            photoImageView.image = result
+        if let itemProvider = results.first?.itemProvider {
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                
+                // loadObject는 시간이 좀 걸릴 수 있으니 global로 돌리는구나~ 로 이해하고 ui 업데이트는 Main Thread로 돌려주자
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    DispatchQueue.main.async {
+                        self?.photoImageView.image = image as? UIImage
+                    }
+                }
+            }
         }
         dismiss(animated: true)
-        
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print(#function)
-        dismiss(animated: true)
-        
-    }
 }
