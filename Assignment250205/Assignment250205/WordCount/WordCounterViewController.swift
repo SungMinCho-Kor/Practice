@@ -9,13 +9,20 @@ import UIKit
 import SnapKit
 
 final class WordCounterViewController: UIViewController {
+    private let viewModel = WordCounterViewModel()
+    
     private let textView: UITextView = {
         let textView = UITextView()
         textView.font = .systemFont(ofSize: 16)
         textView.layer.borderWidth = 1
         textView.layer.borderColor = UIColor.systemGray4.cgColor
         textView.layer.cornerRadius = 8
-        textView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 8)
+        textView.textContainerInset = UIEdgeInsets(
+            top: 12,
+            left: 8,
+            bottom: 12,
+            right: 8
+        )
         return textView
     }()
     
@@ -23,7 +30,10 @@ final class WordCounterViewController: UIViewController {
         let label = UILabel()
         label.text = "현재까지 0글자 작성중"
         label.textAlignment = .left
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(
+            ofSize: 16,
+            weight: .medium
+        )
         label.textColor = .systemBlue
         return label
     }()
@@ -33,12 +43,16 @@ final class WordCounterViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupTextView()
+        bind()
     }
      
     private func setupUI() {
         view.backgroundColor = .white
         
-        [textView, countLabel].forEach {
+        [
+            textView,
+            countLabel
+        ].forEach {
             view.addSubview($0)
         }
     }
@@ -62,8 +76,13 @@ final class WordCounterViewController: UIViewController {
     }
      
     private func updateCharacterCount() {
-        let count = textView.text.count
-        countLabel.text = "현재까지 \(count)글자 작성중"
+        viewModel.inputText.value = textView.text
+    }
+    
+    private func bind() {
+        viewModel.outputCount.bind { count in
+            self.countLabel.text = "현재까지 \(count)글자 작성중"
+        }
     }
 }
  
