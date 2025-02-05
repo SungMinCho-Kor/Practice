@@ -6,17 +6,12 @@
 //
 
 final class CurrencyViewModel {
-    private let exchangeRate: Double = 1445.30
-    var exchangeRateText: String {
-        return "현재 환율: 1 USD = \(exchangeRate.formatted()) KRW"
-    }
-    let amountTextFieldPlaceholder = "원화 금액을 입력하세요"
-    let convertButtonTitle = "환전하기"
+    let exchangeRate: Double = 1445.30
     let outputResultText: Observable<String?> = Observable("환전 결과가 여기에 표시됩니다")
     let inputAmountText: Observable<String?> = Observable(nil)
     
     init() {
-        inputAmountText.bind { _ in
+        inputAmountText.lazyBind { _ in
             self.validate()
         }
     }

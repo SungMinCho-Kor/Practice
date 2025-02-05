@@ -23,6 +23,7 @@ final class CurrencyViewController: UIViewController {
     
     private let amountTextField: UITextField = {
         let textField = UITextField()
+        textField.placeholder = "원화 금액을 입력하세요"
         textField.borderStyle = .roundedRect
         textField.keyboardType = .numberPad
         textField.textAlignment = .center
@@ -32,6 +33,10 @@ final class CurrencyViewController: UIViewController {
     private let convertButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = .systemBlue
+        button.setTitle(
+            "환전하기",
+            for: .normal
+        )
         button.setTitleColor(
             .white,
             for: .normal
@@ -66,12 +71,7 @@ final class CurrencyViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .white
         
-        exchangeRateLabel.text = viewModel.exchangeRateText
-        amountTextField.placeholder = viewModel.amountTextFieldPlaceholder
-        convertButton.setTitle(
-            viewModel.convertButtonTitle,
-            for: .normal
-        )
+        exchangeRateLabel.text = "현재 환율: 1 USD = \(viewModel.exchangeRate.formatted()) KRW"
         
         [
             exchangeRateLabel,
@@ -116,7 +116,7 @@ final class CurrencyViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.outputResultText.lazyBind { [weak self] text in
+        viewModel.outputResultText.bind { [weak self] text in
             self?.resultLabel.text = text
         }
     }
