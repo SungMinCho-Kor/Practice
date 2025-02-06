@@ -17,6 +17,7 @@ final class MarketDetailViewController: UIViewController {
             nibName: nil,
             bundle: nil
         )
+        print("MarketDetailViewController Init")
     }
     
     required init?(coder: NSCoder) {
@@ -26,22 +27,19 @@ final class MarketDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBrown
-        viewModel.outputNavigationTitle.bind { marketTitle in
-            self.navigationItem.title = marketTitle
+        viewModel.outputNavigationTitle.bind { [weak self] marketTitle in
+            self?.navigationItem.title = marketTitle
         } 
         viewModel.inputViewDidLoadTrigger.value = ()
-        
+        print("MarketDetailViewController viewDidLoad")
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("MarketDetailViewController viewDidDisappear")
     }
-    */
-
+    
+    deinit {
+        print("MarketDetailViewController Deinit")
+    }
 }

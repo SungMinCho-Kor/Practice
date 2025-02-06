@@ -48,8 +48,8 @@ final class MarketViewController: UIViewController {
                 return
             }
             let marketDetailViewController = MarketDetailViewController(viewModel: MarketDetailViewModel(market: market))
-//            self.navigationController?.pushViewController(marketDetailViewController, animated: true)
-            self.navigationController?.pushViewController(EmptyViewController(), animated: true)
+            self.navigationController?.pushViewController(marketDetailViewController, animated: true)
+//            self.navigationController?.pushViewController(EmptyViewController(), animated: true)
         }
     }
 }

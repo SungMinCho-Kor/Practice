@@ -14,8 +14,13 @@ final class MarketDetailViewModel {
     
     init(market: Market) {
         self.market = market
-        inputViewDidLoadTrigger.lazyBind { _ in
-            self.outputNavigationTitle.value = market.korean_name
+        inputViewDidLoadTrigger.lazyBind { [weak self] _ in
+            self?.outputNavigationTitle.value = market.korean_name
         }
+        print("MarketDetailViewModel Init")
+    }
+    
+    deinit {
+        print("MarketDetailViewModel Deinit")
     }
 }
