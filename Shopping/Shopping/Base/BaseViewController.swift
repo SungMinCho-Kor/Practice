@@ -20,11 +20,17 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigation()
-        configureView()
+        configureHierarchy()
+        configureLayout()
+        configureViews()
     }
     
     func configureNavigation() { }
     
-    func configureView() { }
+    func configureHierarchy() { }
+    
+    func configureLayout() { }
+    
+    func configureViews() { }
 }
 

@@ -9,24 +9,44 @@ import UIKit
 import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
-    private let shoppingSearchView: ShoppingSearchView
+    private let searchBar = UISearchBar()
+    private let centerLabel = UILabel()
     
-    override init() {
-        self.shoppingSearchView = ShoppingSearchView()
-        super.init()
+    override func configureHierarchy() {
+        [
+            searchBar,
+            centerLabel
+        ].forEach(view.addSubview)
     }
     
-    override func loadView() {
-        self.view = shoppingSearchView
+    override func configureLayout() {
+        searchBar.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(44)
+        }
+        
+        centerLabel.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom)
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
-    override func configureView() {
+    override func configureViews() {
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(tapGestureTapped)
         )
         view.addGestureRecognizer(tapGesture)
-        shoppingSearchView.searchBar.delegate = self
+        view.backgroundColor = .black
+        
+        searchBar.searchBarStyle = .minimal
+        searchBar.searchTextField.placeholder = "브랜드, 상품, 프로필, 태그 등"
+        searchBar.delegate = self
+        
+        centerLabel.text = "쇼핑하구팡"
+        centerLabel.textAlignment = .center
+        centerLabel.font = .boldSystemFont(ofSize: 24)
     }
     
     override func configureNavigation() {
