@@ -9,11 +9,11 @@ import UIKit
 import SnapKit
 
 final class BoxOfficeViewController: UIViewController {
-    
     private lazy var dateTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "날짜 선택"
-        textField.borderStyle = .roundedRect 
+        textField.borderStyle = .roundedRect
+        textField.inputView = datePicker
         return textField
     }()
     
@@ -52,26 +52,33 @@ final class BoxOfficeViewController: UIViewController {
     
     
     private func bindData() {
- 
+        viewModel.outputDateString.bind { dateString in
+            self.dateTextField.text = dateString
+        }
+        
+        viewModel.outputBoxOffice.bind { _ in
+            self.tableView.reloadData()
+        }
     }
     
     @objc private func datePickerValueChanged() {
         print(datePicker.date)
+        viewModel.inputSelectedDate.value = datePicker.date
     }
     
     @objc private func searchButtonTapped() {
-        print(#function)
+        viewModel.inputSearchButtonTapped.value = ()
     }
 }
 
 extension BoxOfficeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.outputBoxOffice.count
+        return viewModel.outputBoxOffice.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath)
-        let data = viewModel.outputBoxOffice[indexPath.row]
+        let data = viewModel.outputBoxOffice.value[indexPath.row]
         cell.textLabel?.text = "\(data.rank). \(data.movieNm) (관객수: \(data.audiCnt))"
         return cell
     }
