@@ -9,8 +9,18 @@ import UIKit
 import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
+    private let viewModel = ShoppingSearchViewModel()
+    
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
+    
+    // MARK: INPUT
+    private var input = ShoppingSearchViewModel.Input(searchButtonClicked: Observable<String?>(nil))
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
+    }
     
     override func configureHierarchy() {
         [
@@ -60,25 +70,32 @@ final class ShoppingSearchViewController: BaseViewController {
         backButton.tintColor = .white
         navigationItem.backBarButtonItem = backButton
     }
+    
+    private func bind() {
+        let output = viewModel.transform(input: input)
+        
+        output.presentAlert.lazyBind { [weak self] _ in
+            self?.presentAlert(
+                title: nil,
+                message: "두 글자 이상으로 검색하세요.",
+                actionTitle: "확인"
+            )
+        }
+        
+        output.pushDetailViewController.lazyBind { [weak self] searchText in
+            self?.view.endEditing(true)
+            self?.navigationController?.pushViewController(
+                ShoppingDetailViewController(searchText: searchText),
+                animated: true
+            )
+        }
+    }
 }
 
 //MARK: SearchBar
 extension ShoppingSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let text = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              text.count >= 2 else {
-            presentAlert(
-                title: nil,
-                message: "두 글자 이상으로 검색하세요.",
-                actionTitle: "확인"
-            )
-            return
-        }
-        view.endEditing(true)
-        navigationController?.pushViewController(
-            ShoppingDetailViewController(searchText: text),
-            animated: true
-        )
+        input.searchButtonClicked.value = searchBar.text
     }
 }
 
