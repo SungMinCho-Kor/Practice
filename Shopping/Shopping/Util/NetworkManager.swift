@@ -36,7 +36,10 @@ final class NetworkManager {
     
     private init() { }
     
-    func fetchShoppingList(form: FetchShoppingListForm) async throws -> ShoppingItemList {
+    func fetchShoppingList(
+        form: FetchShoppingListForm,
+        completion: @escaping (Result<ShoppingItemList, NetworkError>) -> Void
+    ) {
         let url = "https://openapi.naver.com/v1/search/shop.json?query=\(form.query)&display=30&sort=\(form.sort)&start=\(form.start)"
         let header = HTTPHeaders([
             "X-Naver-Client-Id": APIKey.naverClientID,
@@ -44,33 +47,30 @@ final class NetworkManager {
         ])
         
         let data = AF.request(url, method: .get, headers: header)
-            .serializingDecodable(ShoppingItemList.self)
-        
-        let response = await data.response
-        try handleStatusCode(response.response?.statusCode)
-        switch response.result {
-        case .success(let value):
-            return value
-        case .failure(let error):
-            throw error
-        }
+            .responseDecodable(of: ShoppingItemList.self) { [weak self] response in
+                guard let self else { return }
+                switch response.result {
+                case .success(let data):
+                    completion(.success(data))
+                case .failure(let error):
+                    dump(error)
+                    completion(.failure(handleStatusCode(response.response?.statusCode)))
+                }
+            }
     }
     
-    private func handleStatusCode(_ code: Int?) throws {
-        dump(code)
+    private func handleStatusCode(_ code: Int?) -> NetworkError {
         switch code {
-        case 200:
-            break
         case 400:
-            throw NetworkError.S1_S4orS6
+            NetworkError.S1_S4orS6
         case 404:
-            throw NetworkError.S5
+            NetworkError.S5
         case 401:
-            throw NetworkError.authorization
+            NetworkError.authorization
         case 500:
-            throw NetworkError.S99
+            NetworkError.S99
         default:
-            throw NetworkError.unknown
+            NetworkError.unknown
         }
     }
 }

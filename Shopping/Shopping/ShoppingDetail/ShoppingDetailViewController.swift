@@ -5,9 +5,9 @@
 //  Created by 조성민 on 1/15/25.
 //
 
-import UIKit
-import SnapKit
 import Kingfisher
+import SnapKit
+import UIKit
 
 final class ShoppingDetailViewController: BaseViewController {
     var state: ShoppingDetailState
@@ -16,36 +16,34 @@ final class ShoppingDetailViewController: BaseViewController {
         frame: .zero,
         collectionViewLayout: collectionViewLayout()
     )
-    
+
     init(searchText: String) {
         state = ShoppingDetailState(searchText: searchText)
         super.init()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        Task {
-            await fetchShoppingList(
-                filter: state.currentFilter,
-                start: 1
-            )
-        }
+        fetchShoppingList(
+            filter: state.currentFilter,
+            start: 1
+        )
     }
-    
+
     override func configureHierarchy() {
         [
             resultCountLabel,
-            shoppingCollectionView
+            shoppingCollectionView,
         ].forEach(view.addSubview)
     }
-    
+
     override func configureNavigation() {
         navigationItem.title = state.searchText
     }
-    
+
     override func configureViews() {
         view.backgroundColor = .black
-        
+
         shoppingCollectionView.delegate = self
         shoppingCollectionView.dataSource = self
         shoppingCollectionView.prefetchDataSource = self
@@ -54,25 +52,27 @@ final class ShoppingDetailViewController: BaseViewController {
             animated: false,
             scrollPosition: .left
         )
-        
+
         resultCountLabel.font = .systemFont(ofSize: 14)
         resultCountLabel.textColor = .systemGreen
-        
+
         shoppingCollectionView.register(
             ShoppingDetailCollectionViewCell.self,
-            forCellWithReuseIdentifier: ShoppingDetailCollectionViewCell.identifier
+            forCellWithReuseIdentifier: ShoppingDetailCollectionViewCell
+                .identifier
         )
         shoppingCollectionView.register(
             ShoppingFilterCollectionViewCell.self,
-            forCellWithReuseIdentifier: ShoppingFilterCollectionViewCell.identifier
+            forCellWithReuseIdentifier: ShoppingFilterCollectionViewCell
+                .identifier
         )
     }
-    
+
     override func configureLayout() {
         resultCountLabel.snp.makeConstraints { make in
             make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
-        
+
         shoppingCollectionView.snp.makeConstraints { make in
             make.top.equalTo(resultCountLabel.snp.bottom).offset(8)
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -82,47 +82,53 @@ final class ShoppingDetailViewController: BaseViewController {
 
 // MARK: API
 extension ShoppingDetailViewController {
-    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) async {
+    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
         if start == 1 {
             state.isEnd = false
         }
         if !state.isEnd {
-            do {
-                let list = try await NetworkManager.shared.fetchShoppingList(
-                    form: FetchShoppingListForm(
-                        query: state.searchText,
-                        sort: filter.query,
-                        start: start
-                    )
+            NetworkManager.shared.fetchShoppingList(
+                form: FetchShoppingListForm(
+                    query: state.searchText,
+                    sort: filter.query,
+                    start: start
                 )
-                if start != 1 {
-                    self.state.list.append(contentsOf: list.items)
-                } else {
-                    self.state.list = list.items
+            ) { [weak self] result in
+                switch result {
+                case .success(let list):
+                    if start != 1 {
+                        self?.state.list.append(contentsOf: list.items)
+                    } else {
+                        self?.state.list = list.items
+                    }
+                    self?.state.isEnd = list.total < start + 30
+                    self?.resultCountLabel.text =
+                        "\(list.total.formatted()) 개의 검색 결과"
+                    self?.shoppingCollectionView.reloadSections(
+                        IndexSet(integer: 1))
+                    if start == 1 {
+                        self?.shoppingCollectionView.scrollToItem(
+                            at: IndexPath(row: 0, section: 0),
+                            at: .top,
+                            animated: false
+                        )
+                    }
+                case .failure(let failure):
+                    dump(failure)
                 }
-                self.state.isEnd = list.total < start + 30
-                self.resultCountLabel.text = "\(list.total.formatted()) 개의 검색 결과"
-                self.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
-                if start == 1 {
-                    self.shoppingCollectionView.scrollToItem(
-                        at: IndexPath(row: 0, section: 0),
-                        at: .top,
-                        animated: false
-                    )
-                }
-            } catch {
-                dump(error)
             }
         }
     }
 }
 
 //MAKR: CollectionView
-extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ShoppingDetailViewController: UICollectionViewDelegate,
+    UICollectionViewDataSource
+{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
@@ -133,26 +139,33 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
             return state.list.count
         }
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         if indexPath.section == 0 {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ShoppingFilterCollectionViewCell.identifier,
-                for: indexPath
-            ) as? ShoppingFilterCollectionViewCell else {
+            guard
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: ShoppingFilterCollectionViewCell
+                        .identifier,
+                    for: indexPath
+                ) as? ShoppingFilterCollectionViewCell
+            else {
                 print(#function, "ShoppingFilterCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
-            cell.configure(title: ShoppingDetailFilter.allCases[indexPath.row].buttonTitle)
+            cell.configure(
+                title: ShoppingDetailFilter.allCases[indexPath.row].buttonTitle)
             return cell
         } else {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ShoppingDetailCollectionViewCell.identifier,
-                for: indexPath
-            ) as? ShoppingDetailCollectionViewCell else {
+            guard
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: ShoppingDetailCollectionViewCell
+                        .identifier,
+                    for: indexPath
+                ) as? ShoppingDetailCollectionViewCell
+            else {
                 print(#function, "ShoppingDetailCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
@@ -160,25 +173,27 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
             return cell
         }
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
         if indexPath.section == 0 {
             state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
-            Task {
-                await fetchShoppingList(filter: state.currentFilter, start: 1)
-            }
+            fetchShoppingList(
+                filter: state.currentFilter,
+                start: 1
+            )
         }
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         shouldSelectItemAt indexPath: IndexPath
     ) -> Bool {
         if indexPath.section == 0,
-            indexPath != collectionView.indexPathsForSelectedItems?.first {
+            indexPath != collectionView.indexPathsForSelectedItems?.first
+        {
             return true
         } else {
             return false
@@ -192,14 +207,17 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         prefetchItemsAt indexPaths: [IndexPath]
     ) {
         if let lastIndexPath = indexPaths.last,
-           lastIndexPath.section == 1,
-           (state.list.count-10...state.list.count-1).contains(lastIndexPath.row) {
-            Task {
-                await fetchShoppingList(filter: state.currentFilter, start: state.list.count)
-            }
+            lastIndexPath.section == 1,
+            (state.list.count - 10...state.list.count - 1).contains(
+                lastIndexPath.row)
+        {
+            fetchShoppingList(
+                filter: state.currentFilter,
+                start: state.list.count
+            )
         }
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         cancelPrefetchingForItemsAt indexPaths: [IndexPath]
@@ -214,7 +232,8 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
 
 extension ShoppingDetailViewController {
     private func collectionViewLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
+        return UICollectionViewCompositionalLayout {
+            (sectionIndex, _) -> NSCollectionLayoutSection? in
             if sectionIndex == 0 {
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(100),
@@ -234,28 +253,34 @@ extension ShoppingDetailViewController {
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             } else {
-                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-                      let window = sceneDelegate.window else {
+                guard
+                    let sceneDelegate = UIApplication.shared.connectedScenes
+                        .first?.delegate as? SceneDelegate,
+                    let window = sceneDelegate.window
+                else {
                     print(#function, "SceneDelegate Wrong")
                     return nil
                 }
                 let sectionInset: CGFloat = 10
                 let itemSpacing: CGFloat = 12
-                let width = (window.bounds.width - sectionInset * 2 - itemSpacing) / 2
+                let width =
+                    (window.bounds.width - sectionInset * 2 - itemSpacing) / 2
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(width),
                     heightDimension: .absolute(width + 100)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(window.bounds.width - sectionInset * 2),
+                    widthDimension: .absolute(
+                        window.bounds.width - sectionInset * 2),
                     heightDimension: .absolute(width + 100)
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item, item]
                 )
-                group.interItemSpacing = NSCollectionLayoutSpacing.fixed(itemSpacing)
+                group.interItemSpacing = NSCollectionLayoutSpacing.fixed(
+                    itemSpacing)
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(
                     top: sectionInset,
