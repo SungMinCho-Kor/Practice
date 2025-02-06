@@ -10,35 +10,44 @@ import SnapKit
 import UIKit
 
 final class ShoppingDetailViewController: BaseViewController {
-    var state: ShoppingDetailState
-    let resultCountLabel = UILabel()
-    lazy var shoppingCollectionView = UICollectionView(
+    private let resultCountLabel = UILabel()
+    private lazy var shoppingCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout()
     )
+    private let viewModel: ShoppingDetailViewModel
 
+    private let input = ShoppingDetailViewModel.Input(
+        changeFilter: Observable<IndexPath>(
+            IndexPath(
+                row: 0,
+                section: 0
+            )
+        ),
+        pagination: Observable<Bool>(true)
+    )
+    
     init(searchText: String) {
-        state = ShoppingDetailState(searchText: searchText)
+        viewModel = ShoppingDetailViewModel(paginationText: searchText)
         super.init()
+        print("ShoppingDetailViewController Init")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchShoppingList(
-            filter: state.currentFilter,
-            start: 1
-        )
+        bind()
+        input.viewDidLoad.value = ()
     }
 
+    deinit {
+        print("ShoppingDetailViewController Deinit")
+    }
+    
     override func configureHierarchy() {
         [
             resultCountLabel,
             shoppingCollectionView,
         ].forEach(view.addSubview)
-    }
-
-    override func configureNavigation() {
-        navigationItem.title = state.searchText
     }
 
     override func configureViews() {
@@ -78,45 +87,28 @@ final class ShoppingDetailViewController: BaseViewController {
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
-}
-
-// MARK: API
-extension ShoppingDetailViewController {
-    private func fetchShoppingList(filter: ShoppingDetailFilter, start: Int) {
-        if start == 1 {
-            state.isEnd = false
+    
+    private func bind() {
+        let output = viewModel.transform(input: input)
+        
+        output.navigationTitle.bind { [weak self] title in
+            self?.navigationItem.title = title
         }
-        if !state.isEnd {
-            NetworkManager.shared.fetchShoppingList(
-                form: FetchShoppingListForm(
-                    query: state.searchText,
-                    sort: filter.query,
-                    start: start
-                )
-            ) { [weak self] result in
-                switch result {
-                case .success(let list):
-                    if start != 1 {
-                        self?.state.list.append(contentsOf: list.items)
-                    } else {
-                        self?.state.list = list.items
-                    }
-                    self?.state.isEnd = list.total < start + 30
-                    self?.resultCountLabel.text =
-                        "\(list.total.formatted()) 개의 검색 결과"
-                    self?.shoppingCollectionView.reloadSections(
-                        IndexSet(integer: 1))
-                    if start == 1 {
-                        self?.shoppingCollectionView.scrollToItem(
-                            at: IndexPath(row: 0, section: 0),
-                            at: .top,
-                            animated: false
-                        )
-                    }
-                case .failure(let failure):
-                    dump(failure)
-                }
-            }
+        
+        output.reloadData.bind { [weak self] in
+            self?.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
+        }
+        
+        output.scrollToTop.bind { [weak self] in
+            self?.shoppingCollectionView.scrollToItem(
+                at: IndexPath(row: 0, section: 0),
+                at: .top,
+                animated: false
+            )
+        }
+        
+        output.resultCountLabel.bind { [weak self] text in
+            self?.resultCountLabel.text = text
         }
     }
 }
@@ -136,7 +128,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate,
         if section == 0 {
             return ShoppingDetailFilter.allCases.count
         } else {
-            return state.list.count
+            return viewModel.list.count
         }
     }
 
@@ -169,7 +161,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate,
                 print(#function, "ShoppingDetailCollectionViewCell wrong")
                 return UICollectionViewCell()
             }
-            cell.configure(state.list[indexPath.row])
+            cell.configure(viewModel.list[indexPath.row])
             return cell
         }
     }
@@ -179,11 +171,7 @@ extension ShoppingDetailViewController: UICollectionViewDelegate,
         didSelectItemAt indexPath: IndexPath
     ) {
         if indexPath.section == 0 {
-            state.currentFilter = ShoppingDetailFilter.allCases[indexPath.row]
-            fetchShoppingList(
-                filter: state.currentFilter,
-                start: 1
-            )
+            input.changeFilter.value = indexPath
         }
     }
 
@@ -207,14 +195,9 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         prefetchItemsAt indexPaths: [IndexPath]
     ) {
         if let lastIndexPath = indexPaths.last,
-            lastIndexPath.section == 1,
-            (state.list.count - 10...state.list.count - 1).contains(
-                lastIndexPath.row)
-        {
-            fetchShoppingList(
-                filter: state.currentFilter,
-                start: state.list.count
-            )
+           lastIndexPath.section == 1,
+           lastIndexPath.row == viewModel.list.count - 1 {
+            input.pagination.value = false
         }
     }
 
@@ -223,7 +206,7 @@ extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
         cancelPrefetchingForItemsAt indexPaths: [IndexPath]
     ) {
         for indexPath in indexPaths {
-            if let url = URL(string: state.list[indexPath.row].image) {
+            if let url = URL(string: viewModel.list[indexPath.row].image) {
                 KingfisherManager.shared.downloader.cancel(url: url)
             }
         }
