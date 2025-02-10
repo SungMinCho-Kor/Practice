@@ -50,14 +50,15 @@ final class BoxOfficeViewController: UIViewController {
         bindData()
     }
     
-    
     private func bindData() {
         viewModel.output.outputDateString.bind { dateString in
             self.dateTextField.text = dateString
         }
         
-        viewModel.output.outputBoxOffice.bind { _ in
-            self.tableView.reloadData()
+        viewModel.output.outputBoxOffice.bind { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
         }
     }
     

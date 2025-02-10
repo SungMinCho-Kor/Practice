@@ -30,6 +30,7 @@ class BoxOfficeViewModel {
         output = Output()
         
         print("BoxOfficeViewModel Init")
+        callBoxOffice2(date: "20230101")
     }
     
     deinit {
@@ -66,6 +67,44 @@ class BoxOfficeViewModel {
                 print(failure)
             }
         }
+    }
+    
+    private func callNasaAPI() {
+        
+    }
+    
+    private func callBoxOffice2(date: String) {
+        let urlString = "https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=\(date)"
+        guard let url = URL(string: urlString) else {
+            return
+        }
+        let urlRequest = URLRequest(url: url)
+        
+        print("=== ", Thread.isMainThread)
+        let session = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response,error in
+            print("=== ", Thread.isMainThread)
+            if let error {
+                print("error!")
+                return
+            }
+            guard let response = response as? HTTPURLResponse,
+                  (200...299).contains(response.statusCode) else {
+                print("상태코드 ERROR")
+                return
+            }
+            
+            if let data,
+               let movieData = try? JSONDecoder().decode(
+                BoxOfficeResult.self,
+                from: data
+               ) {
+                self?.output.outputBoxOffice.value = movieData.boxOfficeResult.dailyBoxOfficeList
+            } else {
+                
+            }
+        }
+        
+        session.resume()
     }
 
 }
