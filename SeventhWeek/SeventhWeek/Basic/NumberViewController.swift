@@ -56,11 +56,11 @@ class NumberViewController: UIViewController {
         configureConstraints()
         configureActions()
         
-        numberViewModel.outputText.bind { [weak self] formattedAmount in
+        numberViewModel.output.outputText.bind { [weak self] formattedAmount in
             self?.formattedAmountLabel.text = formattedAmount
         }
         
-        numberViewModel.outputTextColor.bind { isRed in
+        numberViewModel.output.outputTextColor.bind { isRed in
             self.formattedAmountLabel.textColor = isRed ? UIColor.red : UIColor.blue
         }
     }
@@ -68,7 +68,7 @@ class NumberViewController: UIViewController {
  
     @objc private func amountChanged() {
         print(#function)
-        numberViewModel.inputField.value = amountTextField.text
+        numberViewModel.input.inputField.value = amountTextField.text
     }
 }
 

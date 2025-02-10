@@ -57,7 +57,7 @@ class PersonListViewController: UIViewController {
         setupTableView()
         setupActions()
         
-        viewModel.people.bind { peopleList in
+        viewModel.output.people.bind { peopleList in
             self.tableView.reloadData()
         }
     }
@@ -105,22 +105,22 @@ class PersonListViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func loadButtonTapped() {
-        viewModel.loadTrigger.value = ()
+        viewModel.input.loadTrigger.value = ()
     }
     
     @objc private func resetButtonTapped() {
-        viewModel.resetTrigger.value = ()
+        viewModel.input.resetTrigger.value = ()
     }
 }
  
 extension PersonListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.people.value.count
+        return viewModel.output.people.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell", for: indexPath)
-        let person = viewModel.people.value[indexPath.row]
+        let person = viewModel.output.people.value[indexPath.row]
         cell.textLabel?.text = "\(person.name), \(person.age)세"
         return cell
     }

@@ -9,34 +9,47 @@ import Foundation
 import Alamofire
 
 class BoxOfficeViewModel {
+
+    private(set) var input: Input
+    private(set) var output: Output
     
-    let inputSelectedDate = Observable(Date())
-    let inputSearchButtonTapped : Observable<Void?> = Observable(nil)
+    struct Input {
+        let inputSelectedDate = Observable(Date())
+        let inputSearchButtonTapped : Observable<Void?> = Observable(nil)
+    }
     
-    let outputBoxOffice: Observable<[Movie]> = Observable([])
-    let outputDateString: Observable<String> = Observable("")
+    struct Output {
+        let outputBoxOffice: Observable<[Movie]> = Observable([])
+        let outputDateString: Observable<String> = Observable("")
+    }
     
     private var query: String = ""
     
     init() {
+        input = Input()
+        output = Output()
+        
         print("BoxOfficeViewModel Init")
-        inputSelectedDate.bind { date in
-            self.convertDate(date: date)
-        }
-        inputSearchButtonTapped.lazyBind { _ in
-            self.callBoxOffice(date: self.query)
-        }
     }
     
     deinit {
         print("BoxOfficeViewModel Deinit")
     }
     
+    private func transform() {
+        input.inputSelectedDate.bind { date in
+            self.convertDate(date: date)
+        }
+        input.inputSearchButtonTapped.lazyBind { _ in
+            self.callBoxOffice(date: self.query)
+        }
+    }
+    
     private func convertDate(date: Date) {
         let format = DateFormatter()
         format.dateFormat = "yy년 MM월 dd일"
         let string = format.string(from: date)
-        outputDateString.value = string
+        output.outputDateString.value = string
         
         format.dateFormat = "yyyyMMdd"
         query = format.string(from: date)
@@ -48,7 +61,7 @@ class BoxOfficeViewModel {
         AF.request(url).responseDecodable(of: BoxOfficeResult.self) { response in
             switch response.result {
             case .success(let success):
-                self.outputBoxOffice.value = success.boxOfficeResult.dailyBoxOfficeList
+                self.output.outputBoxOffice.value = success.boxOfficeResult.dailyBoxOfficeList
             case .failure(let failure):
                 print(failure)
             }

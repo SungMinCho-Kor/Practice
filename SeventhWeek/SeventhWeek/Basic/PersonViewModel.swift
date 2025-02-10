@@ -10,17 +10,27 @@ final class PersonViewModel {
     let resetTitle = "Reset"
     let loadTitle = "Load 10 People"
     
-    var loadTrigger = Observable(())
-    var resetTrigger = Observable(())
+    private(set) var input: Input
+    private(set) var output: Output
     
-    var people: Observable<[Person]> = Observable([])
+    struct Input {
+        let loadTrigger = Observable(())
+        let resetTrigger = Observable(())
+    }
+    
+    struct Output {
+        let people: Observable<[Person]> = Observable([])
+    }
     
     init() {
-        loadTrigger.bind { _ in
-            self.people.value.append(contentsOf: self.generateRandomPeople())
+        input = Input()
+        output = Output()
+         
+        input.loadTrigger.bind { _ in
+            self.output.people.value.append(contentsOf: self.generateRandomPeople())
         }
-        resetTrigger.bind { _ in
-            self.people.value = []
+        input.resetTrigger.bind { _ in
+            self.output.people.value = []
         }
     }
     

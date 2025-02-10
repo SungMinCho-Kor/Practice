@@ -52,33 +52,33 @@ final class BoxOfficeViewController: UIViewController {
     
     
     private func bindData() {
-        viewModel.outputDateString.bind { dateString in
+        viewModel.output.outputDateString.bind { dateString in
             self.dateTextField.text = dateString
         }
         
-        viewModel.outputBoxOffice.bind { _ in
+        viewModel.output.outputBoxOffice.bind { _ in
             self.tableView.reloadData()
         }
     }
     
     @objc private func datePickerValueChanged() {
         print(datePicker.date)
-        viewModel.inputSelectedDate.value = datePicker.date
+        viewModel.input.inputSelectedDate.value = datePicker.date
     }
     
     @objc private func searchButtonTapped() {
-        viewModel.inputSearchButtonTapped.value = ()
+        viewModel.input.inputSearchButtonTapped.value = ()
     }
 }
 
 extension BoxOfficeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.outputBoxOffice.value.count
+        return viewModel.output.outputBoxOffice.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath)
-        let data = viewModel.outputBoxOffice.value[indexPath.row]
+        let data = viewModel.output.outputBoxOffice.value[indexPath.row]
         cell.textLabel?.text = "\(data.rank). \(data.movieNm) (관객수: \(data.audiCnt))"
         return cell
     }

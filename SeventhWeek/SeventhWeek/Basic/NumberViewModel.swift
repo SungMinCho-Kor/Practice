@@ -8,46 +8,57 @@
 import Foundation
 
 final class NumberViewModel {
-    // 사용자가 입력한 값 받아오기
-    let inputField: Field<String?> = Field(nil)
     
-    let outputText: Field<String> = Field("")
-    let outputTextColor = Field(false)
+    struct Input {
+        // 사용자가 입력한 값 받아오기
+        let inputField: Field<String?> = Field(nil)
+    }
+    
+    struct Output {
+        let outputText: Field<String> = Field("")
+        let outputTextColor = Field(false)
+    }
+    
+    private(set) var input: Input
+    var output: Output
     
     init() {
         print("NumberViewModel init")
-        inputField.bind { text in
+        input = Input()
+        output = Output()
+            
+        input.inputField.bind { text in
             print("inputField", text)
             self.validation()
         }
     }
     
     func validation() {
-        guard let text = inputField.value else {
-            outputText.value = ""
+        guard let text = input.inputField.value else {
+            output.outputText.value = ""
             return
         }
         
         guard !text.isEmpty else {
-            outputText.value = "값을 입력해주세요."
-            outputTextColor.value = true
+            output.outputText.value = "값을 입력해주세요."
+            output.outputTextColor.value = true
             return
         }
         
         guard let num = Int(text) else {
-            outputText.value = "숫자만 입력해주세요."
-            outputTextColor.value = true
+            output.outputText.value = "숫자만 입력해주세요."
+            output.outputTextColor.value = true
             return
         }
         
         guard num >= 0 && num <= 1_000_000 else {
-            outputText.value = "100만원 이하의 값을 입력해주세요."
-            outputTextColor.value = true
+            output.outputText.value = "100만원 이하의 값을 입력해주세요."
+            output.outputTextColor.value = true
             return
         }
         
-        outputText.value = "₩" + num.formatted()
-        outputTextColor.value = false
+        output.outputText.value = "₩" + num.formatted()
+        output.outputTextColor.value = false
     }
 
 }
