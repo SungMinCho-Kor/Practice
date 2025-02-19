@@ -30,10 +30,11 @@ final class HomeworkViewController: UIViewController {
      
     private func bind() {
         let cellSelected = tableView.rx.itemSelected
-        let searchText = searchBar.rx.text
+        let searchTextChanged = searchBar.rx.text.orEmpty
         let output = viewModel.transform(
             input: HomeworkViewModel.Input(
-                cellSelected: cellSelected
+                cellSelected: cellSelected,
+                searchTextChanged: searchTextChanged
             )
         )
         
@@ -95,6 +96,7 @@ final class HomeworkViewController: UIViewController {
         tableView.register(PersonTableViewCell.self, forCellReuseIdentifier: PersonTableViewCell.identifier)
         tableView.backgroundColor = .systemGreen
         tableView.rowHeight = 100
+        tableView.keyboardDismissMode = .onDrag
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.horizontalEdges.equalToSuperview()

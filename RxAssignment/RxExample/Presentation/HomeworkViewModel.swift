@@ -70,6 +70,7 @@ final class HomeworkViewModel {
 
     struct Input {
         let cellSelected: ControlEvent<IndexPath>
+        let searchTextChanged: ControlProperty<String>
     }
     
     struct Output {
@@ -108,6 +109,19 @@ final class HomeworkViewModel {
                     )
                 }
                 selectedUsers.accept(owner.selectedUsers)
+            }
+            .disposed(by: disposeBag)
+        
+        input.searchTextChanged
+            .distinctUntilChanged()
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .bind(with: self) { owner, text in
+                if text.isEmpty {
+                    owner.searchedUsers = owner.sampleUsers
+                } else {
+                    owner.searchedUsers = owner.sampleUsers.filter { $0.name.contains(text) }
+                }
+                users.accept(owner.searchedUsers)
             }
             .disposed(by: disposeBag)
         
