@@ -7,8 +7,12 @@
  
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class BirthdayViewController: UIViewController {
+    private let viewModel = BirthdayViewModel()
+    private let disposeBag = DisposeBag()
     
     let birthDayPicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -72,14 +76,39 @@ class BirthdayViewController: UIViewController {
         view.backgroundColor = Color.white
         
         configureLayout()
-        
-        nextButton.addTarget(self, action: #selector(nextButtonClicked), for: .touchUpInside)
+        bind()
     }
     
-    @objc func nextButtonClicked() {
-        navigationController?.pushViewController(SearchViewController(), animated: true)
+    private func bind() {
+        let output = viewModel.transform(
+            input: BirthdayViewModel.Input(
+                birthday: birthDayPicker.rx.date,
+                nextButtonTap: nextButton.rx.tap
+            )
+        )
+        
+        output.year
+            .bind(with: self) { owner, year in
+                owner.yearLabel.text = "\(year)년"
+            }
+            .disposed(by: disposeBag)
+        
+        output.month
+            .map { "\($0)월" }
+            .bind(to: monthLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.day
+            .map { "\($0)일" }
+            .bind(to: dayLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.pushNextViewController
+            .bind(with: self) { owner, _ in
+                owner.navigationController?.pushViewController(SearchViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
-
     
     func configureLayout() {
         view.addSubview(infoLabel)
