@@ -30,6 +30,7 @@ final class HomeworkViewController: UIViewController {
      
     private func bind() {
         let cellSelected = tableView.rx.itemSelected
+        let searchText = searchBar.rx.text
         let output = viewModel.transform(
             input: HomeworkViewModel.Input(
                 cellSelected: cellSelected
@@ -49,9 +50,15 @@ final class HomeworkViewController: UIViewController {
                 }
                 cell.usernameLabel.text = element.name
                 cell.profileImageView.kf.setImage(with: URL(string: element.profileImage))
+                
                 cell.detailButton.rx.tap
                     .bind(with: self) { owner, _ in
-                        owner.navigationController?.pushViewController(DetailViewController(), animated: true)
+                        let vc = DetailViewController()
+                        vc.navigationItem.title = element.name
+                        owner.navigationController?.pushViewController(
+                            vc,
+                            animated: true
+                        )
                     }
                     .disposed(by: cell.disposeBag)
             }
