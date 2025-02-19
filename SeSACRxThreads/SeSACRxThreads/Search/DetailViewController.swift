@@ -14,40 +14,39 @@ final class DetailViewController: UIViewController {
     
     private let button = UIButton()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .lightGray
+        navigationItem.title = "Detail"
         view.addSubview(button)
-        button.backgroundColor = .red
+        button.backgroundColor = .black
+        button.setTitle("다음", for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.snp.makeConstraints { make in
             make.size.equalTo(50)
             make.center.equalToSuperview()
         }
-        view.backgroundColor = .lightGray
-        navigationItem.title = "Detail"
         
-        
-        button
-            .rx
-            .tap
-            .map { _ in UIColor.blue }
-//            .bind(to: view.rx.backgroundColor)
-            .bind { color in
-                self
+        let tap = button.rx.tap
+            .map { Int.random(in: 1...100) }
+            .share()
+        tap
+            .bind(with: self) { owner, value in
+                print("1번", value)
             }
-//            .bind { [weak self] color in
-//                self?.view.backgroundColor = color
-//            }
             .disposed(by: disposeBag)
         
-//        backgroundColorObservable1
-//            .bind(to: view.rx.backgroundColor)
-//            .disposed(by: disposeBag)
-//        backgroundColorObservable2
-//            .bind(onNext: { color in
-//                self.view.backgroundColor = color
-//            })
-//            .disposed(by: disposeBag)
+        tap
+            .bind(with: self) { owner, value in
+                print("2번", value)
+            }
+            .disposed(by: disposeBag)
+        
+        tap
+            .bind(with: self) { owner, value in
+                print("3번", value)
+            }
+            .disposed(by: disposeBag)
     }
     
     deinit {

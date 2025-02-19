@@ -7,10 +7,18 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 final class SearchTableViewCell: UITableViewCell {
     
     static let identifier = "SearchTableViewCell"
+    
+    var disposeBag = DisposeBag()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
     
     let appNameLabel: UILabel = {
         let label = UILabel()

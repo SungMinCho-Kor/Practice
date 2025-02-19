@@ -21,12 +21,25 @@ class SearchViewController: UIViewController {
        return view
      }()
     
-    let items = Observable.just([
+    lazy var items = BehaviorSubject(value: data)
+
+    var data = [
         "First Item",
         "Second Item",
-        "Third Item"
-    ])
-
+        "Third Item",
+        "Fourth Item",
+        "Fifth Item",
+        "Sixth Item",
+        "Seventh Item",
+        "Eighth Item",
+        "Ninth Item",
+        "Tenth Item",
+        "Eleventh Item",
+        "Twelfth Item",
+        "Thirteenth Item",
+        "Fourteenth Item",
+        "Fifteenth Item"
+    ]
     
     let searchBar = UISearchBar()
     
@@ -42,52 +55,53 @@ class SearchViewController: UIViewController {
     }
     
     func bind() {
-        
-        searchBar.rx.searchButtonClicked
-            .throttle(.seconds(1), scheduler: MainScheduler.instance)
-            .withLatestFrom(searchBar.rx.text.orEmpty)
-            .distinctUntilChanged()
-            .bind(with: self) { owner, text in
-                print("리턴키 클릭잼 - \(text)")
+        items
+            .bind(
+                to: tableView.rx.items(
+                    cellIdentifier: SearchTableViewCell.identifier,
+                    cellType: SearchTableViewCell.self
+                )
+            ) { row, element, cell in
+                cell.appNameLabel.text = element
+                cell.downloadButton.rx.tap
+                    .bind(with: self) { owner, _ in
+                        print("다운로드")
+                    }
+                    .disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
         
-//        searchBar.rx.text.orEmpty
-//            .distinctUntilChanged()
-//            .bind(with: self) { owner, text in
-//                print(text)
-//            }
-//            .disposed(by: disposeBag)
-
-        items
-        .bind(to: tableView.rx.items) { (tableView, row, element) in
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier) as! SearchTableViewCell
-            cell.textLabel?.text = "\(element) @ row \(row)"
-            return cell
-        }
-        .disposed(by: disposeBag)
+        tableView
+            .rx
+            .rowHeight
+            .onNext(180)
         
-        Observable.zip(
-            tableView.rx.itemSelected,
-            tableView.rx.modelSelected(String.self)
-        )
-        .bind(with: self) { owner, value in
-            print(value.0) // index
-            print(value.1) // data
-        }
-        .disposed(by: disposeBag)
+        searchBar
+            .rx
+            .searchButtonClicked
+            .withLatestFrom(searchBar.rx.text.orEmpty, resultSelector: { _, text in
+                return "\(text) 추가됨"
+            })
+            .bind(with: self) { owner, text in
+                owner.data.insert(text, at: 0)
+                owner.items.onNext(owner.data)
+            }
+            .disposed(by: disposeBag)
         
-//        tableView.rx.itemSelected
-//            .bind { index in
-//                print(index)
-//            }
-//            .disposed(by: disposeBag)
-//
-//        tableView.rx.modelSelected(String.self)
-//            .bind { string in
-//                print(string)
-//            }
-//            .disposed(by: disposeBag)
+        searchBar
+            .rx
+            .text
+            .orEmpty
+            .debounce(.seconds(1), scheduler: MainScheduler())
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .map { owner, text in
+                owner.data.filter { $0.contains(text) }
+            }
+            .bind(with: self) { owner, data in
+                owner.items.onNext(data.isEmpty ? owner.data : data)
+            }
+            .disposed(by: disposeBag)
     }
      
     private func setSearchController() {
@@ -100,7 +114,6 @@ class SearchViewController: UIViewController {
     @objc func plusButtonClicked() {
         print("추가 버튼 클릭")
     }
-
     
     private func configure() {
         view.addSubview(tableView)
