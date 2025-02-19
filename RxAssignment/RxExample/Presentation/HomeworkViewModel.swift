@@ -65,6 +65,7 @@ final class HomeworkViewModel {
         Person(name: "Ralph", email: "ralph.cox@example.com", profileImage: "https://randomuser.me/api/portraits/thumb/men/26.jpg"),
         Person(name: "Ann", email: "ann.howard@example.com", profileImage: "https://randomuser.me/api/portraits/thumb/women/25.jpg")
     ]
+    private lazy var searchedUsers: [Person] = sampleUsers
     private var selectedUsers: [Person] = []
 
     struct Input {
@@ -77,7 +78,7 @@ final class HomeworkViewModel {
     }
     
     func transform(input: Input) -> Output {
-        let users = BehaviorRelay(value: sampleUsers)
+        let users = BehaviorRelay(value: searchedUsers)
         let selectedUsers = BehaviorRelay(value: selectedUsers)
         let output = Output(
             users: users,
@@ -88,7 +89,7 @@ final class HomeworkViewModel {
             .distinctUntilChanged()
             .withUnretained(self)
             .map { owner, indexPath in
-                owner.sampleUsers[indexPath.row]
+                owner.searchedUsers[indexPath.row]
             }
             .bind(with: self) {
                 owner,
