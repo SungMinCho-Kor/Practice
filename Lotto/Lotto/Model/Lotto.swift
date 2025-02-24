@@ -15,3 +15,16 @@ struct Lotto: Decodable {
     let drwtNo5: Int
     let drwtNo6: Int
 }
+
+extension Lotto {
+    static let none = Lotto(
+        drwNoDate: "",
+        bnusNo: 0,
+        drwtNo1: 0,
+        drwtNo2: 0,
+        drwtNo3: 0,
+        drwtNo4: 0,
+        drwtNo5: 0,
+        drwtNo6: 0
+    )
+}

@@ -5,7 +5,7 @@
 //  Created by 조성민 on 1/14/25.
 //
 
-protocol ViewConfiguration: AnyObject {
+protocol ViewConfiguration {
     func configureHierarchy()
     func configureLayout()
     func configureView()

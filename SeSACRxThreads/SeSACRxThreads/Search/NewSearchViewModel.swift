@@ -30,7 +30,7 @@ final class NewSearchViewModel {
             .withLatestFrom(input.searchText)
             .distinctUntilChanged()
             .map { "\($0)" }
-            .flatMapLatest { NetworkManager.shared.callBoxOffice(date: $0) }
+            .flatMap { NetworkManager.shared.callBoxOffice(date: $0) }
             .subscribe(with: self) { owner, movie in
                 list.onNext(movie.boxOfficeResult.dailyBoxOfficeList)
             } onError: { owner, error in

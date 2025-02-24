@@ -7,11 +7,14 @@
 
 import UIKit
 import SnapKit
-import Alamofire
+import RxSwift
+import RxCocoa
 
 final class ViewController: UIViewController, ViewConfiguration {
+    private let viewModel = ViewModel()
+    private let disposeBag = DisposeBag()
+    
     private let dateFormatter = DateFormatter()
-    private var maxRound: Int = 1
     private let pickerView = UIPickerView()
     private let lottoTextField = UITextField()
     private let announceLabel = UILabel()
@@ -31,30 +34,66 @@ final class ViewController: UIViewController, ViewConfiguration {
     private let roundStackView = UIStackView()
     private let ballsStackView = UIStackView()
     
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        maxRound = calculateLastSaturdayIteration()
-    }
-    
-    private func calculateLastSaturdayIteration() -> Int {
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        guard let firstRoundDate = dateFormatter.date(from: "2002-12-07") else {
-            return 1
-        }
-        return Int(-firstRoundDate.timeIntervalSinceNow) / 7 / 60 / 60 / 24 + 1
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureHierarchy()
         configureLayout()
         configureView()
-        fetchLottoDate(round: maxRound)
+        bind()
+    }
+    
+    private func bind() {
+        let selectedRound = pickerView.rx.modelSelected(Int.self)
+            .map { $0[0] }
+        
+        selectedRound
+            .asDriver(onErrorJustReturn: 0)
+            .drive(with: self) { owner, round in
+                owner.lottoTextField.text = "\(round)"
+            }
+            .disposed(by: disposeBag)
+        
+        let output = viewModel.transform(
+            input: ViewModel.Input(
+                selectRound: selectedRound
+            )
+        )
+        
+        output.roundText
+            .drive(lottoTextField.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.lottoData
+            .drive(with: self) { owner, value in
+                owner.dateLabel.text = value.drwNoDate
+                owner.firstBallLabel.text = "\(value.drwtNo1)"
+                owner.secondBallLabel.text = "\(value.drwtNo2)"
+                owner.thirdBallLabel.text = "\(value.drwtNo3)"
+                owner.fourthBallLabel.text = "\(value.drwtNo4)"
+                owner.fifthBallLabel.text = "\(value.drwtNo5)"
+                owner.sixthBallLabel.text = "\(value.drwtNo6)"
+                owner.bonusBallLabel.text = "\(value.bnusNo)"
+            }
+            .disposed(by: disposeBag)
+        
+        output.pickerItems
+            .drive(pickerView.rx.itemTitles) { _, item in
+                return "\(item)"
+            }
+            .disposed(by: disposeBag)
+        
+        output.ballColors
+            .drive(with: self) { owner, colors in
+                self.firstBallLabel.backgroundColor = colors[0].uiColor
+                self.secondBallLabel.backgroundColor = colors[1].uiColor
+                self.thirdBallLabel.backgroundColor = colors[2].uiColor
+                self.fourthBallLabel.backgroundColor = colors[3].uiColor
+                self.fifthBallLabel.backgroundColor = colors[4].uiColor
+                self.sixthBallLabel.backgroundColor = colors[5].uiColor
+                self.bonusBallLabel.backgroundColor = colors[6].uiColor
+            }
+            .disposed(by: disposeBag)
     }
     
     func configureHierarchy() {
@@ -133,15 +172,6 @@ final class ViewController: UIViewController, ViewConfiguration {
         lottoTextField.borderStyle = .roundedRect
         lottoTextField.textAlignment = .center
         lottoTextField.inputView = pickerView
-        lottoTextField.text = "\(maxRound)"
-        
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        pickerView.selectRow(
-            0,
-            inComponent: 0,
-            animated: false
-        )
         
         announceLabel.text = "당첨번호 안내"
         
@@ -180,79 +210,5 @@ final class ViewController: UIViewController, ViewConfiguration {
         
         ballsStackView.alignment = .center
         ballsStackView.spacing = 4
-    }
-}
-
-extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func pickerView(
-        _ pickerView: UIPickerView,
-        numberOfRowsInComponent component: Int
-    ) -> Int {
-        return maxRound
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(
-        _ pickerView: UIPickerView,
-        titleForRow row: Int,
-        forComponent component: Int
-    ) -> String? {
-        return "\(maxRound - row)"
-    }
-    
-    func pickerView(
-        _ pickerView: UIPickerView,
-        didSelectRow row: Int,
-        inComponent component: Int
-    ) {
-        lottoTextField.text = "\(maxRound - row)"
-        fetchLottoDate(round: maxRound - row)
-    }
-    
-    private func getBallColor(number: Int) -> UIColor {
-        switch number {
-        case ...10:
-            return .systemYellow
-        case ...20:
-            return .systemBlue
-        case ...30:
-            return .systemRed
-        case ...40:
-            return .gray
-        default:
-            return .systemGreen
-        }
-    }
-    
-    private func fetchLottoDate(round: Int) {
-        roundLabel.text = "\(round)회"
-        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(round)"
-        AF.request(url, method: .get)
-            .responseDecodable(of: Lotto.self) { response in
-                switch response.result {
-                case .success(let value):
-                    self.dateLabel.text = value.drwNoDate
-                    self.firstBallLabel.text = "\(value.drwtNo1)"
-                    self.secondBallLabel.text = "\(value.drwtNo2)"
-                    self.thirdBallLabel.text = "\(value.drwtNo3)"
-                    self.fourthBallLabel.text = "\(value.drwtNo4)"
-                    self.fifthBallLabel.text = "\(value.drwtNo5)"
-                    self.sixthBallLabel.text = "\(value.drwtNo6)"
-                    self.bonusBallLabel.text = "\(value.bnusNo)"
-                    
-                    self.firstBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo1)
-                    self.secondBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo2)
-                    self.thirdBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo3)
-                    self.fourthBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo4)
-                    self.fifthBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo5)
-                    self.sixthBallLabel.backgroundColor = self.getBallColor(number: value.drwtNo6)
-                    self.bonusBallLabel.backgroundColor = self.getBallColor(number: value.bnusNo)
-                case .failure(let error):
-                    dump(error)
-                }
-            }
     }
 }
