@@ -33,6 +33,9 @@ final class ViewController: UIViewController, ViewConfiguration {
     private let bonusLabel = UILabel()
     private let roundStackView = UIStackView()
     private let ballsStackView = UIStackView()
+
+    private let observableButton = UIButton()
+    private let singleButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,24 +47,29 @@ final class ViewController: UIViewController, ViewConfiguration {
     }
     
     private func bind() {
-        let selectedRound = pickerView.rx.modelSelected(Int.self)
-            .map { $0[0] }
+        let textFieldText = PublishRelay<String>()
         
-        selectedRound
-            .asDriver(onErrorJustReturn: 0)
-            .drive(with: self) { owner, round in
-                owner.lottoTextField.text = "\(round)"
-            }
+        textFieldText
+            .bind(to: lottoTextField.rx.text)
+            .disposed(by: disposeBag)
+        
+        pickerView.rx.modelSelected(Int.self)
+            .map { "\($0[0])" }
+            .bind(to: textFieldText)
             .disposed(by: disposeBag)
         
         let output = viewModel.transform(
             input: ViewModel.Input(
-                selectRound: selectedRound
+                selectRound: textFieldText,
+                observableTapped: observableButton.rx.tap,
+                singleTapped: singleButton.rx.tap
             )
         )
         
         output.roundText
-            .drive(lottoTextField.rx.text)
+            .drive(with: self) { owner, text in
+                textFieldText.accept(text)
+            }
             .disposed(by: disposeBag)
         
         output.lottoData
@@ -104,7 +112,9 @@ final class ViewController: UIViewController, ViewConfiguration {
             dividerView,
             roundStackView,
             ballsStackView,
-            bonusLabel
+            bonusLabel,
+            observableButton,
+            singleButton
         ].forEach(view.addSubview)
         [
             roundLabel,
@@ -166,6 +176,16 @@ final class ViewController: UIViewController, ViewConfiguration {
             make.top.equalTo(roundStackView.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
+        
+        observableButton.snp.makeConstraints { make in
+            make.top.equalTo(ballsStackView.snp.bottom).offset(16)
+            make.centerX.equalToSuperview()
+        }
+        
+        singleButton.snp.makeConstraints { make in
+            make.top.equalTo(observableButton.snp.bottom).offset(16)
+            make.centerX.equalToSuperview()
+        }
     }
     
     func configureView() {
@@ -210,5 +230,11 @@ final class ViewController: UIViewController, ViewConfiguration {
         
         ballsStackView.alignment = .center
         ballsStackView.spacing = 4
+        
+        observableButton.setTitle("Observable 통신", for: .normal)
+        observableButton.setTitleColor(.systemBlue, for: .normal)
+        
+        singleButton.setTitle("Single 통신", for: .normal)
+        singleButton.setTitleColor(.systemBlue, for: .normal)
     }
 }
