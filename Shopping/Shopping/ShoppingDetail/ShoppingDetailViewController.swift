@@ -8,27 +8,22 @@
 import UIKit
 import Kingfisher
 import SnapKit
+import RxSwift
+import RxCocoa
+import RxDataSources
 
 final class ShoppingDetailViewController: BaseViewController {
+    private let disposeBag = DisposeBag()
+    private let viewModel: ShoppingDetailViewModel
+    
     private let resultCountLabel = UILabel()
     private lazy var shoppingCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout()
     )
-    private let viewModel: ShoppingDetailCustomObservableViewModel
-
-    private let input = ShoppingDetailCustomObservableViewModel.Input(
-        changeFilter: Observable<IndexPath>(
-            IndexPath(
-                row: 0,
-                section: 0
-            )
-        ),
-        pagination: Observable<Bool>(true)
-    )
     
-    init(searchText: String) {
-        viewModel = ShoppingDetailCustomObservableViewModel(paginationText: searchText)
+    init(viewModel: ShoppingDetailViewModel) {
+        self.viewModel = viewModel
         super.init()
         print("ShoppingDetailViewController Init")
     }
@@ -36,7 +31,6 @@ final class ShoppingDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
-        input.viewDidLoad.value = ()
     }
 
     deinit {
@@ -53,9 +47,6 @@ final class ShoppingDetailViewController: BaseViewController {
     override func configureViews() {
         view.backgroundColor = .black
 
-        shoppingCollectionView.delegate = self
-        shoppingCollectionView.dataSource = self
-        shoppingCollectionView.prefetchDataSource = self
         shoppingCollectionView.selectItem(
             at: IndexPath(item: 0, section: 0),
             animated: false,
@@ -89,129 +80,120 @@ final class ShoppingDetailViewController: BaseViewController {
     }
     
     private func bind() {
-        let output = viewModel.transform(input: input)
-        
-        output.navigationTitle.bind { [weak self] title in
-            self?.navigationItem.title = title
-        }
-        
-        output.reloadData.bind { [weak self] in
-            self?.shoppingCollectionView.reloadSections(IndexSet(integer: 1))
-        }
-        
-        output.scrollToTop.bind { [weak self] in
-            self?.shoppingCollectionView.scrollToItem(
-                at: IndexPath(row: 0, section: 0),
-                at: .top,
-                animated: false
+        let output = viewModel.transform(
+            input: ShoppingDetailViewModel.Input(
+                cellDidTapped: shoppingCollectionView.rx.itemSelected,
+                prefetch: shoppingCollectionView.rx.prefetchItems
             )
-        }
+        )
         
-        output.resultCountLabel.bind { [weak self] text in
-            self?.resultCountLabel.text = text
-        }
+        output.navigationTitle
+            .drive(with: self) { owner, value in
+                owner.navigationItem.title = value
+            }
+            .disposed(by: disposeBag)
     }
 }
 
 //MAKR: CollectionView
-extension ShoppingDetailViewController: UICollectionViewDelegate,
-    UICollectionViewDataSource
-{
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
+//extension ShoppingDetailViewController: UICollectionViewDelegate,
+//    UICollectionViewDataSource
+//{
+//    func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        return 2
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        numberOfItemsInSection section: Int
+//    ) -> Int {
+//        if section == 0 {
+//            return ShoppingDetailFilter.allCases.count
+//        } else {
+//            return viewModel.list.count
+//        }
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        cellForItemAt indexPath: IndexPath
+//    ) -> UICollectionViewCell {
+//        if indexPath.section == 0 {
+//            guard
+//                let cell = collectionView.dequeueReusableCell(
+//                    withReuseIdentifier: ShoppingFilterCollectionViewCell
+//                        .identifier,
+//                    for: indexPath
+//                ) as? ShoppingFilterCollectionViewCell
+//            else {
+//                print(#function, "ShoppingFilterCollectionViewCell wrong")
+//                return UICollectionViewCell()
+//            }
+//            cell.configure(
+//                title: ShoppingDetailFilter.allCases[indexPath.row].buttonTitle)
+//            return cell
+//        } else {
+//            guard
+//                let cell = collectionView.dequeueReusableCell(
+//                    withReuseIdentifier: ShoppingDetailCollectionViewCell
+//                        .identifier,
+//                    for: indexPath
+//                ) as? ShoppingDetailCollectionViewCell
+//            else {
+//                print(#function, "ShoppingDetailCollectionViewCell wrong")
+//                return UICollectionViewCell()
+//            }
+//            cell.configure(viewModel.list[indexPath.row])
+//            return cell
+//        }
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        didSelectItemAt indexPath: IndexPath
+//    ) {
+//        if indexPath.section == 0 {
+//            input.changeFilter.value = indexPath
+//        }
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        shouldSelectItemAt indexPath: IndexPath
+//    ) -> Bool {
+//        if indexPath.section == 0,
+//            indexPath != collectionView.indexPathsForSelectedItems?.first
+//        {
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
+//}
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        if section == 0 {
-            return ShoppingDetailFilter.allCases.count
-        } else {
-            return viewModel.list.count
-        }
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            guard
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: ShoppingFilterCollectionViewCell
-                        .identifier,
-                    for: indexPath
-                ) as? ShoppingFilterCollectionViewCell
-            else {
-                print(#function, "ShoppingFilterCollectionViewCell wrong")
-                return UICollectionViewCell()
-            }
-            cell.configure(
-                title: ShoppingDetailFilter.allCases[indexPath.row].buttonTitle)
-            return cell
-        } else {
-            guard
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: ShoppingDetailCollectionViewCell
-                        .identifier,
-                    for: indexPath
-                ) as? ShoppingDetailCollectionViewCell
-            else {
-                print(#function, "ShoppingDetailCollectionViewCell wrong")
-                return UICollectionViewCell()
-            }
-            cell.configure(viewModel.list[indexPath.row])
-            return cell
-        }
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didSelectItemAt indexPath: IndexPath
-    ) {
-        if indexPath.section == 0 {
-            input.changeFilter.value = indexPath
-        }
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        shouldSelectItemAt indexPath: IndexPath
-    ) -> Bool {
-        if indexPath.section == 0,
-            indexPath != collectionView.indexPathsForSelectedItems?.first
-        {
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
-extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        prefetchItemsAt indexPaths: [IndexPath]
-    ) {
-        if let lastIndexPath = indexPaths.last,
-           lastIndexPath.section == 1,
-           lastIndexPath.row == viewModel.list.count - 1 {
-            input.pagination.value = false
-        }
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cancelPrefetchingForItemsAt indexPaths: [IndexPath]
-    ) {
-        for indexPath in indexPaths {
-            if let url = URL(string: viewModel.list[indexPath.row].image) {
-                KingfisherManager.shared.downloader.cancel(url: url)
-            }
-        }
-    }
-}
+//extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        prefetchItemsAt indexPaths: [IndexPath]
+//    ) {
+//        if let lastIndexPath = indexPaths.last,
+//           lastIndexPath.section == 1,
+//           lastIndexPath.row == viewModel.list.count - 1 {
+//            input.pagination.value = false
+//        }
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        cancelPrefetchingForItemsAt indexPaths: [IndexPath]
+//    ) {
+//        for indexPath in indexPaths {
+//            if let url = URL(string: viewModel.list[indexPath.row].image) {
+//                KingfisherManager.shared.downloader.cancel(url: url)
+//            }
+//        }
+//    }
+//}
 
 extension ShoppingDetailViewController {
     private func collectionViewLayout() -> UICollectionViewLayout {

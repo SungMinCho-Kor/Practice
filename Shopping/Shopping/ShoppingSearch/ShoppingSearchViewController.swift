@@ -9,17 +9,17 @@ import UIKit
 import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
-    private let viewModel = ShoppingSearchCustomObservableViewModel()
+//    private let viewModel = ShoppingSearchCustomObservableViewModel()
     
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
     
     // MARK: INPUT
-    private var input = ShoppingSearchCustomObservableViewModel.Input(searchButtonClicked: Observable<String?>(nil))
+//    private var input = ShoppingSearchCustomObservableViewModel.Input(searchButtonClicked: Observable<String?>(nil))
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bind()
+//        bind()
     }
     
     override func configureHierarchy() {
@@ -71,31 +71,31 @@ final class ShoppingSearchViewController: BaseViewController {
         navigationItem.backBarButtonItem = backButton
     }
     
-    private func bind() {
-        let output = viewModel.transform(input: input)
-        
-        output.presentAlert.lazyBind { [weak self] _ in
-            self?.presentAlert(
-                title: nil,
-                message: "두 글자 이상으로 검색하세요.",
-                actionTitle: "확인"
-            )
-        }
-        
-        output.pushDetailViewController.lazyBind { [weak self] searchText in
-            self?.view.endEditing(true)
-            self?.navigationController?.pushViewController(
-                ShoppingDetailViewController(searchText: searchText),
-                animated: true
-            )
-        }
-    }
+//    private func bind() {
+//        let output = viewModel.transform(input: input)
+//        
+//        output.presentAlert.lazyBind { [weak self] _ in
+//            self?.presentAlert(
+//                title: nil,
+//                message: "두 글자 이상으로 검색하세요.",
+//                actionTitle: "확인"
+//            )
+//        }
+//        
+//        output.pushDetailViewController.lazyBind { [weak self] searchText in
+//            self?.view.endEditing(true)
+//            self?.navigationController?.pushViewController(
+//                ShoppingDetailViewController(),
+//                animated: true
+//            )
+//        }
+//    }
 }
 
 //MARK: SearchBar
 extension ShoppingSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        input.searchButtonClicked.value = searchBar.text
+//        input.searchButtonClicked.value = searchBar.text
     }
 }
 

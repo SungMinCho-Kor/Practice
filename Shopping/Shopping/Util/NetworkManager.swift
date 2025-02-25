@@ -7,6 +7,8 @@
 
 import Foundation
 import Alamofire
+import RxSwift
+import RxCocoa
 
 enum NetworkError: Error, LocalizedError {
     case S1_S4orS6
@@ -36,27 +38,27 @@ final class NetworkManager {
     
     private init() { }
     
-    func fetchShoppingList(
-        form: FetchShoppingListForm,
-        completion: @escaping (Result<ShoppingItemList, NetworkError>) -> Void
-    ) {
-        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(form.query)&display=30&sort=\(form.sort)&start=\(form.start)"
-        let header = HTTPHeaders([
-            "X-Naver-Client-Id": APIKey.naverClientID,
-            "X-Naver-Client-Secret": APIKey.naverSecretKey
-        ])
-        
-        let data = AF.request(url, method: .get, headers: header)
-            .responseDecodable(of: ShoppingItemList.self) { [weak self] response in
-                guard let self else { return }
-                switch response.result {
-                case .success(let data):
-                    completion(.success(data))
-                case .failure(let error):
-                    dump(error)
-                    completion(.failure(handleStatusCode(response.response?.statusCode)))
+    func fetchShoppingList(form: FetchShoppingListForm) -> Single<ShoppingItemList> {
+        return Single<ShoppingItemList>.create { observer in
+            let url = "https://openapi.naver.com/v1/search/shop.json?query=\(form.query)&display=30&sort=\(form.sort)&start=\(form.start)"
+            let header = HTTPHeaders([
+                "X-Naver-Client-Id": APIKey.naverClientID,
+                "X-Naver-Client-Secret": APIKey.naverSecretKey
+            ])
+            
+            let data = AF.request(url, method: .get, headers: header)
+                .responseDecodable(of: ShoppingItemList.self) { [weak self] response in
+                    guard let self else { return }
+                    switch response.result {
+                    case .success(let data):
+                        observer(.success(data))
+                    case .failure(let error):
+                        dump(error)
+                        observer(.failure(handleStatusCode(response.response?.statusCode)))
+                    }
                 }
-            }
+            return Disposables.create()
+        }
     }
     
     private func handleStatusCode(_ code: Int?) -> NetworkError {
