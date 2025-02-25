@@ -47,11 +47,11 @@ final class ShoppingDetailViewController: BaseViewController {
     override func configureViews() {
         view.backgroundColor = .black
 
-        shoppingCollectionView.selectItem(
-            at: IndexPath(item: 0, section: 0),
-            animated: false,
-            scrollPosition: .left
-        )
+//        shoppingCollectionView.selectItem(
+//            at: IndexPath(item: 0, section: 0),
+//            animated: false,
+//            scrollPosition: .left
+//        )
 
         resultCountLabel.font = .systemFont(ofSize: 14)
         resultCountLabel.textColor = .systemGreen
@@ -92,6 +92,39 @@ final class ShoppingDetailViewController: BaseViewController {
                 owner.navigationItem.title = value
             }
             .disposed(by: disposeBag)
+        
+        let dataSource = RxCollectionViewSectionedReloadDataSource<ModelSection> { dataSource, collectionView, indexPath, item in
+            switch item {
+            case .filter(let title, let isSelected):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingFilterCollectionViewCell.identifier, for: indexPath) as? ShoppingFilterCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                cell.configure(title: title)
+                cell.isSelected = isSelected
+                
+                return cell
+            case .cell(let cellItem):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingDetailCollectionViewCell.identifier, for: indexPath) as? ShoppingDetailCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                cell.configure(cellItem)
+                
+                return cell
+            }
+        }
+        
+        Observable.combineLatest(
+            output.filterCells.asObservable(),
+            output.searchItems.asObservable()
+        )
+        .map {
+            [
+                ModelSection(items: $0.0),
+                ModelSection(items: $0.1.map { CollectionViewSection.cell(item: $0 )})
+            ]
+        }
+        .bind(to: shoppingCollectionView.rx.items(dataSource: dataSource))
+        .disposed(by: disposeBag)
     }
 }
 

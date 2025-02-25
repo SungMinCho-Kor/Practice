@@ -7,9 +7,13 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 final class ShoppingSearchViewController: BaseViewController {
 //    private let viewModel = ShoppingSearchCustomObservableViewModel()
+    private let viewModel = ShoppingSearchViewModel()
+    private let disposeBag = DisposeBag()
     
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
@@ -19,7 +23,7 @@ final class ShoppingSearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        bind()
+        bind()
     }
     
     override func configureHierarchy() {
@@ -69,6 +73,35 @@ final class ShoppingSearchViewController: BaseViewController {
         )
         backButton.tintColor = .white
         navigationItem.backBarButtonItem = backButton
+    }
+    
+    private func bind() {
+        let output = viewModel.transform(
+            input: ShoppingSearchViewModel.Input(
+                searchText: searchBar.rx.text.orEmpty,
+                searchTapped: searchBar.rx.searchButtonClicked
+            )
+        )
+        
+        output.presentAlert
+            .drive(with: self) { owner, _ in
+                owner.presentAlert(
+                    title: nil,
+                    message: "두 글자 이상으로 검색하세요.",
+                    actionTitle: "확인"
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        output.pushDetailViewController
+            .drive(with: self) { owner, searchText in
+                owner.navigationController?.pushViewController(
+                    ShoppingDetailViewController(viewModel: ShoppingDetailViewModel(searchText: searchText)),
+                    animated: true
+                )
+            }
+            .disposed(by: disposeBag)
+            
     }
     
 //    private func bind() {

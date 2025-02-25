@@ -18,6 +18,7 @@ final class ShoppingDetailViewModel: ViewModel {
     struct Output {
         let navigationTitle: Driver<String>
         let searchItems: Driver<[ShoppingItem]>
+        let filterCells: Driver<[CollectionViewSection]>
     }
     
     private let disposeBag = DisposeBag()
@@ -33,10 +34,24 @@ final class ShoppingDetailViewModel: ViewModel {
     func transform(input: Input) -> Output {
         let navigationTitle = BehaviorRelay(value: searchText)
         let searchItems = BehaviorRelay<[ShoppingItem]>(value: [])
+        let prefetchShoppingList = PublishRelay<ShoppingItemList>()
         let prefetch = PublishRelay<Int>()
+        let filterCells = BehaviorRelay(value: ShoppingDetailFilter.allCases.map {
+            CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == .accuracy)
+        })
+        
+        prefetchShoppingList
+            .withUnretained(self)
+            .map { owner, list in
+                if list.total == list.items.count + searchItems.value.count {
+                    owner.isPaginantionEnd = true
+                }
+                return list.items + searchItems.value
+            }
+            .bind(to: searchItems)
+            .disposed(by: disposeBag)
         
         input.cellDidTapped
-            .distinctUntilChanged()
             .compactMap {
                 if $0.section == 0 {
                     return $0.row
@@ -44,15 +59,39 @@ final class ShoppingDetailViewModel: ViewModel {
                     return nil
                 }
             }
+            .compactMap { ShoppingDetailFilter(rawValue: $0) }
             .withUnretained(self)
-            .flatMapLatest { owner, row in
+            .flatMapLatest { owner, filter in
+                owner.filter = filter
                 owner.isPaginantionEnd = false
                 return owner.fetchSearchItems(start: 1)
                     .catch { error in
-                        return .just([])
+                        return .just(
+                            ShoppingItemList(
+                                total: 0,
+                                items: []
+                            )
+                        )
                     }
             }
+            .map { $0.items }
             .bind(to: searchItems)
+            .disposed(by: disposeBag)
+        
+        input.cellDidTapped
+            .compactMap {
+                if $0.section == 0 {
+                    return $0.row
+                } else {
+                    return nil
+                }
+            }
+            .compactMap { ShoppingDetailFilter(rawValue: $0) }
+            .bind { filter in
+                filterCells.accept(ShoppingDetailFilter.allCases.map({
+                    CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == filter)
+                }))
+            }
             .disposed(by: disposeBag)
         
         input.prefetch
@@ -71,14 +110,15 @@ final class ShoppingDetailViewModel: ViewModel {
             .flatMapLatest { owner, start in
                 return owner.fetchSearchItems(start: start)
                     .catch { error in
-                        return .just([])
+                        return .just(
+                            ShoppingItemList(
+                                total: 0,
+                                items: []
+                            )
+                        )
                     }
             }
-            .bind(with: self) { owner, newItems in
-                var items = searchItems.value
-                items.append(contentsOf: newItems)
-                searchItems.accept(items)
-            }
+            .bind(to: prefetchShoppingList)
             .disposed(by: disposeBag)
         
         navigationTitle
@@ -86,18 +126,23 @@ final class ShoppingDetailViewModel: ViewModel {
             .flatMapLatest { owner, _ in
                 return owner.fetchSearchItems(start: 1)
             }
-            .bind(to: searchItems)
+            .bind(with: self) { owner, list in
+                if list.items.count == list.total {
+                    owner.isPaginantionEnd = true
+                }
+            }
             .disposed(by: disposeBag)
         
         let output = Output(
             navigationTitle: navigationTitle.asDriver(),
-            searchItems: searchItems.asDriver()
+            searchItems: searchItems.asDriver(),
+            filterCells: filterCells.asDriver()
         )
         
         return output
     }
     
-    private func fetchSearchItems(start: Int) -> Single<[ShoppingItem]> {
+    private func fetchSearchItems(start: Int) -> Single<ShoppingItemList> {
         return NetworkManager.shared.fetchShoppingList(
             form: FetchShoppingListForm(
                 query: searchText,
@@ -105,6 +150,5 @@ final class ShoppingDetailViewModel: ViewModel {
                 start: start
             )
         )
-        .map { $0.items }
     }
 }
