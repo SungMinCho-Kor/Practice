@@ -1,5 +1,5 @@
 //
-//  ShoppingDetailViewModel.swift
+//  ShoppingDetailCustomObservableViewModel.swift
 //  Shopping
 //
 //  Created by 조성민 on 2/6/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class ShoppingDetailViewModel: ViewModel {
+final class ShoppingDetailCustomObservableViewModel: ViewModel {
     struct Input {
         let changeFilter: Observable<IndexPath>
         let pagination: Observable<Bool>

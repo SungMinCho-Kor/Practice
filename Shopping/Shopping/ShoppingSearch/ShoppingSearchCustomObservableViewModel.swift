@@ -1,18 +1,11 @@
 //
-//  ShoppingSearchViewModel.swift
+//  ShoppingSearchCustomObservableViewModel.swift
 //  Shopping
 //
 //  Created by 조성민 on 2/6/25.
 //
 
-protocol ViewModel {
-    associatedtype Input
-    associatedtype Output
-    
-    func transform(input: Input) -> Output
-}
-
-final class ShoppingSearchViewModel: ViewModel {
+final class ShoppingSearchCustomObservableViewModel: ViewModel {
     struct Input {
         let searchButtonClicked: Observable<String?>
     }

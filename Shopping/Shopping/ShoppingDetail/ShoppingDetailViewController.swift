@@ -5,9 +5,9 @@
 //  Created by 조성민 on 1/15/25.
 //
 
+import UIKit
 import Kingfisher
 import SnapKit
-import UIKit
 
 final class ShoppingDetailViewController: BaseViewController {
     private let resultCountLabel = UILabel()
@@ -15,9 +15,9 @@ final class ShoppingDetailViewController: BaseViewController {
         frame: .zero,
         collectionViewLayout: collectionViewLayout()
     )
-    private let viewModel: ShoppingDetailViewModel
+    private let viewModel: ShoppingDetailCustomObservableViewModel
 
-    private let input = ShoppingDetailViewModel.Input(
+    private let input = ShoppingDetailCustomObservableViewModel.Input(
         changeFilter: Observable<IndexPath>(
             IndexPath(
                 row: 0,
@@ -28,7 +28,7 @@ final class ShoppingDetailViewController: BaseViewController {
     )
     
     init(searchText: String) {
-        viewModel = ShoppingDetailViewModel(paginationText: searchText)
+        viewModel = ShoppingDetailCustomObservableViewModel(paginationText: searchText)
         super.init()
         print("ShoppingDetailViewController Init")
     }

@@ -9,13 +9,13 @@ import UIKit
 import SnapKit
 
 final class ShoppingSearchViewController: BaseViewController {
-    private let viewModel = ShoppingSearchViewModel()
+    private let viewModel = ShoppingSearchCustomObservableViewModel()
     
     private let searchBar = UISearchBar()
     private let centerLabel = UILabel()
     
     // MARK: INPUT
-    private var input = ShoppingSearchViewModel.Input(searchButtonClicked: Observable<String?>(nil))
+    private var input = ShoppingSearchCustomObservableViewModel.Input(searchButtonClicked: Observable<String?>(nil))
     
     override func viewDidLoad() {
         super.viewDidLoad()
