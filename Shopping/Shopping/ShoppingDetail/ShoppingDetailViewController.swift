@@ -46,13 +46,7 @@ final class ShoppingDetailViewController: BaseViewController {
 
     override func configureViews() {
         view.backgroundColor = .black
-
-//        shoppingCollectionView.selectItem(
-//            at: IndexPath(item: 0, section: 0),
-//            animated: false,
-//            scrollPosition: .left
-//        )
-
+        
         resultCountLabel.font = .systemFont(ofSize: 14)
         resultCountLabel.textColor = .systemGreen
 
@@ -100,6 +94,7 @@ final class ShoppingDetailViewController: BaseViewController {
                     return UICollectionViewCell()
                 }
                 cell.configure(title: title)
+                // Cell의 isSelected가 작동하지 않네요...ㅠㅠ
                 cell.isSelected = isSelected
                 
                 return cell

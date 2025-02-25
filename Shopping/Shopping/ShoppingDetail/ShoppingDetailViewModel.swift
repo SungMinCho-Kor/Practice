@@ -35,7 +35,7 @@ final class ShoppingDetailViewModel: ViewModel {
         let navigationTitle = BehaviorRelay(value: searchText)
         let searchItems = BehaviorRelay<[ShoppingItem]>(value: [])
         let prefetchShoppingList = PublishRelay<ShoppingItemList>()
-        let prefetch = PublishRelay<Int>()
+        let prefetch = BehaviorRelay(value: 1)
         let filterCells = BehaviorRelay(value: ShoppingDetailFilter.allCases.map {
             CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == .accuracy)
         })
