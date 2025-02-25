@@ -30,9 +30,23 @@ final class NewSearchViewModel {
             .withLatestFrom(input.searchText)
             .distinctUntilChanged()
             .map { "\($0)" }
-            .flatMap { NetworkManager.shared.callBoxOffice(date: $0) }
-            .subscribe(with: self) { owner, movie in
-                list.onNext(movie.boxOfficeResult.dailyBoxOfficeList)
+            .flatMap {
+                NetworkManager.shared.callBoxOffice2(date: $0)
+//                    .catch { error in
+////                        switch error as? APIError {
+////                        case .invalidURL:
+////                        case .statusError:
+////                        }
+//                        return .just(Movie(boxOfficeResult: BoxOfficeResult(dailyBoxOfficeList: [])))
+//                    }
+            }
+            .subscribe(with: self) { owner, result in
+                switch result {
+                case .success(let movie):
+                    list.onNext(movie.boxOfficeResult.dailyBoxOfficeList)
+                case .failure(let error):
+                    list.onNext([])
+                }
             } onError: { owner, error in
                 print(#function, "onError", error)
             } onCompleted: { owner in

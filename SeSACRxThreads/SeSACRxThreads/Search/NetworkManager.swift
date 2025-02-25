@@ -85,6 +85,7 @@ final class NetworkManager {
 //                    do {
 //                        let result = try JSONDecoder().decode(Movie.self, from: data)
 //                        observer.onNext(result)
+//                        observer.onCompleted()
 //                    } catch {
 //                        observer.onError(APIError.unknownResponse)
 //                    }
@@ -134,6 +135,58 @@ final class NetworkManager {
                     }
                 } else {
                     observer(.failure(APIError.unknownResponse))
+                }
+            }
+            .resume()
+            
+            return Disposables.create {
+                print("끝!")
+            }
+        }
+        
+    }
+    
+    // 스트림 유지를 위해서 Result 형식으로
+    func callBoxOffice2(date: String) -> Single<Result<Movie, APIError>> {
+        return Single<Result<Movie, APIError>>.create { observer in
+            observer(.failure(APIError.unknownResponse))
+            let urlString =  "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=6f880d27184cbe92e28d4970282cec8e&targetDt=\(date)"
+            
+            guard let url = URL(string: urlString ) else {
+//                observer(.failure(APIError.invalidURL))
+                observer(.success(.failure(APIError.invalidURL)))
+                return Disposables.create {
+                    print("URL ERROR!")
+                }
+            }
+            
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error {
+//                    observer(.failure(APIError.unknownResponse))
+                    observer(.success(.failure(APIError.unknownResponse)))
+                    return
+                }
+                
+                guard let response = response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode) else {
+//                    observer(.failure(APIError.statusError))
+                    observer(.success(.failure(APIError.statusError)))
+                    return
+                }
+                
+                if let data {
+                    do {
+                        let result = try JSONDecoder().decode(Movie.self, from: data)
+//                        observer(.success(result))
+                        observer(.success(.success(result)))
+                        
+                    } catch {
+//                        observer(.failure(APIError.unknownResponse))
+                        observer(.success(.failure(APIError.unknownResponse)))
+                    }
+                } else {
+//                    observer(.failure(APIError.unknownResponse))
+                    observer(.success(.failure(APIError.unknownResponse)))
                 }
             }
             .resume()
