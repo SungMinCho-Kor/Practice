@@ -34,6 +34,9 @@
 		597E1D272D6BF8700075A6A0 /* NewSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597E1D262D6BF86D0075A6A0 /* NewSearchViewModel.swift */; };
 		597E1D292D6C0C1B0075A6A0 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597E1D282D6C0C1B0075A6A0 /* NetworkManager.swift */; };
 		597E1D2C2D6C0EB20075A6A0 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 597E1D2B2D6C0EB20075A6A0 /* Alamofire */; };
+		597E1D9F2D6D66D60075A6A0 /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 597E1D9E2D6D66D60075A6A0 /* Differentiator */; };
+		597E1DA12D6D66D60075A6A0 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 597E1DA02D6D66D60075A6A0 /* RxDataSources */; };
+		597E1DA32D6D674D0075A6A0 /* MultiSectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597E1DA22D6D674D0075A6A0 /* MultiSectionViewController.swift */; };
 		59F58B2C2D65646A00942D03 /* PhoneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2B2D65646800942D03 /* PhoneViewModel.swift */; };
 		59F58B2E2D65741F00942D03 /* BirthdayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F58B2D2D65741D00942D03 /* BirthdayViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -83,6 +86,7 @@
 		597E1D222D6BF6680075A6A0 /* NewSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSearchViewController.swift; sourceTree = "<group>"; };
 		597E1D262D6BF86D0075A6A0 /* NewSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSearchViewModel.swift; sourceTree = "<group>"; };
 		597E1D282D6C0C1B0075A6A0 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		597E1DA22D6D674D0075A6A0 /* MultiSectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSectionViewController.swift; sourceTree = "<group>"; };
 		59F58B2B2D65646800942D03 /* PhoneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneViewModel.swift; sourceTree = "<group>"; };
 		59F58B2D2D65741D00942D03 /* BirthdayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,7 +102,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				594C5C9A2D62C24C009BD81B /* RxSwift in Frameworks */,
+				597E1D9F2D6D66D60075A6A0 /* Differentiator in Frameworks */,
 				597E1D2C2D6C0EB20075A6A0 /* Alamofire in Frameworks */,
+				597E1DA12D6D66D60075A6A0 /* RxDataSources in Frameworks */,
 				594C5C982D62C24C009BD81B /* RxCocoa in Frameworks */,
 				04B0606A2D62A9D300A3155E /* SnapKit in Frameworks */,
 			);
@@ -226,6 +232,7 @@
 				04F6DBFF2C5B0C2200667F4D /* SearchTableViewCell.swift */,
 				04F6DC012C5B0D8200667F4D /* DetailViewController.swift */,
 				597E1D222D6BF6680075A6A0 /* NewSearchViewController.swift */,
+				597E1DA22D6D674D0075A6A0 /* MultiSectionViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -255,6 +262,8 @@
 				594C5C972D62C24C009BD81B /* RxCocoa */,
 				594C5C992D62C24C009BD81B /* RxSwift */,
 				597E1D2B2D6C0EB20075A6A0 /* Alamofire */,
+				597E1D9E2D6D66D60075A6A0 /* Differentiator */,
+				597E1DA02D6D66D60075A6A0 /* RxDataSources */,
 			);
 			productName = SeSACRxThreads;
 			productReference = 041280202AEF9BAB00972552 /* SeSACRxThreads.app */;
@@ -332,6 +341,7 @@
 				04B060682D62A9D300A3155E /* XCRemoteSwiftPackageReference "SnapKit" */,
 				594C5C962D62C24C009BD81B /* XCRemoteSwiftPackageReference "RxSwift" */,
 				597E1D2A2D6C0EB20075A6A0 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				597E1D9D2D6D66D60075A6A0 /* XCRemoteSwiftPackageReference "RxDataSources" */,
 			);
 			productRefGroup = 041280212AEF9BAB00972552 /* Products */;
 			projectDirPath = "";
@@ -384,6 +394,7 @@
 				597E1D232D6BF6680075A6A0 /* NewSearchViewController.swift in Sources */,
 				597E1D272D6BF8700075A6A0 /* NewSearchViewModel.swift in Sources */,
 				597E1D292D6C0C1B0075A6A0 /* NetworkManager.swift in Sources */,
+				597E1DA32D6D674D0075A6A0 /* MultiSectionViewController.swift in Sources */,
 				041280282AEF9BAB00972552 /* ViewController.swift in Sources */,
 				041280632AEFA0CE00972552 /* PointButton.swift in Sources */,
 				04F6DC022C5B0D8200667F4D /* DetailViewController.swift in Sources */,
@@ -759,6 +770,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		597E1D9D2D6D66D60075A6A0 /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -781,6 +800,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 597E1D2A2D6C0EB20075A6A0 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		597E1D9E2D6D66D60075A6A0 /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 597E1D9D2D6D66D60075A6A0 /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		597E1DA02D6D66D60075A6A0 /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 597E1D9D2D6D66D60075A6A0 /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
