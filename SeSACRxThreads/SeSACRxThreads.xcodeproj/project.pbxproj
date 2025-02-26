@@ -94,6 +94,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		591090C42D66EFA200BF5C2A /* Homework */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Homework; sourceTree = "<group>"; };
 		597E1D2D2D6C0F800075A6A0 /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
+		597E1DEF2D6E9DE70075A6A0 /* CompositionalDiffable */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CompositionalDiffable; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +151,7 @@
 		041280222AEF9BAB00972552 /* SeSACRxThreads */ = {
 			isa = PBXGroup;
 			children = (
+				597E1DEF2D6E9DE70075A6A0 /* CompositionalDiffable */,
 				591090C42D66EFA200BF5C2A /* Homework */,
 				041280532AEF9C1F00972552 /* SignUp */,
 				041280542AEF9C2600972552 /* SignIn */,
@@ -255,6 +257,7 @@
 			fileSystemSynchronizedGroups = (
 				591090C42D66EFA200BF5C2A /* Homework */,
 				597E1D2D2D6C0F800075A6A0 /* Model */,
+				597E1DEF2D6E9DE70075A6A0 /* CompositionalDiffable */,
 			);
 			name = SeSACRxThreads;
 			packageProductDependencies = (
