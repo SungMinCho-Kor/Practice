@@ -13,6 +13,11 @@ struct Product: Hashable {
     let count = Int.random(in: 1...20)
 }
 
+enum Section: CaseIterable {
+    case main
+    case sub
+}
+
 final class Cell: UICollectionViewCell {
     private let label = UILabel()
     
@@ -53,7 +58,7 @@ final class SimpleCollectionViewController: UIViewController {
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
     
 //    <Section, Model>
-    private var dataSource: UICollectionViewDiffableDataSource<Int, Product>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Product>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +70,7 @@ final class SimpleCollectionViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
+        updateSnapShot()
     }
     //Flow -> Compositinoal -> List Configuration
     //테이블뷰 시스템 기능 기능을 컬렉션뷰로도 만들수 있어
@@ -86,7 +92,7 @@ final class SimpleCollectionViewController: UIViewController {
             var content = UIListContentConfiguration.valueCell()
             content.image = UIImage(systemName: "star")
             
-            content.text = itemIdentifier.name + "aasfqfweqfqqrqfqwkrhjg"
+            content.text = itemIdentifier.name
             content.textProperties.color = .brown
             content.textProperties.font = .systemFont(ofSize: 20, weight: .bold)
             
@@ -118,6 +124,20 @@ final class SimpleCollectionViewController: UIViewController {
         }
     }
     
+    private func updateSnapShot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Product>()
+        snapshot.appendSections(Section.allCases)
+        snapshot.appendItems(list, toSection: .main)
+        snapshot.appendItems(
+            [Product(name: "afwg"), Product(name: "afwg")],
+            toSection: .main
+        )
+        snapshot.appendItems(
+            [Product(name: "afwgww"), Product(name: "afwddg")],
+            toSection: .sub
+        )
+        dataSource.apply(snapshot)
+    }
 }
 
 extension SimpleCollectionViewController: UICollectionViewDelegate/*, UICollectionViewDataSource */{
