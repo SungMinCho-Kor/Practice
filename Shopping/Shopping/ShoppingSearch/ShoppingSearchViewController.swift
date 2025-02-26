@@ -73,6 +73,23 @@ final class ShoppingSearchViewController: BaseViewController {
         )
         backButton.tintColor = .white
         navigationItem.backBarButtonItem = backButton
+        
+        let wishListBarButton = UIBarButtonItem(
+            image: UIImage(systemName: "list.bullet.below.rectangle"),
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        wishListBarButton.tintColor = .white
+        navigationItem.rightBarButtonItem = wishListBarButton
+        wishListBarButton.rx.tap
+            .bind(with: self) { owner, _ in
+                owner.navigationController?.pushViewController(
+                    WishListViewController(),
+                    animated: true
+                )
+            }
+            .disposed(by: disposeBag)
     }
     
     private func bind() {

@@ -7,10 +7,11 @@
 
 import UIKit
 
-struct Product: Hashable {
+struct Product: Hashable, Identifiable {
+    let id = UUID()
     let name: String
-    let price = Int.random(in: 1...1000)
-    let count = Int.random(in: 1...20)
+    let price = 40000
+    let count = 3
 }
 
 enum Section: CaseIterable {
@@ -46,7 +47,7 @@ final class SimpleCollectionViewController: UIViewController {
     
 //    private let list = ["Jack", "Bran", "Den", "Hue"]
 //    private let list = [1,2,3,4,5,6,7]
-    private let list = [
+    private var list = [
         Product(name: "M5"),
         Product(name: "trackpad"),
         Product(name: "keyboard"),
@@ -130,7 +131,7 @@ final class SimpleCollectionViewController: UIViewController {
         snapshot.appendItems(list, toSection: .main)
         snapshot.appendItems(
             [Product(name: "afwg"), Product(name: "afwg")],
-            toSection: .main
+            toSection: .sub
         )
         snapshot.appendItems(
             [Product(name: "afwgww"), Product(name: "afwddg")],
@@ -141,7 +142,14 @@ final class SimpleCollectionViewController: UIViewController {
 }
 
 extension SimpleCollectionViewController: UICollectionViewDelegate/*, UICollectionViewDataSource */{
-    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        list.insert(Product(name: "\(dataSource.itemIdentifier(for: indexPath)?.name ?? "") - \(Int.random(in: 0...100))"), at: 2)
+//        list.remove(at: indexPath.row)
+        updateSnapShot()
+    }
 //    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        return list.count
 //    }
