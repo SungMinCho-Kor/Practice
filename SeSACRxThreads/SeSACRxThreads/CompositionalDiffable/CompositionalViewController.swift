@@ -11,8 +11,8 @@ final class CompositionalViewController: UIViewController {
     
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
     private var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
-    private var list = [1,2,3,4,5]
-    private var list2 = [1,2,4,5,6,7,8]
+    private var list = Array(10000...10100)
+    private var list2 = Array(0...100)
     
     enum Section: CaseIterable {
         case first
@@ -35,44 +35,168 @@ final class CompositionalViewController: UIViewController {
     }
     
     // Compositional Layout 설정
-    private func createLayout() -> UICollectionViewLayout {
-//        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-//        configuration.showsSeparators = false
-//        configuration.backgroundColor = .systemPurple
-//        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+//    private func createLayout() -> UICollectionViewLayout {
+////        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+////        configuration.showsSeparators = false
+////        configuration.backgroundColor = .systemPurple
+////        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+////        return layout
+//        
+//        let itemSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(0.5),
+//            heightDimension: .fractionalHeight(1.0)
+//        )
+//        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+//        item.contentInsets = NSDirectionalEdgeInsets(
+//            top: 5,
+//            leading: 5,
+//            bottom: 5,
+//            trailing: 5
+//        )
+//        
+//        let groupSize = NSCollectionLayoutSize(
+//            widthDimension: .absolute(300),
+//            heightDimension: .absolute(100)
+//        )
+//        
+//        let group = NSCollectionLayoutGroup.horizontal(
+//            layoutSize: groupSize,
+//            subitems: [item]
+//        )
+//        
+//        let section = NSCollectionLayoutSection(group: group)
+//        section.interGroupSpacing = 20
+//        section.orthogonalScrollingBehavior = .groupPagingCentered
+//        
+//        let layout = UICollectionViewCompositionalLayout(section: section)
+//        
 //        return layout
+//    }
+    
+    // Group 안에 Group - 중첩 그룹)
+//    private func createLayout() -> UICollectionViewLayout {
+//        let itemSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(1.0),
+//            heightDimension: .fractionalHeight(1/3)
+//        )
+//        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+//        item.contentInsets = NSDirectionalEdgeInsets(
+//            top: 5,
+//            leading: 5,
+//            bottom: 5,
+//            trailing: 5
+//        )
+//        
+//        let innerGroupSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(1/3),
+//            heightDimension: .fractionalHeight(1.0)
+//        )
+//        
+//        let innerGroup = NSCollectionLayoutGroup.vertical(
+//            layoutSize: innerGroupSize,
+//            subitems: [item]
+//        )
+//        
+//        let groupSize = NSCollectionLayoutSize(
+//            widthDimension: .absolute(300),
+//            heightDimension: .absolute(100)
+//        )
+//        
+//        let group = NSCollectionLayoutGroup.horizontal(
+//            layoutSize: groupSize,
+//            subitems: [innerGroup]
+//        )
+//        
+//        let section = NSCollectionLayoutSection(group: group)
+//        section.interGroupSpacing = 20
+//        section.orthogonalScrollingBehavior = .groupPagingCentered
+//        
+//        let layout = UICollectionViewCompositionalLayout(section: section)
+//        
+//        return layout
+//    }
+    
+    // 섹션 별 다른 레이아웃
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
+            if sectionIndex == 0 {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .fractionalHeight(1/3)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(
+                    top: 5,
+                    leading: 5,
+                    bottom: 5,
+                    trailing: 5
+                )
         
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1/3),
-            heightDimension: .fractionalHeight(0.5)
-        )
+                let innerGroupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1/3),
+                    heightDimension: .fractionalHeight(1.0)
+                )
         
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let innerGroup = NSCollectionLayoutGroup.vertical(
+                    layoutSize: innerGroupSize,
+                    subitems: [item]
+                )
         
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(50)
-        )
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(300),
+                    heightDimension: .absolute(100)
+                )
         
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [item]
-        )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [innerGroup]
+                )
         
-        let section = NSCollectionLayoutSection(group: group)
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 20
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                
+                return section
+            } else {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.5),
+                    heightDimension: .fractionalHeight(1.0)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(
+                    top: 5,
+                    leading: 5,
+                    bottom: 5,
+                    trailing: 5
+                )
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(300),
+                    heightDimension: .absolute(100)
+                )
+                
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 20
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                
+                return section
+            }
+        }
         return layout
     }
     
     // Cell 등록, Cell For Item A
     private func configureDataSource() {
-        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, Int> { cell, indexPath, itemIdentifier in
-            var content = UIListContentConfiguration.subtitleCell()
-            content.text = "\(itemIdentifier)"
-            content.image = UIImage(systemName: "star")
-            cell.contentConfiguration = content
+        let registration = UICollectionView.CellRegistration<CompositionalCollectionViewCell, Int> { cell, indexPath, itemIdentifier in
+//            var content = UIListContentConfiguration.subtitleCell()
+//            content.text = "\(itemIdentifier)"
+//            content.image = UIImage(systemName: "star")
+            cell.configure(text: "\(itemIdentifier)")
             print("Cell Registration \(itemIdentifier)")
         }
         
