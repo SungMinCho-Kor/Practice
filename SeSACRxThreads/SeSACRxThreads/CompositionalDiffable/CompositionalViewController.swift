@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class CompositionalViewController: UIViewController {
     
@@ -24,6 +26,44 @@ final class CompositionalViewController: UIViewController {
         configureViews()
         configureDataSource()
         updateSnapShot()
+        multiUnicast()
+    }
+    
+    private let disposeBag = DisposeBag()
+    
+    
+    // Observable(unicast), Subject(multicast)
+    private func multiUnicast() {
+//        let sampleInt = Observable<Int>.create { observer in
+//            observer.onNext(Int.random(in: 0...100))
+//            return Disposables.create()
+//        }
+        
+//        let sampleInt = BehaviorSubject(value: 0)
+//        sampleInt.onNext(Int.random(in: 0...100))
+        
+//        let sampleInt = Observable<Int>.just(10)
+        let sampleInt = Observable<Int>.of(1, 2, 3)
+        
+        sampleInt
+            .subscribe { value in
+                print("1", value)
+            }
+            .disposed(by: disposeBag)
+        
+        sampleInt
+            .subscribe { value in
+                print("2", value)
+            }
+            .disposed(by: disposeBag)
+        
+        sampleInt
+            .subscribe { value in
+                print("3", value)
+            }
+            .disposed(by: disposeBag)
+        
+        
     }
     
     private func configureViews() {
@@ -197,14 +237,14 @@ final class CompositionalViewController: UIViewController {
 //            content.text = "\(itemIdentifier)"
 //            content.image = UIImage(systemName: "star")
             cell.configure(text: "\(itemIdentifier)")
-            print("Cell Registration \(itemIdentifier)")
+//            print("Cell Registration \(itemIdentifier)")
         }
         
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueConfiguredReusableCell(
                 using: registration, for: indexPath, item: itemIdentifier
             )
-            print("Cell DataSource \(itemIdentifier)")
+//            print("Cell DataSource \(itemIdentifier)")
             return cell
         }
     }
