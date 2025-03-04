@@ -90,6 +90,20 @@ final class ShoppingSearchViewController: BaseViewController {
                 )
             }
             .disposed(by: disposeBag)
+        
+        let likeListBarButton = UIBarButtonItem(
+            image: UIImage(systemName: "heart.fill"),
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        likeListBarButton.tintColor = .white
+        navigationItem.leftBarButtonItem = likeListBarButton
+        likeListBarButton.rx.tap
+            .bind(with: self) { owner, _ in
+                owner.navigationController?.pushViewController(LikeListViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func bind() {

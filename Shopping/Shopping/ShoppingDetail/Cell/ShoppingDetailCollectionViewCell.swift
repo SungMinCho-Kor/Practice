@@ -18,6 +18,11 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
     let disposeBag = DisposeBag()
     let likeButton = UIButton()
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        likeButton.isSelected = false
+    }
+    
     override func configureHierarchy() {
         [
             thumbnailImageView,
