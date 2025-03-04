@@ -19,6 +19,7 @@ final class ShoppingDetailViewModel: ViewModel {
         let navigationTitle: Driver<String>
         let searchItems: Driver<[ShoppingItem]>
         let filterCells: Driver<[CollectionViewSection]>
+        let totalCount: Driver<String>
     }
     
     private let disposeBag = DisposeBag()
@@ -39,6 +40,7 @@ final class ShoppingDetailViewModel: ViewModel {
         let filterCells = BehaviorRelay(value: ShoppingDetailFilter.allCases.map {
             CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == .accuracy)
         })
+        let totalCount = PublishRelay<String>()
         
         prefetchShoppingList
             .withUnretained(self)
@@ -96,9 +98,9 @@ final class ShoppingDetailViewModel: ViewModel {
         
         input.prefetch
             .bind(with: self) { owner, indexPaths in
-                if owner.isPaginantionEnd,
+                if !owner.isPaginantionEnd,
                    let lastIndexPath = indexPaths.last,
-                   lastIndexPath.section == 0,
+                   lastIndexPath.section == 1,
                    lastIndexPath.row == searchItems.value.count - 1 {
                     prefetch.accept(searchItems.value.count)
                 }
@@ -130,13 +132,15 @@ final class ShoppingDetailViewModel: ViewModel {
                 if list.items.count == list.total {
                     owner.isPaginantionEnd = true
                 }
+                totalCount.accept(list.total.formatted() + "개의 검색 결과")
             }
             .disposed(by: disposeBag)
         
         let output = Output(
             navigationTitle: navigationTitle.asDriver(),
             searchItems: searchItems.asDriver(),
-            filterCells: filterCells.asDriver()
+            filterCells: filterCells.asDriver(),
+            totalCount: totalCount.asDriver(onErrorJustReturn: "")
         )
         
         return output

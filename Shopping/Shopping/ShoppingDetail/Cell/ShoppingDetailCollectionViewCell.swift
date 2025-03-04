@@ -14,13 +14,15 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
     private let mallLabel = UILabel()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()
+    let likeButton = UIButton()
     
     override func configureHierarchy() {
         [
             thumbnailImageView,
             mallLabel,
             titleLabel,
-            priceLabel
+            priceLabel,
+            likeButton
         ].forEach(contentView.addSubview)
     }
     
@@ -44,6 +46,11 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.horizontalEdges.equalToSuperview().inset(8)
         }
+        
+        likeButton.snp.makeConstraints { make in
+            make.bottom.trailing.equalTo(thumbnailImageView).inset(4)
+            make.size.equalTo(30)
+        }
     }
     
     override func configureViews() {
@@ -62,6 +69,17 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
             ofSize: 18,
             weight: .semibold
         )
+        
+        likeButton.setImage(
+            UIImage(systemName: "suit.heart"),
+            for: .normal
+        )
+        likeButton.clipsToBounds = true
+        likeButton.layer.masksToBounds = true
+        likeButton.backgroundColor = .white
+        likeButton.tintColor = .red
+        likeButton.layer.cornerRadius = 15
+        likeButton.alpha = 0.9
     }
 }
 

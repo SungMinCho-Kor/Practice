@@ -87,6 +87,10 @@ final class ShoppingDetailViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
+        output.totalCount
+            .drive(resultCountLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         let dataSource = RxCollectionViewSectionedReloadDataSource<ModelSection> { dataSource, collectionView, indexPath, item in
             switch item {
             case .filter(let title, let isSelected):
