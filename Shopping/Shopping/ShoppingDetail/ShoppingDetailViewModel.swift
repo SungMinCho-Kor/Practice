@@ -22,6 +22,7 @@ final class ShoppingDetailViewModel: ViewModel {
         let searchItems: Driver<[ShoppingItem]>
         let filterCells: Driver<[CollectionViewSection]>
         let totalCount: Driver<String>
+        let toast: Driver<String>
     }
     
     private let disposeBag = DisposeBag()
@@ -45,6 +46,8 @@ final class ShoppingDetailViewModel: ViewModel {
             CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == .accuracy)
         })
         let totalCount = PublishRelay<String>()
+        let toast = PublishRelay<String>()
+        
         prefetchShoppingList
             .withUnretained(self)
             .map { owner, list in
@@ -147,17 +150,40 @@ final class ShoppingDetailViewModel: ViewModel {
         
         input.likeButtonTapped
             .bind { indexPath in
-                var item = searchItems.value[indexPath.row]
-                item.like.toggle()
-//                realmLikeRepository.update(item: item.toModel())
+                let item = searchItems.value[indexPath.row]
+                if let modelItem = realmLikeRepository.read(id: item.productId) {
+                    realmLikeRepository.delete(item: modelItem)
+                    toast.accept("상품을 좋아요 목록에서 삭제했습니다")
+                } else {
+                    realmLikeRepository.save(item: item.toModel())
+                    toast.accept("상품을 좋아요 목록에 추가했습니다")
+                }
             }
             .disposed(by: disposeBag)
         
+        let convertedItems = searchItems.map { item in
+            item.map {
+                if let item = realmLikeRepository.read(id: $0.toModel().productId) {
+                    return ShoppingItem(
+                        productId: $0.productId,
+                        title: $0.title,
+                        image: $0.image,
+                        lprice: $0.lprice,
+                        mallName: $0.mallName,
+                        like: true
+                    )
+                } else {
+                    return $0
+                }
+            }
+        }
+        
         let output = Output(
             navigationTitle: navigationTitle.asDriver(),
-            searchItems: searchItems.asDriver(),
+            searchItems: convertedItems.asDriver(onErrorJustReturn: []),
             filterCells: filterCells.asDriver(),
-            totalCount: totalCount.asDriver(onErrorJustReturn: "")
+            totalCount: totalCount.asDriver(onErrorJustReturn: ""),
+            toast: toast.asDriver(onErrorJustReturn: "")
         )
         
         return output

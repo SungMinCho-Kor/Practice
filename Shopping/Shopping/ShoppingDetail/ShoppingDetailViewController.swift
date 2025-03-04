@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Toast
 
 final class ShoppingDetailViewController: BaseViewController {
     private let disposeBag = DisposeBag()
@@ -120,6 +121,16 @@ final class ShoppingDetailViewController: BaseViewController {
                 return cell
             }
         }
+        
+        output.toast
+            .drive(with: self) { owner, message in
+                owner.view.makeToast(
+                    message,
+                    duration: 2,
+                    position: .bottom
+                )
+            }
+            .disposed(by: disposeBag)
         
         Observable.combineLatest(
             output.filterCells.asObservable(),

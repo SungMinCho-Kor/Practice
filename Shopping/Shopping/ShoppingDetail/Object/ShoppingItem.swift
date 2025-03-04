@@ -28,12 +28,29 @@ struct ShoppingItem: Decodable {
     }
     
     init(from decoder: any Decoder) throws {
-        self.productId = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .productId)
-        self.title = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .title)
-        self.image = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .image)
-        self.lprice = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .lprice)
-        self.mallName = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .mallName)
-        self.like = false// TODO: 수정
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.productId = try container.decode(String.self, forKey: .productId)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.image = try container.decode(String.self, forKey: .image)
+        self.lprice = try container.decode(String.self, forKey: .lprice)
+        self.mallName = try container.decode(String.self, forKey: .mallName)
+        self.like = false
+    }
+    
+    init(
+        productId: String,
+        title: String,
+        image: String,
+        lprice: String,
+        mallName: String,
+        like: Bool
+    ) {
+        self.productId = productId
+        self.title = title
+        self.image = image
+        self.lprice = lprice
+        self.mallName = mallName
+        self.like = like
     }
 }
 

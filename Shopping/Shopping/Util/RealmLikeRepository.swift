@@ -10,6 +10,10 @@ import RealmSwift
 final class RealmLikeRepository {
     private let realm = try! Realm()
     
+    init() {
+        dump(realm.configuration.fileURL)
+    }
+    
     func save(item: ShoppingItemModel) {
         do {
             try realm.write {
@@ -20,8 +24,15 @@ final class RealmLikeRepository {
         }
     }
     
-    func read() -> Results<ShoppingItemModel> {
+    func readAll() -> Results<ShoppingItemModel> {
         return realm.objects(ShoppingItemModel.self)
+    }
+    
+    func read(id: String) -> ShoppingItemModel? {
+        return realm.object(
+            ofType: ShoppingItemModel.self,
+            forPrimaryKey: id
+        )
     }
     
     func update(item: ShoppingItemModel) {
@@ -51,7 +62,6 @@ final class ShoppingItemModel: Object {
     @Persisted var image: String
     @Persisted var lprice: String
     @Persisted var mallName: String
-    @Persisted var like: Bool
     
     convenience init(
         productId: String,
@@ -66,6 +76,5 @@ final class ShoppingItemModel: Object {
         self.image = image
         self.lprice = lprice
         self.mallName = mallName
-        self.like = false
     }
 }
