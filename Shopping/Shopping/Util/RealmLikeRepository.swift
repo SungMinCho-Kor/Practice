@@ -8,8 +8,8 @@
 import RealmSwift
 
 final class RealmLikeRepository {
-    private let realm = try! Realm()
-    let likeList: Results<ShoppingItemModel>
+    let realm = try! Realm()
+    var likeList: Results<ShoppingItemModel>
     
     init() {
         likeList = realm.objects(ShoppingItemModel.self)

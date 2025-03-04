@@ -16,9 +16,7 @@ final class LikeListViewController: BaseViewController {
         frame: .zero,
         collectionViewLayout: createColectionViewLayout()
     )
-    
     private let likeRepository = RealmLikeRepository()
-    
     override func configureHierarchy() {
         [
             searchBar,
@@ -39,9 +37,11 @@ final class LikeListViewController: BaseViewController {
     }
     
     override func configureViews() {
-        navigationItem.title = "좋아요 리스트"
+        navigationItem.title = "좋아요"
         
         searchBar.searchBarStyle = .minimal
+        searchBar.delegate = self
+        searchBar.placeholder = "검색어를 입력하세요"
         
         collectionView.keyboardDismissMode = .onDrag
         collectionView.delegate = self
@@ -118,5 +118,20 @@ extension LikeListViewController: UICollectionViewDelegateFlowLayout {
             width: width,
             height: width + 100
         )
+    }
+}
+
+extension LikeListViewController: UISearchBarDelegate {
+    func searchBar(
+        _ searchBar: UISearchBar,
+        textDidChange searchText: String
+    ) {
+        if searchText.isEmpty {
+            likeRepository.likeList = likeRepository.realm.objects(ShoppingItemModel.self)
+        } else {
+            likeRepository.likeList = likeRepository.realm.objects(ShoppingItemModel.self)
+                .where { $0.title.contains(searchText, options: .caseInsensitive) }
+        }
+        collectionView.reloadData()
     }
 }
