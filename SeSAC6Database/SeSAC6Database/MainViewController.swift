@@ -26,6 +26,8 @@ class MainViewController: UIViewController {
         configureConstraints()
         
         list = realm.objects(UserTable.self)
+            .where { $0.name.contains("sesac", options: .caseInsensitive) }
+            .sorted(byKeyPath: "money", ascending: false)
         dump(realm.objects(UserTable.self))
     }
     
@@ -51,7 +53,6 @@ class MainViewController: UIViewController {
     }
     
     private func configureConstraints() {
-         
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
@@ -61,11 +62,9 @@ class MainViewController: UIViewController {
         let vc = AddViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
@@ -84,8 +83,23 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
- 
+        let data = list[indexPath.row]
+        
+        do {
+            try realm.write {
+//                realm.delete(data)
+                realm.create(
+                    UserTable.self,
+                    value: [
+                        "id": data.id,
+                        "money": 1000000000
+                    ],
+                    update: .modified
+                )
+                tableView.reloadData()
+            }
+        } catch {
+            print("삭제 실패")
+        }
     }
-      
-    
 }

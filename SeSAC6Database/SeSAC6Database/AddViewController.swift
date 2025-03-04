@@ -51,9 +51,9 @@ class AddViewController: UIViewController {
         do {
             try realm.write {
                 let data = UserTable(
-                    money: Int.random(in: 0...100000),
+                    money: Int.random(in: 100...1000) * 100,
                     category: categoryField.text!,
-                    name: titleTextField.text!,
+                    name: "SeSAC",
                     isIncome: false,
                     memo: memoField.text
                 )
