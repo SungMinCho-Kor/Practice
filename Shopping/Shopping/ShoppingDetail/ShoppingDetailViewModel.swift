@@ -8,11 +8,13 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RealmSwift
 
 final class ShoppingDetailViewModel: ViewModel {
     struct Input {
         let cellDidTapped: ControlEvent<IndexPath>
         let prefetch: ControlEvent<[IndexPath]>
+        let likeButtonTapped: PublishRelay<IndexPath>
     }
     
     struct Output {
@@ -33,6 +35,8 @@ final class ShoppingDetailViewModel: ViewModel {
     }
     
     func transform(input: Input) -> Output {
+        let realmLikeRepository = RealmLikeRepository()
+        
         let navigationTitle = BehaviorRelay(value: searchText)
         let searchItems = BehaviorRelay<[ShoppingItem]>(value: [])
         let prefetchShoppingList = PublishRelay<ShoppingItemList>()
@@ -41,7 +45,6 @@ final class ShoppingDetailViewModel: ViewModel {
             CollectionViewSection.filter(title: $0.buttonTitle, isSelected: $0 == .accuracy)
         })
         let totalCount = PublishRelay<String>()
-        
         prefetchShoppingList
             .withUnretained(self)
             .map { owner, list in
@@ -133,6 +136,20 @@ final class ShoppingDetailViewModel: ViewModel {
                     owner.isPaginantionEnd = true
                 }
                 totalCount.accept(list.total.formatted() + "개의 검색 결과")
+            }
+            .disposed(by: disposeBag)
+        
+        searchItems
+            .bind { items in
+                
+            }
+            .disposed(by: disposeBag)
+        
+        input.likeButtonTapped
+            .bind { indexPath in
+                var item = searchItems.value[indexPath.row]
+                item.like.toggle()
+//                realmLikeRepository.update(item: item.toModel())
             }
             .disposed(by: disposeBag)
         

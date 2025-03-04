@@ -74,10 +74,13 @@ final class ShoppingDetailViewController: BaseViewController {
     }
     
     private func bind() {
+        let likeButtonTapped = PublishRelay<IndexPath>()
+        
         let output = viewModel.transform(
             input: ShoppingDetailViewModel.Input(
                 cellDidTapped: shoppingCollectionView.rx.itemSelected,
-                prefetch: shoppingCollectionView.rx.prefetchItems
+                prefetch: shoppingCollectionView.rx.prefetchItems,
+                likeButtonTapped: likeButtonTapped
             )
         )
         
@@ -107,6 +110,12 @@ final class ShoppingDetailViewController: BaseViewController {
                     return UICollectionViewCell()
                 }
                 cell.configure(cellItem)
+                cell.likeButton.rx.tap
+                    .bind { _ in
+                        cell.likeButton.isSelected.toggle()
+                        likeButtonTapped.accept(indexPath)
+                    }
+                    .disposed(by: cell.disposeBag)
                 
                 return cell
             }

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 import Kingfisher
 
 final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
@@ -14,6 +15,7 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
     private let mallLabel = UILabel()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()
+    let disposeBag = DisposeBag()
     let likeButton = UIButton()
     
     override func configureHierarchy() {
@@ -71,8 +73,12 @@ final class ShoppingDetailCollectionViewCell: BaseCollectionViewCell {
         )
         
         likeButton.setImage(
-            UIImage(systemName: "suit.heart"),
+            UIImage(systemName: "heart"),
             for: .normal
+        )
+        likeButton.setImage(
+            UIImage(systemName: "heart.fill"),
+            for: .selected
         )
         likeButton.clipsToBounds = true
         likeButton.layer.masksToBounds = true
@@ -90,5 +96,6 @@ extension ShoppingDetailCollectionViewCell {
         mallLabel.text = content.mallName
         titleLabel.text = content.title
         priceLabel.text = Int(content.lprice)?.formatted()
+        likeButton.isSelected = content.like
     }
 }
