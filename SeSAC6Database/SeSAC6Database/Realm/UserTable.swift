@@ -35,12 +35,3 @@ class UserTable: Object {
         self.like = false
     }
 }
-
-class Folder: Object {
-    @Persisted var name: String
-    
-    convenience init(name: String) {
-        self.init()
-        self.name = name
-    }
-}

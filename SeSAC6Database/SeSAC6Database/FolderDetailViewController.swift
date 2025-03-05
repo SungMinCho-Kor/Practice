@@ -1,22 +1,21 @@
 //
-//  MainViewController.swift
+//  FolderDetailViewController.swift
 //  SeSAC6Database
 //
-//  Created by Jack on 3/4/25.
+//  Created by 조성민 on 3/5/25.
 //
 
 import UIKit
-import SnapKit
 import RealmSwift
 
-class MainViewController: UIViewController {
-
+class FolderDetailViewController: UIViewController {
+    
     let tableView = UITableView()
     
     private let repository: UserRepository = UserTableRepository()
-    private let folderRepository: FolderRepository = FolderTableRepository()
     
-    var list: Results<UserTable>!
+    var list: List<UserTable>!
+    var id: ObjectId!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,15 +24,8 @@ class MainViewController: UIViewController {
         configureHierarchy()
         configureView()
         configureConstraints()
-        list = repository.fetchAll()
         
         repository.getFileURL()
-        
-        
-        folderRepository.createItem(name: "계모임")
-        folderRepository.createItem(name: "개인")
-        folderRepository.createItem(name: "회사")
-        folderRepository.createItem(name: "멘토")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,11 +58,12 @@ class MainViewController: UIViewController {
      
     @objc func rightBarButtonItemClicked() {
         let vc = AddViewController()
+        vc.id = id
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+extension FolderDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }

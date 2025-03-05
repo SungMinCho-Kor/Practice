@@ -12,6 +12,7 @@ protocol UserRepository {
     func getFileURL()
     func fetchAll() -> Results<UserTable>
     func createItem()
+    func createItemInFolder(folder: Folder)
     func deleteItem(data: UserTable)
     func updateItem(data: UserTable)
 }
@@ -26,7 +27,7 @@ final class UserTableRepository: UserRepository {
     
     func fetchAll() -> Results<UserTable> {
         return realm.objects(UserTable.self)
-            .where { $0.name.contains("sesac", options: .caseInsensitive) }
+//            .where { $0.name.contains("sesac", options: .caseInsensitive) }
             .sorted(byKeyPath: "money", ascending: false)
     }
     
@@ -41,6 +42,24 @@ final class UserTableRepository: UserRepository {
                     memo: nil
                 )
                 realm.add(data)
+            }
+        } catch {
+            print("업데이트 실패")
+        }
+    }
+    
+    func createItemInFolder(folder: Folder) {
+        do {
+            try realm.write {
+                let data = UserTable(
+                    money: Int.random(in: 10...100) * 1000,
+                    category: ["생활비", "카페", "식비"].randomElement()!,
+                    name: ["빵", "커피", "돈까스"].randomElement()!,
+                    isIncome: false,
+                    memo: nil
+                )
+        
+                folder.detail.append(data)
             }
         } catch {
             print("업데이트 실패")
