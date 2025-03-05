@@ -20,8 +20,8 @@ class AddViewController: UIViewController {
     let titleTextField = UITextField()
     let contentTextField = UITextField()
     
-    let realm = try! Realm()
-       
+    private let repository = UserTableRepository()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureHierarchy()
@@ -47,24 +47,7 @@ class AddViewController: UIViewController {
     
     @objc func saveButtonClicked() {
         print(#function)
-        
-        do {
-            try realm.write {
-                let data = UserTable(
-                    money: Int.random(in: 100...1000) * 100,
-                    category: categoryField.text!,
-                    name: "SeSAC",
-                    isIncome: false,
-                    memo: memoField.text
-                )
-                
-                realm.add(data)
-                print("렘 저장 확인")
-            }
-        } catch {
-            print("렘 저장 실패")
-        }
-        
+        repository.createItem()
         navigationController?.popViewController(animated: true)
         
     }

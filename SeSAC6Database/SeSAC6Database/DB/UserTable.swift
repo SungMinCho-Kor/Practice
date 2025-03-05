@@ -1,5 +1,5 @@
 //
-//  RealmModel.swift
+//  UserTable.swift
 //  SeSAC6Database
 //
 //  Created by 조성민 on 3/4/25.

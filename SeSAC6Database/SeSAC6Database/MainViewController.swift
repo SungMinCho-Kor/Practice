@@ -12,23 +12,19 @@ import RealmSwift
 class MainViewController: UIViewController {
 
     let tableView = UITableView()
-     
-    private let realm = try! Realm()
+    
+    private let repository = UserTableRepository()
     
     var list: Results<UserTable>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print(#function)
-        print(realm.configuration.fileURL)
+        repository.getFileURL()
         configureHierarchy()
         configureView()
         configureConstraints()
-        
-        list = realm.objects(UserTable.self)
-            .where { $0.name.contains("sesac", options: .caseInsensitive) }
-            .sorted(byKeyPath: "money", ascending: false)
-        dump(realm.objects(UserTable.self))
+        list = repository.fetchAll()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,22 +80,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = list[indexPath.row]
-        
-        do {
-            try realm.write {
-//                realm.delete(data)
-                realm.create(
-                    UserTable.self,
-                    value: [
-                        "id": data.id,
-                        "money": 1000000000
-                    ],
-                    update: .modified
-                )
-                tableView.reloadData()
-            }
-        } catch {
-            print("삭제 실패")
-        }
+        repository.updateItem(data: data)
+        tableView.reloadData()
     }
 }
