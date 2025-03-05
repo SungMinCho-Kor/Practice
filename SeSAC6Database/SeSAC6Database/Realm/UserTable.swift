@@ -18,6 +18,9 @@ class UserTable: Object {
     @Persisted var date: Date
     @Persisted var like: Bool
     
+    @Persisted(originProperty: "detail")
+    var folder: LinkingObjects<Folder>
+    
     convenience init(
         money: Int,
         category: String,
