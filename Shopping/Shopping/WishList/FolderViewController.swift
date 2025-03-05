@@ -27,6 +27,15 @@ final class FolderViewController: BaseViewController {
     
     override func configureNavigation() {
         navigationItem.title = "위시리스트 폴더"
+        
+        let backButton = UIBarButtonItem(
+            image: nil,
+            style: .plain,
+            target: nil,
+            action: nil
+        )
+        backButton.tintColor = .white
+        navigationItem.backBarButtonItem = backButton
     }
     
     override func configureHierarchy() {
@@ -80,6 +89,9 @@ extension FolderViewController: UITableViewDelegate, UITableViewDataSource {
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
-        print("push \(list[indexPath.row].name) WishListViewController")
+        navigationController?.pushViewController(
+            WishListViewController(folder: list[indexPath.row]),
+            animated: true
+        )
     }
 }

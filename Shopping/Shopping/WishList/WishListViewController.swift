@@ -6,19 +6,16 @@
 //
 
 import UIKit
+import SnapKit
+import RealmSwift
 
 final class WishListViewController: BaseViewController {
     enum Section {
         case main
     }
     
-    struct Product: Hashable, Identifiable {
-        let id = UUID()
-        let name: String
-        let date = Date()
-    }
-    
-    private var list: [Product] = []
+    private let repository: WishRepository = WishTableRepository()
+    private var list: Results<Wish>!
     
     private let textField = UITextField()
     private lazy var collectionView = UICollectionView(
@@ -26,16 +23,28 @@ final class WishListViewController: BaseViewController {
         collectionViewLayout: collectionViewLayout()
     )
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Product>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Wish>!
+    private let folder: Folder
+    
+    init(folder: Folder) {
+        self.folder = folder
+        super.init()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setDataBase()
         configureDataSource()
+        updateSnapShot()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         textField.becomeFirstResponder()
+    }
+    
+    private func setDataBase() {
+        list = repository.fetchListInFolder(folder: folder)
     }
     
     override func configureHierarchy() {
@@ -69,7 +78,7 @@ final class WishListViewController: BaseViewController {
     }
     
     override func configureNavigation() {
-        navigationItem.title = "도봉러의 위시리스트"
+        navigationItem.title = folder.name
     }
     
     private func collectionViewLayout() -> UICollectionViewCompositionalLayout {
@@ -80,12 +89,12 @@ final class WishListViewController: BaseViewController {
     }
     
     private func configureDataSource() {
-        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, Product> { cell, indexPath, itemIdentifier in
+        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, Wish> { cell, indexPath, itemIdentifier in
             
             var content = UIListContentConfiguration.valueCell()
             content.image = UIImage(systemName: "star.fill")
             
-            content.text = itemIdentifier.name
+            content.text = itemIdentifier.content
             content.textProperties.color = .white
             content.textProperties.font = .systemFont(ofSize: 16, weight: .bold)
             
@@ -114,9 +123,9 @@ final class WishListViewController: BaseViewController {
     }
     
     private func updateSnapShot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Product>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Wish>()
         snapshot.appendSections([Section.main])
-        snapshot.appendItems(list, toSection: .main)
+        snapshot.appendItems(Array(list), toSection: .main)
         dataSource.apply(snapshot)
     }
 }
@@ -127,7 +136,7 @@ extension WishListViewController: UITextFieldDelegate {
             print(#function, "No Text")
             return true
         }
-        list.insert(Product(name: text), at: 0)
+        repository.createItem(content: text, folder: folder)
         updateSnapShot()
         textField.text = ""
         return true
@@ -139,7 +148,7 @@ extension WishListViewController: UICollectionViewDelegate {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
-        list.remove(at: indexPath.row)
+        repository.deleteItem(item: list[indexPath.row])
         updateSnapShot()
     }
 }

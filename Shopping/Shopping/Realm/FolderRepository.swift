@@ -9,7 +9,7 @@ import RealmSwift
 
 protocol FolderRepository {
     func fetchAll() -> Results<Folder>
-    func createItem(name: String)
+    func createFolder(name: String)
 }
 
 final class FolderTableRepository: FolderRepository {
@@ -19,7 +19,7 @@ final class FolderTableRepository: FolderRepository {
         return realm.objects(Folder.self)
     }
     
-    func createItem(name: String) {
+    func createFolder(name: String) {
         do {
             try realm.write {
                 realm.add(Folder(name: name))
