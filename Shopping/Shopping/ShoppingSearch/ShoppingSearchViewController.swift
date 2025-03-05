@@ -85,7 +85,7 @@ final class ShoppingSearchViewController: BaseViewController {
         wishListBarButton.rx.tap
             .bind(with: self) { owner, _ in
                 owner.navigationController?.pushViewController(
-                    WishListViewController(),
+                    FolderViewController(),
                     animated: true
                 )
             }
