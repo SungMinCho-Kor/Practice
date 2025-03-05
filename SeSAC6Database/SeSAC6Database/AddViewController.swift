@@ -20,7 +20,7 @@ class AddViewController: UIViewController {
     let titleTextField = UITextField()
     let contentTextField = UITextField()
     
-    private let repository = UserTableRepository()
+    private let repository: UserRepository = UserTableRepository()
     
     override func viewDidLoad() {
         super.viewDidLoad()

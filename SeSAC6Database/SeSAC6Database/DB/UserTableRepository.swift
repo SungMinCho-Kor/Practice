@@ -8,7 +8,15 @@
 import Foundation
 import RealmSwift
 
-final class UserTableRepository {
+protocol UserRepository {
+    func getFileURL()
+    func fetchAll() -> Results<UserTable>
+    func createItem()
+    func deleteItem(data: UserTable)
+    func updateItem(data: UserTable)
+}
+
+final class UserTableRepository: UserRepository {
     
     private let realm = try! Realm()
     

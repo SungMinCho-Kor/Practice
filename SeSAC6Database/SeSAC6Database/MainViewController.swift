@@ -13,7 +13,7 @@ class MainViewController: UIViewController {
 
     let tableView = UITableView()
     
-    private let repository = UserTableRepository()
+    private let repository: UserRepository = UserTableRepository()
     
     var list: Results<UserTable>!
     
