@@ -38,11 +38,6 @@ final class FolderViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
-        
-        
-      let image = UIImage(systemName: "plus")
-      let item = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(rightBarButtonItemClicked))
-      navigationItem.rightBarButtonItem = item
     }
     
    @objc func rightBarButtonItemClicked() {
