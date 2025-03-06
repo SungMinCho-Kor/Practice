@@ -10,6 +10,9 @@ import RealmSwift
 class Folder: Object {
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var name: String
+    @Persisted var favorite: Bool
+    @Persisted var nameDescription: String
+    
     @Persisted var detail: List<UserTable>
     
     convenience init(name: String) {

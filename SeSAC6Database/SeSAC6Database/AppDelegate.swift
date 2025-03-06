@@ -6,13 +6,76 @@
 //
 
 import UIKit
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
  
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        realmMigration()
+//        현재 사용자가 사용하는 DB Schema Version 체크
+        let realm = try! Realm()
+        do {
+            let version = try schemaVersionAtURL(realm.configuration.fileURL!)
+            print("Schema Version : ", version)
+        } catch {
+            print("Schema Failed")
+        }
+        
         return true
+    }
+    
+    func realmMigration() {
+        let config = Realm.Configuration(schemaVersion: 6) { migration, oldSchemaVersion in
+            // 단순히 테이블, 컬럼 추가 삭제에는 코드 필요 X
+            
+            // 0 -> 1: Folder에 like: Bool 추가
+            if oldSchemaVersion < 1 {
+                
+            }
+            
+            // 1 -> 2: Folder에 like: Bool 삭제
+            if oldSchemaVersion < 2 {
+                
+            }
+            
+            // 2 -> 3: Folder에 like: Bool 추가
+            if oldSchemaVersion < 3 {
+                
+            }
+            
+            // 3 -> 4 like = true 기본 설정
+            if oldSchemaVersion < 4 {
+                migration.enumerateObjects(ofType: Folder.className()) { oldObject, newObject in
+                    
+                    guard let newObject else { return }
+                    
+                    newObject["like"] = true
+                }
+            }
+            
+            // 4 -> 5 like 이름 favorite으로 수정
+            if oldSchemaVersion < 5 {
+                migration.renameProperty(
+                    onType: Folder.className(),
+                    from: "like",
+                    to: "favorite"
+                )
+            }
+            
+            // 5 -> 6 Folder의 nameDescription을 기존 필드의 내용으로 만들어 채우기
+            if oldSchemaVersion < 6 {
+                migration.enumerateObjects(ofType: Folder.className()) { oldObject, newObject in
+                    guard let oldObject, let newObject else {
+                        return
+                    }
+                    newObject["nameDescription"] = "'\(oldObject["name"] ?? "")'폴더에 대한 설명입니다."
+                }
+            }
+        }
+        
+        Realm.Configuration.defaultConfiguration = config
     }
 
     // MARK: UISceneSession Lifecycle
