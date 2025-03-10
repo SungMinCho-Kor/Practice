@@ -12,7 +12,7 @@ protocol UserRepository {
     func getFileURL()
     func fetchAll() -> Results<UserTable>
     func createItem()
-    func createItemInFolder(folder: Folder)
+    func createItemInFolder(folder: Folder, data: UserTable)
     func deleteItem(data: UserTable)
     func updateItem(data: UserTable)
 }
@@ -48,17 +48,9 @@ final class UserTableRepository: UserRepository {
         }
     }
     
-    func createItemInFolder(folder: Folder) {
+    func createItemInFolder(folder: Folder, data: UserTable) {
         do {
             try realm.write {
-                let data = UserTable(
-                    money: Int.random(in: 10...100) * 1000,
-                    category: ["생활비", "카페", "식비"].randomElement()!,
-                    name: ["빵", "커피", "돈까스"].randomElement()!,
-                    isIncome: false,
-                    memo: nil
-                )
-        
                 folder.detail.append(data)
             }
         } catch {

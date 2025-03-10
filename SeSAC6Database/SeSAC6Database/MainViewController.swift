@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import FSCalendar
 import SnapKit
 import RealmSwift
 
 class MainViewController: UIViewController {
 
     let tableView = UITableView()
+    let calendar = FSCalendar()
     
     private let repository: UserRepository = UserTableRepository()
     private let folderRepository: FolderRepository = FolderTableRepository()
@@ -44,10 +46,16 @@ class MainViewController: UIViewController {
     
     private func configureHierarchy() {
         view.addSubview(tableView)
+        view.addSubview(calendar)
     }
     
     private func configureView() {
         view.backgroundColor = .white
+        
+        calendar.backgroundColor = .green
+        calendar.delegate = self
+        calendar.dataSource = self
+        
         tableView.rowHeight = 130
         tableView.delegate = self
         tableView.dataSource = self
@@ -59,8 +67,14 @@ class MainViewController: UIViewController {
     }
     
     private func configureConstraints() {
+        calendar.snp.makeConstraints { make in
+            make.horizontalEdges.top.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(250)
+        }
+        
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(calendar.snp.bottom)
+            make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
      
@@ -93,4 +107,48 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         repository.updateItem(data: data)
         tableView.reloadData()
     }
+}
+
+extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
+    
+//    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+//        return 2
+//    }
+    
+//    func calendar(_ calendar: FSCalendar, titleFor date: Date) -> String? {
+//        return "WRW"
+//    }
+    
+//    func calendar(_ calendar: FSCalendar, imageFor date: Date) -> UIImage? {
+//        return UIImage(systemName: "star")
+//    }
+    
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        print(#function, date)
+        
+        // 선택한 날짜
+        let start = Calendar.current.startOfDay(for: date)
+        
+        // 선택한 날짜의 다음 날짜
+        let end = Calendar.current.date(
+            byAdding: .day,
+            value: 1,
+            to: start
+        )!
+        
+        // Realm Filter를 위한 NSPredicate 만들기
+        let predicate = NSPredicate(
+            format: "date >= %@ && date < %@",
+            start as NSDate, end as NSDate
+        )
+        
+        let realm = try! Realm()
+        
+        let result = realm.objects(UserTable.self)
+            .filter(predicate)
+        
+        dump(result)
+        
+    }
+    
 }

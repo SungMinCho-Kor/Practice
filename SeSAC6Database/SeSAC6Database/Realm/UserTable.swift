@@ -18,6 +18,8 @@ class UserTable: Object {
     @Persisted var date: Date
     @Persisted var like: Bool
     
+    @Persisted var poster: Data
+    
     @Persisted(originProperty: "detail")
     var folder: LinkingObjects<Folder>
     

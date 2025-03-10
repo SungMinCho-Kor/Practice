@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func realmMigration() {
-        let config = Realm.Configuration(schemaVersion: 7) { migration, oldSchemaVersion in
+        let config = Realm.Configuration(schemaVersion: 8) { migration, oldSchemaVersion in
             // 단순히 테이블, 컬럼 추가 삭제에는 코드 필요 X
             
             // 0 -> 1: Folder에 like: Bool 추가
@@ -76,6 +76,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             // 6 -> 7 Folder에 EmbededObject Memo 생성
             if oldSchemaVersion < 7 {
+                
+            }
+            
+            // 7 -> 8 UserTable에 poster 생성
+            if oldSchemaVersion < 8 {
                 
             }
         }

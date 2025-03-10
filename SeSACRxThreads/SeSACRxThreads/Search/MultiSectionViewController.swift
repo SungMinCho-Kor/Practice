@@ -73,12 +73,20 @@ final class MultiSectionViewController: UIViewController {
         
         // 1 - TableViewSectionedDataSource<SectionModelType>
         // 4 - Section
+//        let dataSource = RxTableViewSectionedReloadDataSource<Mentor> { dataSource, tableView, indexPath, item in
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "sectionCell", for: indexPath)
+//            cell.textLabel?.text = "\(item.word) - \(item.count)번"
+//            
+//            return cell
+//        }
         let dataSource = RxTableViewSectionedReloadDataSource<Mentor> { dataSource, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: "sectionCell", for: indexPath)
             cell.textLabel?.text = "\(item.word) - \(item.count)번"
             
             return cell
         }
+        
+        
         
         dataSource.titleForHeaderInSection = { dataSource, index in
             return dataSource.sectionModels[index].name

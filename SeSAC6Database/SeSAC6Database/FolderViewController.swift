@@ -21,11 +21,26 @@ final class FolderViewController: UIViewController {
         configureView()
         configureConstraints()
         list = repository.fetchAll()
+        configureNavigation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+    }
+    
+    private func configureNavigation() {
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "pencil"),
+            style: .plain,
+            target: self,
+            action: #selector(backupTapped)
+        )
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc private func backupTapped() {
+        navigationController?.pushViewController(BackupViewController(), animated: true)
     }
     
     private func configureHierarchy() {
@@ -70,12 +85,12 @@ extension FolderViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = list[indexPath.row]
-//        let vc = FolderDetailViewController()
-//        vc.list = data.detail
-//        vc.id = data.id
-//        navigationController?.pushViewController(vc, animated: true)
+        let vc = FolderDetailViewController()
+        vc.list = data.detail
+        vc.id = data.id
+        navigationController?.pushViewController(vc, animated: true)
 //        repository.deleteItem(data: data)
-        repository.createMemo(data: data)
-        tableView.reloadData()
+//        repository.createMemo(data: data)
+//        tableView.reloadData()
     }
 }
