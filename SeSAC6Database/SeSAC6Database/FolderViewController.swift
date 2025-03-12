@@ -37,6 +37,11 @@ final class FolderViewController: UIViewController {
             action: #selector(backupTapped)
         )
         navigationItem.leftBarButtonItem = button
+        
+        navigationItem.title = "navigation_title_folder".localized
+        let title = NSLocalizedString("navigation_title_folder", comment: "")
+        let titleFormat = String(format: title, "고래밥")
+        navigationItem.title = titleFormat
     }
     
     @objc private func backupTapped() {
