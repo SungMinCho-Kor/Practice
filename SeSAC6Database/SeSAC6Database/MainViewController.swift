@@ -28,14 +28,6 @@ class MainViewController: UIViewController {
         configureView()
         configureConstraints()
         list = repository.fetchAll()
-        
-        repository.getFileURL()
-        
-        
-//        folderRepository.createItem(name: "계모임")
-//        folderRepository.createItem(name: "개인")
-//        folderRepository.createItem(name: "회사")
-//        folderRepository.createItem(name: "멘토")
     }
     
     override func viewWillAppear(_ animated: Bool) {

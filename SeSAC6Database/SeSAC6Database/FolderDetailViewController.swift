@@ -20,12 +20,9 @@ class FolderDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print(#function)
-        repository.getFileURL()
         configureHierarchy()
         configureView()
         configureConstraints()
-        
-        repository.getFileURL()
     }
     
     override func viewWillAppear(_ animated: Bool) {

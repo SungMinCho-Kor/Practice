@@ -27,7 +27,6 @@ final class UserTableRepository: UserRepository {
     
     func fetchAll() -> Results<UserTable> {
         return realm.objects(UserTable.self)
-//            .where { $0.name.contains("sesac", options: .caseInsensitive) }
             .sorted(byKeyPath: "money", ascending: false)
     }
     
